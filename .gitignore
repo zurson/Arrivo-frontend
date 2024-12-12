@@ -145,6 +145,7 @@ captures/
 .cxx/
 *.apk
 output.json
+.DS_Store
 
 # IntelliJ
 .idea/
