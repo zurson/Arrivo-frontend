@@ -11,30 +11,50 @@ import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
+
 
 @Composable
 fun NavBar(
     navHostController: NavHostController,
     mainScaffoldViewModel: MainScaffoldViewModel
 ) {
+    val containerColor = MaterialTheme.colorScheme.primary
+    val contentColor = MaterialTheme.colorScheme.onPrimary
+    val navItems = mainScaffoldViewModel.getNavbarElements()
 
-    val items = mainScaffoldViewModel.navbarDestinations
+    AppNavigationBar(
+        navHostController = navHostController,
+        mainScaffoldViewModel = mainScaffoldViewModel,
+        containerColor = containerColor,
+        contentColor = contentColor,
+        navItems = navItems
+    )
+}
+
+
+@Composable
+fun AppNavigationBar(
+    navHostController: NavHostController,
+    mainScaffoldViewModel: MainScaffoldViewModel,
+    contentColor: Color,
+    containerColor: Color,
+    navItems: List<NavigationItem>
+) {
 
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.primary,
-        contentColor = MaterialTheme.colorScheme.onPrimary
+        containerColor = containerColor,
+        contentColor = contentColor
     ) {
-        items.forEach { item ->
+        navItems.forEach { item ->
             val selected = mainScaffoldViewModel.isSelected(item)
-
             NavigationBarItem(
                 modifier = Modifier
                     .wrapContentHeight()
@@ -73,6 +93,7 @@ fun NavBar(
                     )
                 }
             )
+
         }
     }
 }

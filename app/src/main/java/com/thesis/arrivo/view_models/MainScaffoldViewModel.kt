@@ -1,37 +1,43 @@
 package com.thesis.arrivo.view_models
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.thesis.arrivo.components.NavigationItem
 
-class MainScaffoldViewModel : ViewModel() {
+class MainScaffoldViewModel(var adminMode: Boolean) : ViewModel() {
 
     /**
      * NavBar elements
      **/
 
-    val navbarDestinations = listOf(
-        NavigationItem.Tasks,
-        NavigationItem.Map,
-        NavigationItem.Accidents,
-        NavigationItem.Reports,
-        NavigationItem.Account
+    private val navbarElementUser = listOf(
+        NavigationItem.TasksUser,
+        NavigationItem.MapUser,
+        NavigationItem.AccidentsUser,
+        NavigationItem.ReportsUser,
+        NavigationItem.AccountUser
     )
+
+    private val navbarElementsAdmin = listOf(
+        NavigationItem.AccidentsAdmin,
+        NavigationItem.TasksAdmin,
+        NavigationItem.EmployeesAdmin,
+    )
+
+    fun getNavbarElements(): List<NavigationItem> =
+        if (adminMode) navbarElementsAdmin else navbarElementUser
 
     /**
      * View selection
      **/
 
-    private val _selectedView = mutableStateOf(navbarDestinations[0])
+    private val _selectedView = mutableStateOf(getNavbarElements()[0])
     val selectedView: NavigationItem
         get() = _selectedView.value
 
     private fun selectView(item: NavigationItem) {
-        if (item in navbarDestinations) {
-            _selectedView.value = item
-        }
+        _selectedView.value = item
     }
 
     fun isSelected(item: NavigationItem): Boolean {
@@ -60,13 +66,6 @@ class MainScaffoldViewModel : ViewModel() {
 
     fun setNavbarVisibility(visible: Boolean) {
         _showNavbar.value = visible
-    }
-
-    /**
-     * Screen change animation
-     **/
-    fun screenChangeAnimation() {
-
     }
 
 }

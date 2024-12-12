@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.delivery_view
+package com.thesis.arrivo.ui.admin.admin_employees
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun DeliveryView(modifier: Modifier = Modifier) {
+fun EmployeesView(modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -19,7 +19,7 @@ fun DeliveryView(modifier: Modifier = Modifier) {
             .background(MaterialTheme.colorScheme.background)
     ) {
         Text(
-            text = "DeliveryView",
+            text = "EmployeesView ADMIN",
             color = MaterialTheme.colorScheme.primary,
             fontSize = 24.sp
         )

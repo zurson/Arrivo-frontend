@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.map_view
+package com.thesis.arrivo.ui.user.user_road_accident_view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun MapView(modifier: Modifier = Modifier) {
+fun RoadAccidentView(modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -19,7 +19,7 @@ fun MapView(modifier: Modifier = Modifier) {
             .background(MaterialTheme.colorScheme.background)
     ) {
         Text(
-            text = "MapView",
+            text = "RoadAccidentView",
             color = MaterialTheme.colorScheme.primary,
             fontSize = 24.sp
         )

@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.account_view
+package com.thesis.arrivo.ui.admin.admin_accidents
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun AccountView(modifier: Modifier = Modifier) {
+fun AccidentsView(modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -19,7 +19,7 @@ fun AccountView(modifier: Modifier = Modifier) {
             .background(MaterialTheme.colorScheme.background)
     ) {
         Text(
-            text = "AccountView",
+            text = "AccidentsView ADMIN",
             color = MaterialTheme.colorScheme.primary,
             fontSize = 24.sp
         )

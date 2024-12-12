@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.road_accident_view
+package com.thesis.arrivo.ui.user.user_your_accidents_view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun RoadAccidentView(modifier: Modifier = Modifier) {
+fun YourAccidentsView(modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -19,7 +19,7 @@ fun RoadAccidentView(modifier: Modifier = Modifier) {
             .background(MaterialTheme.colorScheme.background)
     ) {
         Text(
-            text = "RoadAccidentView",
+            text = "YourAccidentsView",
             color = MaterialTheme.colorScheme.primary,
             fontSize = 24.sp
         )
