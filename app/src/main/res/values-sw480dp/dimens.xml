@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- TABLET -->
+
+    <!-- Navigation Bar -->
+    <dimen name="navbar_icon_size">48dp</dimen>
+    <dimen name="navbar_text_size">24sp</dimen>
+    <dimen name="navbar_top_padding">16dp</dimen>
+
+</resources>

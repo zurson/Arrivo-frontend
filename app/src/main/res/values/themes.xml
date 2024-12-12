@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="Base.Theme.Arrivo" parent="Theme.AppCompat.DayNight.NoActionBar">
+    </style>
 
-    <style name="Theme.Arrivo" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Arrivo" parent="Base.Theme.Arrivo" />
+
 </resources>
