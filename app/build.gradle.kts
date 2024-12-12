@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -75,4 +76,12 @@ dependencies {
     /** Navigation **/
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose.v285)
+
+    /** Firebase **/
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+
+    /** Constraint Layout **/
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0")
 }

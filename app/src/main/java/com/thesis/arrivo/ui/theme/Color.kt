@@ -16,6 +16,9 @@ val LIGHT_SURFACE = Color(0xBFBEBBB3)
 val LIGHT_ON_SURFACE = Color(0xFF727876)
 
 
+/** Error **/
+val ERROR = Color(0xFFF50000)
+
 /** DARK **/
 val DARK_PRIMARY = Color(0xFFA75827)
 val DARK_PRIMARY_ALT = Color(0xFF927F7F)

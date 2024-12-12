@@ -17,10 +17,7 @@ fun MainScaffold(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            NavBar(
-                navHostController = navHostController,
-                mainScaffoldViewModel = mainScaffoldViewModel
-            )
+            if (mainScaffoldViewModel.showNavbar) NavBar(mainScaffoldViewModel)
         }
     ) { contentPadding ->
         content(contentPadding)

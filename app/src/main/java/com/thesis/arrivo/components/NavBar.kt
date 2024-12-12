@@ -15,23 +15,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.navigation.NavHostController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 
 
 @Composable
-fun NavBar(
-    navHostController: NavHostController,
-    mainScaffoldViewModel: MainScaffoldViewModel
-) {
+fun NavBar(mainScaffoldViewModel: MainScaffoldViewModel) {
+
     val containerColor = MaterialTheme.colorScheme.primary
     val contentColor = MaterialTheme.colorScheme.onPrimary
     val navItems = mainScaffoldViewModel.getNavbarElements()
 
     AppNavigationBar(
-        navHostController = navHostController,
         mainScaffoldViewModel = mainScaffoldViewModel,
         containerColor = containerColor,
         contentColor = contentColor,
@@ -42,7 +38,6 @@ fun NavBar(
 
 @Composable
 fun AppNavigationBar(
-    navHostController: NavHostController,
     mainScaffoldViewModel: MainScaffoldViewModel,
     contentColor: Color,
     containerColor: Color,
@@ -50,25 +45,28 @@ fun AppNavigationBar(
 ) {
 
     NavigationBar(
-        containerColor = containerColor,
-        contentColor = contentColor
+        containerColor = containerColor, contentColor = contentColor
     ) {
         navItems.forEach { item ->
             val selected = mainScaffoldViewModel.isSelected(item)
-            NavigationBarItem(
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .padding(top = dimensionResource(R.dimen.navbar_top_padding)),
+
+            NavigationBarItem(modifier = Modifier
+                .wrapContentHeight()
+                .padding(top = dimensionResource(R.dimen.navbar_top_padding)),
+
                 label = {
-                    Text(
-                        text = stringResource(item.title),
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontSize = dpToSp(R.dimen.navbar_text_size),
-                        textAlign = TextAlign.Center
-                    )
+                    item.title?.let {
+                        Text(
+                            text = stringResource(it),
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            fontSize = dpToSp(R.dimen.navbar_text_size),
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 },
                 alwaysShowLabel = true,
                 selected = selected,
+
                 colors = NavigationBarItemColors(
                     selectedIconColor = MaterialTheme.colorScheme.onPrimary,
                     unselectedIconColor = MaterialTheme.colorScheme.onPrimary,
@@ -77,22 +75,21 @@ fun AppNavigationBar(
                     disabledTextColor = MaterialTheme.colorScheme.onPrimary,
                     selectedTextColor = MaterialTheme.colorScheme.onPrimary,
                     unselectedTextColor = MaterialTheme.colorScheme.onPrimary
+
                 ),
+
                 icon = {
-                    Icon(
-                        imageVector = item.icon,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(dimensionResource(R.dimen.navbar_icon_size))
-                    )
+                    item.icon?.let {
+                        Icon(
+                            imageVector = it,
+                            contentDescription = null,
+                            modifier = Modifier.size(dimensionResource(R.dimen.navbar_icon_size))
+                        )
+                    }
+
                 },
-                onClick = {
-                    mainScaffoldViewModel.onNavItemClick(
-                        navHostController = navHostController,
-                        clickedItem = item
-                    )
-                }
-            )
+
+                onClick = { mainScaffoldViewModel.onNavItemClick(item) })
 
         }
     }

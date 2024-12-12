@@ -18,7 +18,8 @@ object Theme {
         background = LIGHT_BACKGROUND,
         onBackground = LIGHT_ON_BACKGROUND,
         surface = LIGHT_SURFACE,
-        onSurface = LIGHT_ON_SURFACE
+        onSurface = LIGHT_ON_SURFACE,
+        error = ERROR
     )
 
     private val DarkColorPalette = darkColorScheme(
@@ -32,7 +33,8 @@ object Theme {
         background = DARK_BACKGROUND,
         onBackground = DARK_ON_BACKGROUND,
         surface = DARK_SURFACE,
-        onSurface = DARK_ON_SURFACE
+        onSurface = DARK_ON_SURFACE,
+        error = ERROR
     )
 
     @Composable
