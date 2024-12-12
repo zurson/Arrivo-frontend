@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Arrivo</string>
+
+    <string name="nav_delivery_details_label">Tasks</string>
+    <string name="nav_map_label">Map</string>
+    <string name="nav_road_accident_label">Accident</string>
+    <string name="nav_your_reports_label">Reports</string>
+    <string name="nav_help_label">Help</string>
 </resources>
