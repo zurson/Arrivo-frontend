@@ -38,10 +38,6 @@ class MainScaffoldViewModel : ViewModel() {
         return item.route == selectedView.route
     }
 
-    fun getIcon(item: NavigationItem, selected: Boolean): ImageVector {
-        return if (selected) item.selectedIcon else item.unselectedIcon
-    }
-
     fun onNavItemClick(clickedItem: NavigationItem, navHostController: NavHostController) {
         if (clickedItem.route == selectedView.route)
             return

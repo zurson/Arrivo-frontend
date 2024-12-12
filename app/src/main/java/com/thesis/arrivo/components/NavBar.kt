@@ -1,6 +1,6 @@
 package com.thesis.arrivo.components
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Icon
@@ -10,13 +10,14 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.thesis.arrivo.R
+import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 
 @Composable
@@ -33,15 +34,16 @@ fun NavBar(
     ) {
         items.forEach { item ->
             val selected = mainScaffoldViewModel.isSelected(item)
-            val imageVector = mainScaffoldViewModel.getIcon(item, selected)
 
             NavigationBarItem(
-                modifier = Modifier.wrapContentHeight(),
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .padding(top = dimensionResource(R.dimen.navbar_top_padding)),
                 label = {
                     Text(
                         text = stringResource(item.title),
                         color = MaterialTheme.colorScheme.onPrimary,
-                        fontSize = 12.sp,
+                        fontSize = dpToSp(R.dimen.navbar_text_size),
                         textAlign = TextAlign.Center
                     )
                 },
@@ -58,9 +60,10 @@ fun NavBar(
                 ),
                 icon = {
                     Icon(
-                        imageVector = imageVector,
+                        imageVector = item.icon,
                         contentDescription = null,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier
+                            .size(dimensionResource(R.dimen.navbar_icon_size))
                     )
                 },
                 onClick = {
