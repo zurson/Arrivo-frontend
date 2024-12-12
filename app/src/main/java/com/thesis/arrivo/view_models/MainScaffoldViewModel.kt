@@ -3,9 +3,17 @@ package com.thesis.arrivo.view_models
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
+import com.google.firebase.auth.FirebaseAuth
 import com.thesis.arrivo.components.NavigationItem
+import com.thesis.arrivo.utilities.navigateTo
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class MainScaffoldViewModel(var adminMode: Boolean) : ViewModel() {
+class MainScaffoldViewModel(
+    var adminMode: Boolean,
+    val navController: NavHostController
+) : ViewModel() {
 
     /**
      * NavBar elements
@@ -28,6 +36,19 @@ class MainScaffoldViewModel(var adminMode: Boolean) : ViewModel() {
     fun getNavbarElements(): List<NavigationItem> =
         if (adminMode) navbarElementsAdmin else navbarElementUser
 
+
+    private fun isUserAuthenticated(): Boolean {
+        return FirebaseAuth.getInstance().currentUser != null
+    }
+
+    fun getStartDestination(): NavigationItem {
+        return if (!isUserAuthenticated()) {
+            setNavbarVisibility(false)
+            NavigationItem.Login
+        } else
+            getNavbarElements().first()
+    }
+
     /**
      * View selection
      **/
@@ -44,11 +65,11 @@ class MainScaffoldViewModel(var adminMode: Boolean) : ViewModel() {
         return item.route == selectedView.route
     }
 
-    fun onNavItemClick(clickedItem: NavigationItem, navHostController: NavHostController) {
+    fun onNavItemClick(clickedItem: NavigationItem) {
         if (clickedItem.route == selectedView.route)
             return
 
-        navHostController.navigate(clickedItem.route) {
+        navController.navigate(clickedItem.route) {
             popUpTo(selectedView.route) { inclusive = true }
             launchSingleTop = true
         }
@@ -60,12 +81,24 @@ class MainScaffoldViewModel(var adminMode: Boolean) : ViewModel() {
      * Navbar visibility status
      **/
 
-    private val _showNavbar = mutableStateOf(true)
+    private val _showNavbar = mutableStateOf(false)
     val showNavbar: Boolean
         get() = _showNavbar.value
 
     fun setNavbarVisibility(visible: Boolean) {
         _showNavbar.value = visible
+    }
+
+
+    /**
+     * Login success
+     **/
+
+    fun onAuthenticationSuccess() {
+        CoroutineScope(Dispatchers.Main).launch {
+            setNavbarVisibility(true)
+            navigateTo(navController, getStartDestination())
+        }
     }
 
 }

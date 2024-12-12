@@ -14,8 +14,8 @@ import com.thesis.arrivo.R
 
 sealed class NavigationItem(
     val route: String,
-    @StringRes val title: Int,
-    val icon: ImageVector,
+    @StringRes val title: Int? = null,
+    val icon: ImageVector? = null,
 ) {
 
     /** User **/
@@ -68,5 +68,11 @@ sealed class NavigationItem(
         route = "employees_admin",
         title = R.string.nav_employees_label_admin,
         icon = Icons.Outlined.Person
+    )
+
+    /** Login **/
+
+    data object Login : NavigationItem(
+        route = "login",
     )
 }

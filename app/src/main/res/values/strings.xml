@@ -13,4 +13,15 @@
     <string name="nav_tasks_label_admin">Tasks</string>
     <string name="nav_employees_label_admin">Employees</string>
 
+    <!-- LoginView -->
+    <string name="login_title">Login to your account</string>
+    <string name="login_email_label">Email address</string>
+    <string name="login_email_error">Email is incorrect!</string>
+    <string name="login_password_label">Password</string>
+    <string name="login_password_error">Password is too short!</string>
+    <string name="login_terms">If you are creating new account,\nTerms &amp; Conditions and Privacy Policy will apply.</string>
+    <string name="login_login_button_text">Login</string>
+<!--    <string name="login_title">Arrivo</string>-->
+    <string name="login_help_message">Enter login details to continue</string>
+
 </resources>

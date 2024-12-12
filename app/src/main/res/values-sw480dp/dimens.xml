@@ -7,4 +7,21 @@
     <dimen name="navbar_text_size">24sp</dimen>
     <dimen name="navbar_top_padding">16dp</dimen>
 
+    <!-- AUTH -->
+    <dimen name="auth_header_text_size">30sp</dimen>
+    <dimen name="auth_title_text_size">34sp</dimen>
+    <dimen name="auth_description_text_size">26sp</dimen>
+
+    <dimen name="auth_button_text_size">30sp</dimen>
+    <dimen name="auth_divider_text_size">25sp</dimen>
+    <dimen name="auth_terms_text_size">22sp</dimen>
+
+    <dimen name="auth_form_padding">100dp</dimen>
+    <dimen name="auth_form_label_text_size">20sp</dimen>
+    <dimen name="auth_form_text_size">24sp</dimen>
+    <dimen name="auth_form_ic_size">32dp</dimen>
+    <dimen name="auth_form_ic_padding">8dp</dimen>
+
+    <dimen name="auth_form_error_size">20sp</dimen>
+
 </resources>
