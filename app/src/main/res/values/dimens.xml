@@ -16,12 +16,18 @@
     <dimen name="auth_divider_text_size">16sp</dimen>
     <dimen name="auth_terms_text_size">12sp</dimen>
 
-    <dimen name="auth_form_padding">50dp</dimen>
-    <dimen name="auth_form_label_text_size">16sp</dimen>
-    <dimen name="auth_form_text_size">16sp</dimen>
-    <dimen name="auth_form_ic_size">28dp</dimen>
-    <dimen name="auth_form_ic_padding">0dp</dimen>
+    <dimen name="form_label_text_size">16sp</dimen>
+    <dimen name="form_text_size">16sp</dimen>
+    <dimen name="form_ic_size">28dp</dimen>
+    <dimen name="form_ic_padding">0dp</dimen>
+    <dimen name="form_height">50dp</dimen>
+    <dimen name="form_error_size">12sp</dimen>
 
-    <dimen name="auth_form_error_size">12sp</dimen>
+    <!-- TEXT FIELD -->
+    <dimen name="text_filed_padding">10dp</dimen>
+
+    <!-- APP BUTTON -->
+    <dimen name="app_button_text_size">16sp</dimen>
+    <dimen name="app_button_icon_size">32sp</dimen>
 
 </resources>

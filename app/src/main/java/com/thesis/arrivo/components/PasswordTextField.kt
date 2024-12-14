@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.authentication
+package com.thesis.arrivo.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,7 +24,7 @@ import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.AuthViewModel
 
 @Composable
-fun AuthPasswordTextField(
+fun PasswordTextField(
     value: String,
     onValueChange: (String) -> Unit,
     aurhViewModel: AuthViewModel,
@@ -38,7 +38,7 @@ fun AuthPasswordTextField(
         modifier = modifier,
         value = value,
         singleLine = true,
-        textStyle = TextStyle.Default.copy(fontSize = dpToSp(R.dimen.auth_form_text_size)),
+        textStyle = TextStyle.Default.copy(fontSize = dpToSp(R.dimen.form_text_size)),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Next
@@ -64,8 +64,8 @@ fun AuthPasswordTextField(
                 imageVector = Icons.Outlined.Lock,
                 contentDescription = "",
                 modifier = Modifier
-                    .padding(dimensionResource(R.dimen.auth_form_ic_padding))
-                    .size(dimensionResource(R.dimen.auth_form_ic_size))
+                    .padding(dimensionResource(R.dimen.form_ic_padding))
+                    .size(dimensionResource(R.dimen.form_ic_size))
             )
         },
 
@@ -73,12 +73,12 @@ fun AuthPasswordTextField(
             if (showVisualityToggleIcon) {
                 IconButton(
                     onClick = { aurhViewModel.togglePasswordVisibility() },
-                    Modifier.padding(dimensionResource(R.dimen.auth_form_ic_padding))
+                    Modifier.padding(dimensionResource(R.dimen.form_ic_padding))
                 ) {
                     Icon(
                         imageVector = aurhViewModel.visibilityIcon,
                         contentDescription = null,
-                        Modifier.size(dimensionResource(R.dimen.auth_form_ic_size)),
+                        Modifier.size(dimensionResource(R.dimen.form_ic_size)),
                     )
                 }
             }
@@ -89,7 +89,7 @@ fun AuthPasswordTextField(
 
         onValueChange = onValueChange,
 
-        label = { Text(text = label, fontSize = dpToSp(R.dimen.auth_form_label_text_size)) },
+        label = { Text(text = label, fontSize = dpToSp(R.dimen.form_label_text_size)) },
 
         supportingText = {
             if (isError) {
@@ -97,7 +97,7 @@ fun AuthPasswordTextField(
                     modifier = Modifier.fillMaxWidth(),
                     text = errorMessage,
                     color = MaterialTheme.colorScheme.error,
-                    fontSize = dpToSp(R.dimen.auth_form_error_size)
+                    fontSize = dpToSp(R.dimen.form_error_size)
                 )
             }
         },

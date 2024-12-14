@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.components.MainScaffold
 import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_accidents.AccidentsView
+import com.thesis.arrivo.ui.admin.admin_employees.CreateEmployeeView
 import com.thesis.arrivo.ui.admin.admin_employees.EmployeesView
 import com.thesis.arrivo.ui.admin.admin_tasks.TasksView
 import com.thesis.arrivo.ui.authentication.LoginView
@@ -26,7 +27,7 @@ import com.thesis.arrivo.view_models.MainScaffoldViewModel
 fun MainView() {
     val navHostController = rememberNavController()
     val mainScaffoldViewModel = MainScaffoldViewModel(
-        adminMode = false,
+        adminMode = true,
         navController = navHostController
     )
 
@@ -45,7 +46,6 @@ private fun SetupMainScaffold(
 ) {
     Theme.ArrivoTheme {
         MainScaffold(
-            navHostController = navHostController,
             mainScaffoldViewModel = mainScaffoldViewModel
         ) { contentPadding ->
 
@@ -64,7 +64,17 @@ private fun SetupMainScaffold(
                 /** Admin **/
                 composable(NavigationItem.AccidentsAdmin.route) { AccidentsView() }
                 composable(NavigationItem.TasksAdmin.route) { TasksView() }
-                composable(NavigationItem.EmployeesAdmin.route) { EmployeesView() }
+
+                composable(NavigationItem.EmployeesAdmin.route) {
+                    EmployeesView(
+                        mainScaffoldViewModel
+                    )
+                }
+                composable(NavigationItem.CreateEmployeeAdmin.route) {
+                    CreateEmployeeView(
+                        mainScaffoldViewModel
+                    )
+                }
 
                 /** Authentication **/
                 composable(NavigationItem.Login.route) { LoginView(mainScaffoldViewModel = mainScaffoldViewModel) }

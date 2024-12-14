@@ -21,7 +21,12 @@
     <string name="login_password_error">Password is too short!</string>
     <string name="login_terms">If you are creating new account,\nTerms &amp; Conditions and Privacy Policy will apply.</string>
     <string name="login_login_button_text">Login</string>
-<!--    <string name="login_title">Arrivo</string>-->
     <string name="login_help_message">Enter login details to continue</string>
+
+    <!-- Create Employee Account Forms -->
+    <string name="create_account_first_name_label">First name</string>
+    <string name="create_account_last_name_label">Last name</string>
+    <string name="create_account_email_label">Email address</string>
+    <string name="create_account_phone_label">Phone number</string>
 
 </resources>

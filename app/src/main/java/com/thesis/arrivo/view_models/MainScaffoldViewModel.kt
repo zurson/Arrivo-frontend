@@ -1,14 +1,13 @@
 package com.thesis.arrivo.view_models
 
+import android.os.Handler
+import android.os.Looper
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.utilities.navigateTo
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MainScaffoldViewModel(
     var adminMode: Boolean,
@@ -43,10 +42,10 @@ class MainScaffoldViewModel(
 
     fun getStartDestination(): NavigationItem {
         return if (!isUserAuthenticated()) {
-            setNavbarVisibility(false)
             NavigationItem.Login
-        } else
+        } else {
             getNavbarElements().first()
+        }
     }
 
     /**
@@ -81,7 +80,7 @@ class MainScaffoldViewModel(
      * Navbar visibility status
      **/
 
-    private val _showNavbar = mutableStateOf(false)
+    private val _showNavbar = mutableStateOf(true)
     val showNavbar: Boolean
         get() = _showNavbar.value
 
@@ -95,10 +94,30 @@ class MainScaffoldViewModel(
      **/
 
     fun onAuthenticationSuccess() {
-        CoroutineScope(Dispatchers.Main).launch {
-            setNavbarVisibility(true)
+        Handler(Looper.getMainLooper()).post({
             navigateTo(navController, getStartDestination())
-        }
+            setNavbarVisibility(true)
+        })
+    }
+
+
+    fun manageNavbarOnLogin() {
+        if (FirebaseAuth.getInstance().currentUser == null)
+            setNavbarVisibility(false)
+        else
+            setNavbarVisibility(true)
+    }
+
+
+    /**
+     * Other
+     **/
+
+    fun onCreateEmployeeAccountRedirectButtonClick() {
+        navigateTo(
+            navController = navController,
+            navigationItem = NavigationItem.CreateEmployeeAdmin
+        )
     }
 
 }

@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         FirebaseApp.initializeApp(this)
-        FirebaseAuth.getInstance().signOut()
+//        FirebaseAuth.getInstance().signOut()
 
         setContent {
             enableEdgeToEdge()

@@ -70,6 +70,10 @@ sealed class NavigationItem(
         icon = Icons.Outlined.Person
     )
 
+    data object CreateEmployeeAdmin : NavigationItem(
+        route = "create_employee_admin"
+    )
+
     /** Login **/
 
     data object Login : NavigationItem(
