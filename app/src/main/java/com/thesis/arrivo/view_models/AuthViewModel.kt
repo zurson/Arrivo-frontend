@@ -18,7 +18,7 @@ import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.showToast
 
 class AuthViewModel(
-    val mainScaffoldViewModel: MainScaffoldViewModel
+    private val mainScaffoldViewModel: MainScaffoldViewModel
 ) : ViewModel() {
 
     var firstName by mutableStateOf("")
