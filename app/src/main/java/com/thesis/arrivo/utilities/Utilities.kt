@@ -5,28 +5,16 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import androidx.annotation.DimenRes
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
+import com.google.gson.Gson
+import com.thesis.arrivo.communication.ErrorResponse
 import com.thesis.arrivo.components.NavigationItem
-import com.thesis.arrivo.components.bounceClick
+import retrofit2.HttpException
+import java.io.IOException
 import kotlin.reflect.KClass
 
 fun changeActivity(context: Context, destActivity: KClass<*>, finish: Boolean = false) {
@@ -52,5 +40,36 @@ fun showToast(context: Context, text: String?, toastLength: Int = Toast.LENGTH_S
         (context as? Activity)?.runOnUiThread {
             Toast.makeText(context, it, toastLength).show()
         }
+    }
+}
+
+
+fun mapError(e: Exception): ErrorResponse {
+    e.printStackTrace()
+    return when (e) {
+        is HttpException -> {
+            val errorBody = e.response()?.errorBody()?.string()
+            val errors = parseErrorResponse(errorBody)
+            ErrorResponse(e.code(), errors)
+        }
+
+        is IOException ->
+            ErrorResponse(
+                -1,
+                listOf("Network error. Please check your connection")
+        )
+
+        else -> ErrorResponse(-1, listOf("An unexpected error occurred"))
+    }
+
+}
+
+
+fun parseErrorResponse(errorBody: String?): List<String> {
+    return try {
+        val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+        errorResponse.errors
+    } catch (e: Exception) {
+        listOf("Unable to parse error response")
     }
 }
