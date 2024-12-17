@@ -30,4 +30,7 @@
     <dimen name="app_button_text_size">16sp</dimen>
     <dimen name="app_button_icon_size">32sp</dimen>
 
+    <!-- PROGRESS INDICATOR -->
+    <dimen name="progress_indicator_size">32dp</dimen>
+
 </resources>
