@@ -19,7 +19,8 @@ object Theme {
         onBackground = LIGHT_ON_BACKGROUND,
         surface = LIGHT_SURFACE,
         onSurface = LIGHT_ON_SURFACE,
-        error = ERROR
+        error = ERROR,
+        surfaceContainer = LOADING_SCREEN_BG
     )
 
     private val DarkColorPalette = darkColorScheme(
@@ -34,7 +35,8 @@ object Theme {
         onBackground = DARK_ON_BACKGROUND,
         surface = DARK_SURFACE,
         onSurface = DARK_ON_SURFACE,
-        error = ERROR
+        error = ERROR,
+        surfaceContainer = LOADING_SCREEN_BG
     )
 
     @Composable

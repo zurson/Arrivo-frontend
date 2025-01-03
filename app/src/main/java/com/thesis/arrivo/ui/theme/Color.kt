@@ -16,6 +16,9 @@ val LIGHT_SURFACE = Color(0xFFBEBBB3)
 val LIGHT_ON_SURFACE = Color(0xFF727876)
 
 
+/** Loading screen background **/
+val LOADING_SCREEN_BG = Color(0x80D2D0CB)
+
 /** Error **/
 val ERROR = Color(0xFFF50000)
 
