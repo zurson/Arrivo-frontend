@@ -18,7 +18,10 @@ import com.thesis.arrivo.utilities.dpToSp
 fun DialogRecord(
     label: String,
     value: Any,
+    valueFormatter: ((Any) -> String)? = null
 ) {
+    val formattedValue = valueFormatter?.invoke(value) ?: value.toString()
+
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -39,7 +42,7 @@ fun DialogRecord(
             )
 
             Text(
-                text = "$value",
+                text = formattedValue,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = dpToSp(R.dimen.employee_details_value_text_size),
                 fontWeight = FontWeight.Bold

@@ -25,7 +25,8 @@ fun EmployeesDetailsAlertDialog(
 
         DialogRecord(
             label = "Phone",
-            value = emp.phoneNumber
+            value = emp.phoneNumber,
+            valueFormatter = { value -> "${value.toString().substring(0, 3)}-${value.toString().substring(3, 6)}-${value.toString().substring(6)}" }
         )
 
         DialogRecord(
