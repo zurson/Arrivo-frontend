@@ -1,8 +1,17 @@
 package com.thesis.arrivo.ui.admin.admin_employees
 
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.employee.EmployeeResponse
+import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.info_alert_dialog.DialogRecord
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
 
@@ -38,5 +47,16 @@ fun EmployeesDetailsAlertDialog(
             value = emp.status
         )
 
+        AppButton(
+            onClick = {
+
+            },
+            text = stringResource(R.string.employees_list_edit_button_text),
+            icon = Icons.Outlined.Edit,
+            modifier = Modifier
+                .padding(top = dimensionResource(R.dimen.employee_details_edit_button_top_padding))
+                .padding(horizontal = dimensionResource(R.dimen.employee_details_edit_button_horizontal_padding))
+                .height(dimensionResource(R.dimen.employee_details_edit_button_height))
+        )
     }
 }

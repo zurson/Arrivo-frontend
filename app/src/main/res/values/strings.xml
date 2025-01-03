@@ -37,4 +37,7 @@
     <string name="create_account_redirect_button_text">New Account</string>
     <string name="create_account_button_text">Create Account</string>
 
+    <!-- Employees List -->
+    <string name="employees_list_edit_button_text">Edit</string>
+
 </resources>
