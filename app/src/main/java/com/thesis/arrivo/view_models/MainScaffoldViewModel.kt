@@ -1,6 +1,8 @@
 package com.thesis.arrivo.view_models
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
@@ -121,8 +123,18 @@ class MainScaffoldViewModel(
      * Auth
      **/
 
-    private var isListeningAuthStatus = false
     private var accountBlockJob: Job? = null
+
+
+    private fun isConnectedToInternet(): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val activeNetwork = connectivityManager.activeNetwork
+        val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
+
+        return capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+    }
 
 
     private fun reset() {
@@ -144,7 +156,7 @@ class MainScaffoldViewModel(
             while (isActive) {
                 delay(AUTH_ACCOUNT_STATUS_CHECK_INTERVAL_MS)
 
-                if (FirebaseAuth.getInstance().currentUser == null)
+                if (FirebaseAuth.getInstance().currentUser == null || !isConnectedToInternet())
                     continue
 
                 isUserAuthenticated { isAuthenticated ->

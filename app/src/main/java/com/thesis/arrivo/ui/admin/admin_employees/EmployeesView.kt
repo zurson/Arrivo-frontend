@@ -22,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -57,10 +58,18 @@ fun EmployeesView(mainScaffoldViewModel: MainScaffoldViewModel) {
     val employeeViewModel = remember { EmployeeViewModel() }
     val employees by employeeViewModel.employees.collectAsState()
 
-    employeeViewModel.fetchEmployeesList(
-        context = context,
-        onFailure = { error -> showErrorDialog(context, "Error", error) }
-    )
+    LaunchedEffect(Unit) {
+        employeeViewModel.fetchEmployeesList(
+            context = context,
+            onFailure = { error ->
+                showErrorDialog(
+                    context,
+                    context.getString(R.string.error_title),
+                    error
+                )
+            }
+        )
+    }
 
     ConstraintLayout(
         modifier = Modifier

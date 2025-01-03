@@ -4,6 +4,7 @@
     <!-- Global Messages -->
     <string name="unexpected_error">An unexpected error occurred. Try again later.</string>
     <string name="io_error">Network error. Please check your connection.</string>
+    <string name="error_title">Error</string>
 
     <!-- NavBar - User -->
     <string name="nav_delivery_details_label_user">Tasks</string>
@@ -33,7 +34,6 @@
     <string name="create_account_email_label">Email address</string>
     <string name="create_account_phone_label">Phone number</string>
     <string name="create_account_success_message">Account created successfully!</string>
-    <string name="create_account_error_title">Error</string>
     <string name="create_account_redirect_button_text">New Account</string>
     <string name="create_account_button_text">Create Account</string>
 

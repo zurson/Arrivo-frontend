@@ -40,6 +40,7 @@ class EmployeeViewModel : ViewModel() {
 
 
     fun fetchEmployeesList(context: Context, onFailure: (ErrorResponse) -> Unit) {
+        println("FETCHING!")
         viewModelScope.launch {
             try {
                 setActionInProgress(true)
@@ -113,7 +114,7 @@ class EmployeeViewModel : ViewModel() {
     fun onAccountCreateFailure(context: Context, error: ErrorResponse) {
         showErrorDialog(
             context = context,
-            title = context.getString(R.string.create_account_error_title),
+            title = context.getString(R.string.error_title),
             errorResponse = error
         )
     }
