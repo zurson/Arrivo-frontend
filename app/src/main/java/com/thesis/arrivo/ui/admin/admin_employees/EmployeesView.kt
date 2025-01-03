@@ -28,31 +28,39 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.compose.rememberNavController
+import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.employee.EmployeeResponse
 import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.ProgressIndicator
 import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.Settings
+import com.thesis.arrivo.utilities.dpToSp
+import com.thesis.arrivo.utilities.showErrorDialog
 import com.thesis.arrivo.view_models.EmployeeViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 
 @Composable
 fun EmployeesView(mainScaffoldViewModel: MainScaffoldViewModel) {
+    val context = LocalContext.current
     val employeeViewModel = remember { EmployeeViewModel() }
     val employees by employeeViewModel.employees.collectAsState()
-    val error by employeeViewModel.error.collectAsState()
 
-    employeeViewModel.fetchEmployeesList()
+    employeeViewModel.fetchEmployeesList(
+        context = context,
+        onFailure = { error -> showErrorDialog(context, "Error", error) }
+    )
 
     ConstraintLayout(
         modifier = Modifier
@@ -88,7 +96,7 @@ fun EmployeesView(mainScaffoldViewModel: MainScaffoldViewModel) {
         val buttonBottomGuideline = createGuidelineFromTop(0.96f)
         val buttonStartGuideline = createGuidelineFromStart(0.3f)
 
-        CreateEmployeeButton(
+        EmployeeCreateButton(
             mainScaffoldViewModel = mainScaffoldViewModel,
             modifier = Modifier
                 .constrainAs(buttonRef) {
@@ -118,7 +126,7 @@ private fun EmployeesList(
             .background(MaterialTheme.colorScheme.surface),
         contentAlignment = Alignment.Center
     ) {
-        if (employeeViewModel.fetchInProgress) {
+        if (employeeViewModel.actionInProgress) {
             ProgressIndicator()
             return
         }
@@ -130,7 +138,7 @@ private fun EmployeesList(
                 .padding(8.dp)
         ) {
             items(employees) { emp ->
-                EmployeeRecord(
+                EmployeeContainer(
                     emp.firstName,
                     emp.lastName
                 )
@@ -141,13 +149,13 @@ private fun EmployeesList(
 
 
 @Composable
-private fun EmployeeRecord(
+private fun EmployeeContainer(
     firstName: String,
     lastName: String
 ) {
     Column(
         modifier = Modifier
-            .clickable {  }
+            .clickable { }
             .bounceClick()
             .fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
@@ -168,13 +176,13 @@ private fun EmployeeRecord(
                     imageVector = Icons.Outlined.Person,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.requiredSize(32.dp)
+                    modifier = Modifier.requiredSize(dimensionResource(R.dimen.employees_icon_size))
                 )
 
                 Text(
                     text = "$firstName $lastName",
                     color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = 20.sp,
+                    fontSize = dpToSp(R.dimen.employees_data_text_size),
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     textAlign = TextAlign.Center,
@@ -188,7 +196,7 @@ private fun EmployeeRecord(
                     imageVector = Icons.AutoMirrored.Outlined.ArrowRight,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.requiredSize(32.dp)
+                    modifier = Modifier.requiredSize(dimensionResource(R.dimen.employees_icon_size))
                 )
             }
 
@@ -200,14 +208,14 @@ private fun EmployeeRecord(
 
 
 @Composable
-private fun CreateEmployeeButton(
+private fun EmployeeCreateButton(
     modifier: Modifier = Modifier,
     mainScaffoldViewModel: MainScaffoldViewModel
 ) {
     AppButton(
         onClick = { mainScaffoldViewModel.onCreateEmployeeAccountRedirectButtonClick() },
         modifier = modifier,
-        text = "Create Account",
+        text = stringResource(R.string.create_account_redirect_button_text),
         icon = Icons.Filled.Add
     )
 }
@@ -217,6 +225,6 @@ private fun CreateEmployeeButton(
 @Composable
 private fun Preview() {
     Theme.ArrivoTheme {
-        EmployeesView(MainScaffoldViewModel(true, rememberNavController()))
+        EmployeesView(MainScaffoldViewModel(LocalContext.current, true, rememberNavController()))
     }
 }

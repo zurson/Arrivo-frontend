@@ -28,9 +28,13 @@
 
     <!-- APP BUTTON -->
     <dimen name="app_button_text_size">16sp</dimen>
-    <dimen name="app_button_icon_size">32sp</dimen>
+    <dimen name="app_button_icon_size">32dp</dimen>
 
     <!-- PROGRESS INDICATOR -->
     <dimen name="progress_indicator_size">32dp</dimen>
+
+    <!-- EMPLOYEE ACCOUNTS LIST -->
+    <dimen name="employees_icon_size">32dp</dimen>
+    <dimen name="employees_data_text_size">20sp</dimen>
 
 </resources>

@@ -33,4 +33,8 @@
     <!-- PROGRESS INDICATOR -->
     <dimen name="progress_indicator_size">64dp</dimen>
 
+    <!-- EMPLOYEE ACCOUNTS LIST -->
+    <dimen name="employees_icon_size">64dp</dimen>
+    <dimen name="employees_data_text_size">32sp</dimen>
+
 </resources>
