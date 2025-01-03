@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.lifecycle.ViewModel
+import com.thesis.arrivo.communication.employee.EmployeeCreateAccountRequest
 import com.thesis.arrivo.components.FormType
 import com.thesis.arrivo.ui.authentication.FirebaseAuthManager
 import com.thesis.arrivo.utilities.Settings
@@ -78,6 +79,15 @@ class AuthViewModel(
             loginViaEmail(context)
     }
 
+
+    fun prepareEmployeeCreateRequest(): EmployeeCreateAccountRequest {
+        return EmployeeCreateAccountRequest(
+            firstName = firstName,
+            lastName = lastName,
+            email = email,
+            phoneNumber = phoneNumber
+        )
+    }
 
 //    fun registerViaEmail(context: Context) {
 //        FirebaseAuthManager().registerViaEmail(email, password) { authStatus ->

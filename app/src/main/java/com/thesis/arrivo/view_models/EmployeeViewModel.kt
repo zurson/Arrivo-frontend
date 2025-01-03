@@ -1,93 +1,121 @@
 package com.thesis.arrivo.view_models
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
+import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.ErrorResponse
 import com.thesis.arrivo.communication.employee.EmployeeCreateAccountRequest
 import com.thesis.arrivo.communication.employee.EmployeeRepository
 import com.thesis.arrivo.communication.employee.EmployeeResponse
 import com.thesis.arrivo.communication.employee.EmployeeUpdateRequest
+import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.utilities.mapError
-import kotlinx.coroutines.delay
+import com.thesis.arrivo.utilities.navigateTo
+import com.thesis.arrivo.utilities.showErrorDialog
+import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class EmployeeViewModel() : ViewModel() {
+class EmployeeViewModel : ViewModel() {
 
     private val repository: EmployeeRepository by lazy { EmployeeRepository() }
 
     private val _employees = MutableStateFlow<List<EmployeeResponse>>(emptyList())
     val employees: StateFlow<List<EmployeeResponse>> = _employees.asStateFlow()
 
-    private val _error = MutableStateFlow<ErrorResponse?>(null)
-    val error: StateFlow<ErrorResponse?> = _error.asStateFlow()
-
-    private val _fetchInProgress = mutableStateOf(false)
-    val fetchInProgress: Boolean
-        get() = _fetchInProgress.value
+    private val _actionInProgress = mutableStateOf(false)
+    val actionInProgress: Boolean
+        get() = _actionInProgress.value
 
 
-    private fun setFetchInProgress(status: Boolean) {
-        _fetchInProgress.value = status
+    private fun setActionInProgress(status: Boolean) {
+        _actionInProgress.value = status
     }
 
 
-    fun fetchEmployeesList() {
-        getAllEmployees()
-    }
-
-
-    private fun getAllEmployees() {
+    fun fetchEmployeesList(context: Context, onFailure: (ErrorResponse) -> Unit) {
         viewModelScope.launch {
             try {
-                setFetchInProgress(true)
+                setActionInProgress(true)
                 val employeeList = repository.getAllEmployees()
                 _employees.value = employeeList
-                _error.value = null
             } catch (e: Exception) {
-                _error.value = mapError(e)
-                _error.value?.errors?.forEach { err ->
-                    println(err)
-                }
+                onFailure(mapError(e, context))
             } finally {
-                setFetchInProgress(false)
+                setActionInProgress(false)
             }
         }
     }
 
 
-    fun createEmployeeAccount(createAccountRequest: EmployeeCreateAccountRequest) {
+    fun createEmployeeAccount(
+        context: Context,
+        createAccountRequest: EmployeeCreateAccountRequest,
+        onSuccess: () -> Unit,
+        onFailure: (ErrorResponse) -> Unit
+    ) {
         viewModelScope.launch {
             try {
-                setFetchInProgress(true)
+                setActionInProgress(true)
                 repository.createEmployeeAccount(createAccountRequest)
-                _error.value = null
-                getAllEmployees()
+                onSuccess()
             } catch (e: Exception) {
-                _error.value = mapError(e)
+                onFailure(mapError(e, context))
             } finally {
-                setFetchInProgress(false)
+                setActionInProgress(false)
             }
         }
     }
 
 
-    fun updateEmployeeAccount(id: Long, updateAccountRequest: EmployeeUpdateRequest) {
+    fun updateEmployeeAccount(
+        context: Context,
+        id: Long,
+        updateAccountRequest: EmployeeUpdateRequest,
+        onFailure: (ErrorResponse) -> Unit,
+        onSuccess: () -> Unit,
+    ) {
         viewModelScope.launch {
             try {
-                setFetchInProgress(true)
+                setActionInProgress(true)
                 repository.updateEmployeeAccount(id, updateAccountRequest)
-                _error.value = null
-                getAllEmployees()
+                onSuccess()
             } catch (e: Exception) {
-                _error.value = mapError(e)
+                onFailure(mapError(e, context))
             } finally {
-                setFetchInProgress(false)
+                setActionInProgress(false)
             }
         }
+    }
+
+
+    private fun showAccountCreateSuccessToast(context: Context) {
+        showToast(
+            context = context,
+            text = context.getString(R.string.create_account_success_message),
+            toastLength = Toast.LENGTH_LONG
+        )
+    }
+
+
+    fun onAccountCreateSuccess(context: Context, navController: NavHostController) {
+        showAccountCreateSuccessToast(context)
+        navigateTo(navController, NavigationItem.CreateEmployeeAdmin)
+    }
+
+
+    fun onAccountCreateFailure(context: Context, error: ErrorResponse) {
+        showErrorDialog(
+            context = context,
+            title = context.getString(R.string.create_account_error_title),
+            errorResponse = error
+        )
     }
 
 }

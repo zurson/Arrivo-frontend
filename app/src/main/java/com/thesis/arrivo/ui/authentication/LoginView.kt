@@ -30,9 +30,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
-import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.components.AppTextField
 import com.thesis.arrivo.components.PasswordTextField
+import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.AuthViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
@@ -240,6 +240,6 @@ fun LoginDescription(modifier: Modifier = Modifier) {
 @Composable
 private fun Show() {
     Theme.ArrivoTheme {
-        LoginView(MainScaffoldViewModel(false, rememberNavController()))
+        LoginView(MainScaffoldViewModel(LocalContext.current, false, rememberNavController()))
     }
 }

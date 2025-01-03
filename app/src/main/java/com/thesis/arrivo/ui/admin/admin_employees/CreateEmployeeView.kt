@@ -1,5 +1,6 @@
 package com.thesis.arrivo.ui.admin.admin_employees
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
@@ -20,20 +22,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.AppTextField
 import com.thesis.arrivo.components.FormType
+import com.thesis.arrivo.components.LoadingScreen
 import com.thesis.arrivo.components.PhoneVisualTransformation
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.view_models.AuthViewModel
+import com.thesis.arrivo.view_models.EmployeeViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 
 @Composable
 fun CreateEmployeeView(mainScaffoldViewModel: MainScaffoldViewModel) {
+    val context = LocalContext.current
     val authViewModel = remember { AuthViewModel(mainScaffoldViewModel) }
+    val employeeViewModel = remember { EmployeeViewModel() }
 
     ConstraintLayout(
         modifier = Modifier
@@ -66,8 +73,11 @@ fun CreateEmployeeView(mainScaffoldViewModel: MainScaffoldViewModel) {
         val buttonTopGuideline = createGuidelineFromTop(0.87f)
         val buttonBottomGuideline = createGuidelineFromTop(0.95f)
 
-        CreateEmployeeButton(
-            mainScaffoldViewModel = mainScaffoldViewModel,
+        EmployeeCreateButton(
+            context = context,
+            navController = mainScaffoldViewModel.navController,
+            employeeViewModel = employeeViewModel,
+            authViewModel = authViewModel,
             modifier = Modifier
                 .constrainAs(buttonRef) {
                     top.linkTo(buttonTopGuideline)
@@ -78,6 +88,8 @@ fun CreateEmployeeView(mainScaffoldViewModel: MainScaffoldViewModel) {
                     height = Dimension.fillToConstraints
                 }
         )
+
+        LoadingScreen(enabled = employeeViewModel.actionInProgress)
     }
 }
 
@@ -145,14 +157,24 @@ private fun Forms(modifier: Modifier = Modifier, authViewModel: AuthViewModel) {
 
 
 @Composable
-private fun CreateEmployeeButton(
+private fun EmployeeCreateButton(
+    context: Context,
     modifier: Modifier = Modifier,
-    mainScaffoldViewModel: MainScaffoldViewModel
+    employeeViewModel: EmployeeViewModel,
+    authViewModel: AuthViewModel,
+    navController: NavHostController
 ) {
     AppButton(
-        onClick = { },
+        onClick = {
+            employeeViewModel.createEmployeeAccount(
+                context = context,
+                createAccountRequest = authViewModel.prepareEmployeeCreateRequest(),
+                onSuccess = { employeeViewModel.onAccountCreateSuccess(context, navController) },
+                onFailure = { error -> employeeViewModel.onAccountCreateFailure(context, error) },
+            )
+        },
         modifier = modifier,
-        text = "Create Account",
+        text = stringResource(R.string.create_account_button_text),
         icon = Icons.Filled.Add
     )
 }
@@ -192,6 +214,6 @@ fun BasicTextField(
 @Composable
 private fun Preview() {
     Theme.ArrivoTheme {
-        CreateEmployeeView(MainScaffoldViewModel(true, rememberNavController()))
+        CreateEmployeeView(MainScaffoldViewModel(LocalContext.current, true, rememberNavController()))
     }
 }
