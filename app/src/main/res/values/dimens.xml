@@ -37,4 +37,14 @@
     <dimen name="employees_icon_size">32dp</dimen>
     <dimen name="employees_data_text_size">20sp</dimen>
 
+    <!-- ALERT DIALOG -->
+    <dimen name="alert_dialog_window_width">200dp</dimen>
+    <dimen name="alert_dialog_close_icon_size">32dp</dimen>
+    <dimen name="alert_dialog_title_font_size">24sp</dimen>
+    <dimen name="alert_dialog_content_vertical_space">8dp</dimen>
+
+    <!-- EMPLOYEE DETAILS -->
+    <dimen name="employee_details_label_text_size">16sp</dimen>
+    <dimen name="employee_details_value_text_size">16sp</dimen>
+
 </resources>

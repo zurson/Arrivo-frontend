@@ -7,4 +7,18 @@ data class EmployeeResponse(
     var email: String,
     var phoneNumber: String,
     var status: EmployeeStatus,
-)
+) {
+
+    companion object {
+        fun emptyEmployeeResponse(): EmployeeResponse {
+            return EmployeeResponse(
+                id = 0,
+                firstName = "",
+                lastName = "",
+                email = "",
+                phoneNumber = "",
+                status = EmployeeStatus.DELETED
+            )
+        }
+    }
+}

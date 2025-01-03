@@ -33,6 +33,17 @@ class EmployeeViewModel : ViewModel() {
     val actionInProgress: Boolean
         get() = _actionInProgress.value
 
+    private val _showEmployeeDetails = mutableStateOf(false)
+    val showEmployeeDetails: Boolean get() = _showEmployeeDetails.value
+
+    private val _clickedEmployee = mutableStateOf(EmployeeResponse.emptyEmployeeResponse())
+    var clickedEmployee = _clickedEmployee.value
+
+
+    fun toggleShowEmployeeDetails() {
+        _showEmployeeDetails.value = !_showEmployeeDetails.value
+    }
+
 
     private fun setActionInProgress(status: Boolean) {
         _actionInProgress.value = status

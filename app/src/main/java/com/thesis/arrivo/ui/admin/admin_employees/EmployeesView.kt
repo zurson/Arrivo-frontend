@@ -55,6 +55,7 @@ import com.thesis.arrivo.view_models.MainScaffoldViewModel
 @Composable
 fun EmployeesView(mainScaffoldViewModel: MainScaffoldViewModel) {
     val context = LocalContext.current
+
     val employeeViewModel = remember { EmployeeViewModel() }
     val employees by employeeViewModel.employees.collectAsState()
 
@@ -76,6 +77,8 @@ fun EmployeesView(mainScaffoldViewModel: MainScaffoldViewModel) {
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
+
+        ShowEmployeeDetails(employeeViewModel)
 
         /* CONFIGURATION */
         val startGuideline = createGuidelineFromStart(Settings.START_END_PERCENTAGE)
@@ -123,6 +126,16 @@ fun EmployeesView(mainScaffoldViewModel: MainScaffoldViewModel) {
 
 
 @Composable
+fun ShowEmployeeDetails(employeeViewModel: EmployeeViewModel) {
+    if (employeeViewModel.showEmployeeDetails)
+        EmployeesDetailsAlertDialog(
+            emp = employeeViewModel.clickedEmployee,
+            onDismiss = { employeeViewModel.toggleShowEmployeeDetails() }
+        )
+}
+
+
+@Composable
 private fun EmployeesList(
     modifier: Modifier = Modifier,
     employeeViewModel: EmployeeViewModel,
@@ -148,8 +161,8 @@ private fun EmployeesList(
         ) {
             items(employees) { emp ->
                 EmployeeContainer(
-                    emp.firstName,
-                    emp.lastName
+                    employeeViewModel = employeeViewModel,
+                    employee = emp
                 )
             }
         }
@@ -159,20 +172,23 @@ private fun EmployeesList(
 
 @Composable
 private fun EmployeeContainer(
-    firstName: String,
-    lastName: String
+    employeeViewModel: EmployeeViewModel,
+    employee: EmployeeResponse
 ) {
     Column(
         modifier = Modifier
-            .clickable { }
-            .bounceClick()
             .fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .bounceClick()
+                .clickable {
+                    employeeViewModel.clickedEmployee = employee
+                    employeeViewModel.toggleShowEmployeeDetails()
+                },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -189,7 +205,7 @@ private fun EmployeeContainer(
                 )
 
                 Text(
-                    text = "$firstName $lastName",
+                    text = "${employee.firstName} ${employee.lastName}",
                     color = MaterialTheme.colorScheme.onSurface,
                     fontSize = dpToSp(R.dimen.employees_data_text_size),
                     fontWeight = FontWeight.Bold,
