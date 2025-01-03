@@ -11,6 +11,8 @@ class Settings {
         const val PHONE_NUMBER_MAX_LEN = 9
         const val PHONE_NUMBER_MASK = "000-000-000"
         const val PHONE_NUMBER_MASK_LETTER = '0'
+
+        const val AUTH_ACCOUNT_STATUS_CHECK_INTERVAL_MS: Long = 10_000
     }
 
 }

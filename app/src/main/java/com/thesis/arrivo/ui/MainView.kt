@@ -2,7 +2,12 @@ package com.thesis.arrivo.ui
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,6 +32,7 @@ import com.thesis.arrivo.view_models.MainScaffoldViewModel
 fun MainView() {
     val navHostController = rememberNavController()
     val mainScaffoldViewModel = MainScaffoldViewModel(
+        context = LocalContext.current,
         adminMode = true,
         navController = navHostController
     )
@@ -35,7 +41,6 @@ fun MainView() {
         navHostController = navHostController,
         mainScaffoldViewModel = mainScaffoldViewModel
     )
-
 }
 
 
@@ -44,42 +49,51 @@ private fun SetupMainScaffold(
     navHostController: NavHostController,
     mainScaffoldViewModel: MainScaffoldViewModel
 ) {
+    var destLoaded by remember { mutableStateOf(false) }
+    var startDestination: NavigationItem = NavigationItem.Login
+
+    mainScaffoldViewModel.getStartDestination { dest ->
+        startDestination = dest
+        destLoaded = true
+    }
+
     Theme.ArrivoTheme {
         MainScaffold(
             mainScaffoldViewModel = mainScaffoldViewModel
         ) { contentPadding ->
 
-            NavHost(
-                navController = navHostController,
-                startDestination = mainScaffoldViewModel.getStartDestination().route,
-                modifier = Modifier.padding(contentPadding)
-            ) {
-                /** User **/
-                composable(NavigationItem.TasksUser.route) { DeliveryView() }
-                composable(NavigationItem.MapUser.route) { MapView() }
-                composable(NavigationItem.AccidentsUser.route) { RoadAccidentView() }
-                composable(NavigationItem.ReportsUser.route) { YourAccidentsView() }
-                composable(NavigationItem.AccountUser.route) { AccountView() }
+            if (destLoaded) {
+                NavHost(
+                    navController = navHostController,
+                    startDestination = startDestination.route,
+                    modifier = Modifier.padding(contentPadding)
+                ) {
+                    /** User **/
+                    composable(NavigationItem.TasksUser.route) { DeliveryView() }
+                    composable(NavigationItem.MapUser.route) { MapView() }
+                    composable(NavigationItem.AccidentsUser.route) { RoadAccidentView() }
+                    composable(NavigationItem.ReportsUser.route) { YourAccidentsView() }
+                    composable(NavigationItem.AccountUser.route) { AccountView() }
 
-                /** Admin **/
-                composable(NavigationItem.AccidentsAdmin.route) { AccidentsView() }
-                composable(NavigationItem.TasksAdmin.route) { TasksView() }
+                    /** Admin **/
+                    composable(NavigationItem.AccidentsAdmin.route) { AccidentsView() }
+                    composable(NavigationItem.TasksAdmin.route) { TasksView() }
 
-                composable(NavigationItem.EmployeesAdmin.route) {
-                    EmployeesView(
-                        mainScaffoldViewModel
-                    )
+                    composable(NavigationItem.EmployeesAdmin.route) {
+                        EmployeesView(mainScaffoldViewModel)
+                    }
+                    composable(NavigationItem.CreateEmployeeAdmin.route) {
+                        CreateEmployeeView(mainScaffoldViewModel)
+                    }
+
+                    /** Authentication **/
+                    composable(NavigationItem.Login.route) {
+                        LoginView(mainScaffoldViewModel = mainScaffoldViewModel)
+                    }
                 }
-                composable(NavigationItem.CreateEmployeeAdmin.route) {
-                    CreateEmployeeView(
-                        mainScaffoldViewModel
-                    )
-                }
-
-                /** Authentication **/
-                composable(NavigationItem.Login.route) { LoginView(mainScaffoldViewModel = mainScaffoldViewModel) }
             }
 
+            mainScaffoldViewModel.startAuthListeners()
         }
     }
 }
