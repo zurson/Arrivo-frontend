@@ -28,16 +28,20 @@
     <string name="login_login_button_text">Login</string>
     <string name="login_help_message">Enter login details to continue</string>
 
-    <!-- Create Employee Account -->
+    <!-- Create or Edit Employee Account -->
     <string name="create_account_first_name_label">First name</string>
     <string name="create_account_last_name_label">Last name</string>
     <string name="create_account_email_label">Email address</string>
     <string name="create_account_phone_label">Phone number</string>
     <string name="create_account_success_message">Account created successfully!</string>
     <string name="create_account_redirect_button_text">New Account</string>
-    <string name="create_account_button_text">Create Account</string>
+    <string name="create_account_create_button_text">Create Account</string>
+    <string name="create_account_edit_button_text">Save</string>
 
     <!-- Employees List -->
     <string name="employees_list_edit_button_text">Edit</string>
+
+    <!-- Edit Employee Account -->
+    <string name="employee_edit_status_label">Employment status</string>
 
 </resources>

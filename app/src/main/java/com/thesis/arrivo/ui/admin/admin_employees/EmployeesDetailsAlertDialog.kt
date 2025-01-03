@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.employee.EmployeeResponse
 import com.thesis.arrivo.components.AppButton
@@ -19,7 +18,8 @@ import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
 fun EmployeesDetailsAlertDialog(
     modifier: Modifier = Modifier,
     emp: EmployeeResponse,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onEditButtonClick: () -> Unit
 ) {
     InfoAlertDialog(
         title = "${emp.firstName} ${emp.lastName}",
@@ -48,9 +48,7 @@ fun EmployeesDetailsAlertDialog(
         )
 
         AppButton(
-            onClick = {
-
-            },
+            onClick = { onEditButtonClick() },
             text = stringResource(R.string.employees_list_edit_button_text),
             icon = Icons.Outlined.Edit,
             modifier = Modifier

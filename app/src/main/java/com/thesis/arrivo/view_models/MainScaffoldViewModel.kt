@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.thesis.arrivo.activities.MainActivity
+import com.thesis.arrivo.communication.employee.EmployeeResponse
 import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.utilities.Settings.Companion.AUTH_ACCOUNT_STATUS_CHECK_INTERVAL_MS
 import com.thesis.arrivo.utilities.changeActivity
@@ -188,8 +189,16 @@ class MainScaffoldViewModel(
 
 
     /**
+     * Employee Edit
+     **/
+
+    var employeeToEdit = EmployeeResponse.emptyEmployeeResponse()
+
+
+    /**
      * Other
      **/
+
 
     fun onCreateEmployeeAccountRedirectButtonClick() {
         navigateTo(

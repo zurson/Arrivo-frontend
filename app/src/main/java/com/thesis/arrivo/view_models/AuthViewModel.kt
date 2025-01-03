@@ -13,6 +13,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.lifecycle.ViewModel
 import com.thesis.arrivo.communication.employee.EmployeeCreateAccountRequest
+import com.thesis.arrivo.communication.employee.EmployeeStatus
 import com.thesis.arrivo.components.FormType
 import com.thesis.arrivo.ui.authentication.FirebaseAuthManager
 import com.thesis.arrivo.utilities.Settings
@@ -28,6 +29,7 @@ class AuthViewModel(
     var email by mutableStateOf("")
     var password by mutableStateOf("")
     var repeatedPassword by mutableStateOf("")
+    var employmentStatus by mutableStateOf(EmployeeStatus.HIRED)
 
     var isErrorFirstName by mutableStateOf(false)
     var isErrorLastName by mutableStateOf(false)
@@ -163,6 +165,20 @@ class AuthViewModel(
 
     private fun filterPhoneNumber(input: String): String {
         return input.replace("[^0-9]".toRegex(), "")
+    }
+
+    /**
+    * Employee Edit Mode
+    **/
+
+    fun prepareToEdit() {
+        val emp = mainScaffoldViewModel.employeeToEdit
+
+        firstName = emp.firstName
+        lastName = emp.lastName
+        email = emp.email
+        phoneNumber = emp.phoneNumber
+        employmentStatus = emp.status
     }
 
 }

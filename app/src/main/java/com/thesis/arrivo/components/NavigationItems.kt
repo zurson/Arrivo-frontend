@@ -74,6 +74,10 @@ sealed class NavigationItem(
         route = "create_employee_admin"
     )
 
+    data object EditEmployeeAdmin : NavigationItem(
+        route = "edit_employee_admin"
+    )
+
     /** Login **/
 
     data object Login : NavigationItem(

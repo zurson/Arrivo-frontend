@@ -15,7 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.components.MainScaffold
 import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_accidents.AccidentsView
-import com.thesis.arrivo.ui.admin.admin_employees.CreateEmployeeView
+import com.thesis.arrivo.ui.admin.admin_employees.CreateEditEmployeeView
 import com.thesis.arrivo.ui.admin.admin_employees.EmployeesView
 import com.thesis.arrivo.ui.admin.admin_tasks.TasksView
 import com.thesis.arrivo.ui.authentication.LoginView
@@ -82,8 +82,13 @@ private fun SetupMainScaffold(
                     composable(NavigationItem.EmployeesAdmin.route) {
                         EmployeesView(mainScaffoldViewModel)
                     }
+
                     composable(NavigationItem.CreateEmployeeAdmin.route) {
-                        CreateEmployeeView(mainScaffoldViewModel)
+                        CreateEditEmployeeView(mainScaffoldViewModel, editMode = false)
+                    }
+
+                    composable(NavigationItem.EditEmployeeAdmin.route) {
+                        CreateEditEmployeeView(mainScaffoldViewModel, editMode = true)
                     }
 
                     /** Authentication **/

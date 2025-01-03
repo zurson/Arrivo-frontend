@@ -51,7 +51,6 @@ class EmployeeViewModel : ViewModel() {
 
 
     fun fetchEmployeesList(context: Context, onFailure: (ErrorResponse) -> Unit) {
-        println("FETCHING!")
         viewModelScope.launch {
             try {
                 setActionInProgress(true)
@@ -128,6 +127,13 @@ class EmployeeViewModel : ViewModel() {
             title = context.getString(R.string.error_title),
             errorResponse = error
         )
+    }
+
+
+    fun setEmployeeToEdit(
+        mainScaffoldViewModel: MainScaffoldViewModel,
+    ) {
+        mainScaffoldViewModel.employeeToEdit = clickedEmployee
     }
 
 }

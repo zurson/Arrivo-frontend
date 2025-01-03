@@ -27,7 +27,7 @@ import com.thesis.arrivo.utilities.dpToSp
 fun AppTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    keyboardType: KeyboardType,
+    keyboardType: KeyboardType = KeyboardType.Text,
     leadingIcon: ImageVector? = null,
     trailingIcon: ImageVector? = null,
     onTrailingIconClick: () -> Unit = {},

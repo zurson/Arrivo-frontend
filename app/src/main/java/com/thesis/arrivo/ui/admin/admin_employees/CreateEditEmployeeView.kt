@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -25,11 +24,13 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
+import com.thesis.arrivo.communication.employee.EmployeeStatus
 import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.AppTextField
 import com.thesis.arrivo.components.FormType
 import com.thesis.arrivo.components.LoadingScreen
 import com.thesis.arrivo.components.PhoneVisualTransformation
+import com.thesis.arrivo.components.AppSpinner
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.view_models.AuthViewModel
@@ -37,10 +38,15 @@ import com.thesis.arrivo.view_models.EmployeeViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 
 @Composable
-fun CreateEmployeeView(mainScaffoldViewModel: MainScaffoldViewModel) {
+fun CreateEditEmployeeView(
+    mainScaffoldViewModel: MainScaffoldViewModel,
+    editMode: Boolean = false
+) {
     val context = LocalContext.current
-    val authViewModel = remember { AuthViewModel(mainScaffoldViewModel) }
-    val employeeViewModel = remember { EmployeeViewModel() }
+    val employeeViewModel = EmployeeViewModel()
+    val authViewModel = AuthViewModel(mainScaffoldViewModel)
+
+    if (editMode) authViewModel.prepareToEdit()
 
     ConstraintLayout(
         modifier = Modifier
@@ -54,10 +60,14 @@ fun CreateEmployeeView(mainScaffoldViewModel: MainScaffoldViewModel) {
         /* FORMS LIST */
         val (formsListRef) = createRefs()
         val formsListTopGuideline = createGuidelineFromTop(0.1f)
-        val formsListBottomGuideline = createGuidelineFromTop(0.75f)
+        val formsListBottomGuideline = createGuidelineFromTop(
+            if (!editMode) 0.75f else 0.85f
+        )
 
         Forms(
+            editMode = editMode,
             authViewModel = authViewModel,
+            mainScaffoldViewModel = mainScaffoldViewModel,
             modifier = Modifier.constrainAs(formsListRef) {
                 top.linkTo(formsListTopGuideline)
                 bottom.linkTo(formsListBottomGuideline)
@@ -75,6 +85,7 @@ fun CreateEmployeeView(mainScaffoldViewModel: MainScaffoldViewModel) {
 
         EmployeeCreateButton(
             context = context,
+            editMode = editMode,
             navController = mainScaffoldViewModel.navController,
             employeeViewModel = employeeViewModel,
             authViewModel = authViewModel,
@@ -95,9 +106,14 @@ fun CreateEmployeeView(mainScaffoldViewModel: MainScaffoldViewModel) {
 
 
 @Composable
-private fun Forms(modifier: Modifier = Modifier, authViewModel: AuthViewModel) {
+private fun Forms(
+    modifier: Modifier = Modifier,
+    authViewModel: AuthViewModel,
+    editMode: Boolean,
+    mainScaffoldViewModel: MainScaffoldViewModel
+) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(24.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp),
         modifier = modifier
     ) {
         /**
@@ -152,6 +168,18 @@ private fun Forms(modifier: Modifier = Modifier, authViewModel: AuthViewModel) {
             errorMessage = authViewModel.emailErrorText,
             trailingIcon = Icons.Outlined.Close,
         )
+
+        /**
+         * Status - only in edit mode
+         **/
+        if (editMode) {
+            AppSpinner(
+                label = stringResource(R.string.employee_edit_status_label),
+                items = EmployeeStatus.entries.map { value -> value.toString() },
+                selectedItem = mainScaffoldViewModel.employeeToEdit.status.toString(),
+                onItemSelected = { authViewModel.employmentStatus = EmployeeStatus.valueOf(it) }
+            )
+        }
     }
 }
 
@@ -159,11 +187,16 @@ private fun Forms(modifier: Modifier = Modifier, authViewModel: AuthViewModel) {
 @Composable
 private fun EmployeeCreateButton(
     context: Context,
+    editMode: Boolean,
     modifier: Modifier = Modifier,
     employeeViewModel: EmployeeViewModel,
     authViewModel: AuthViewModel,
     navController: NavHostController
 ) {
+    val buttonText =
+        if (!editMode) stringResource(R.string.create_account_create_button_text)
+        else stringResource(R.string.create_account_edit_button_text)
+
     AppButton(
         onClick = {
             employeeViewModel.createEmployeeAccount(
@@ -174,7 +207,7 @@ private fun EmployeeCreateButton(
             )
         },
         modifier = modifier,
-        text = stringResource(R.string.create_account_button_text),
+        text = buttonText,
         icon = Icons.Filled.Add
     )
 }
@@ -214,6 +247,13 @@ fun BasicTextField(
 @Composable
 private fun Preview() {
     Theme.ArrivoTheme {
-        CreateEmployeeView(MainScaffoldViewModel(LocalContext.current, true, rememberNavController()))
+        CreateEditEmployeeView(
+            MainScaffoldViewModel(
+                LocalContext.current,
+                true,
+                rememberNavController(),
+            ),
+            editMode = true
+        )
     }
 }
