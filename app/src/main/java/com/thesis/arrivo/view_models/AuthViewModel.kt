@@ -14,6 +14,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.lifecycle.ViewModel
 import com.thesis.arrivo.communication.employee.EmployeeCreateAccountRequest
 import com.thesis.arrivo.communication.employee.EmployeeStatus
+import com.thesis.arrivo.communication.employee.EmployeeUpdateRequest
 import com.thesis.arrivo.components.FormType
 import com.thesis.arrivo.ui.authentication.FirebaseAuthManager
 import com.thesis.arrivo.utilities.Settings
@@ -88,6 +89,17 @@ class AuthViewModel(
             lastName = lastName,
             email = email,
             phoneNumber = phoneNumber
+        )
+    }
+
+
+    fun prepareEmployeeUpdateRequest(): EmployeeUpdateRequest {
+        return EmployeeUpdateRequest(
+            firstName = firstName,
+            lastName = lastName,
+            email = email,
+            phoneNumber = phoneNumber,
+            status = employmentStatus
         )
     }
 

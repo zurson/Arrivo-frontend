@@ -43,5 +43,6 @@
 
     <!-- Edit Employee Account -->
     <string name="employee_edit_status_label">Employment status</string>
+    <string name="employee_edit_success_message">Data updated successfully!</string>
 
 </resources>

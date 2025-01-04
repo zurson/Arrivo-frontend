@@ -18,6 +18,8 @@ class EmployeeRepository {
         id: Long,
         updateAccountRequest: EmployeeUpdateRequest
     ) {
+        println("UPDATE: $updateAccountRequest")
+        println("ID: $id")
         employeeService.updateEmployeeAccount(id, updateAccountRequest)
     }
 }

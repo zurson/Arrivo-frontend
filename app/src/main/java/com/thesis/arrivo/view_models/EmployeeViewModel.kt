@@ -65,16 +65,50 @@ class EmployeeViewModel : ViewModel() {
     }
 
 
-    fun createEmployeeAccount(
+    fun onCreateOrEditButtonClick(
         context: Context,
-        createAccountRequest: EmployeeCreateAccountRequest,
+        mainScaffoldViewModel: MainScaffoldViewModel,
+        authViewModel: AuthViewModel,
+        onSuccess: () -> Unit,
+        onFailure: (ErrorResponse) -> Unit,
+        editMode: Boolean
+    ) {
+        val request = if (editMode) {
+            EmployeeAccountOperation.Update(
+                id = mainScaffoldViewModel.employeeToEdit.id,
+                data = authViewModel.prepareEmployeeUpdateRequest()
+            )
+        } else {
+            EmployeeAccountOperation.Create(
+                data = authViewModel.prepareEmployeeCreateRequest()
+            )
+        }
+
+        handleEmployeeAccountOperation(
+            context = context,
+            operation = request,
+            onSuccess = onSuccess,
+            onFailure = onFailure
+        )
+    }
+
+    private fun handleEmployeeAccountOperation(
+        context: Context,
+        operation: EmployeeAccountOperation,
         onSuccess: () -> Unit,
         onFailure: (ErrorResponse) -> Unit
     ) {
         viewModelScope.launch {
             try {
                 setActionInProgress(true)
-                repository.createEmployeeAccount(createAccountRequest)
+                when (operation) {
+                    is EmployeeAccountOperation.Create -> {
+                        repository.createEmployeeAccount(operation.data)
+                    }
+                    is EmployeeAccountOperation.Update -> {
+                        repository.updateEmployeeAccount(operation.id, operation.data)
+                    }
+                }
                 onSuccess()
             } catch (e: Exception) {
                 onFailure(mapError(e, context))
@@ -84,44 +118,35 @@ class EmployeeViewModel : ViewModel() {
         }
     }
 
-
-    fun updateEmployeeAccount(
-        context: Context,
-        id: Long,
-        updateAccountRequest: EmployeeUpdateRequest,
-        onFailure: (ErrorResponse) -> Unit,
-        onSuccess: () -> Unit,
-    ) {
-        viewModelScope.launch {
-            try {
-                setActionInProgress(true)
-                repository.updateEmployeeAccount(id, updateAccountRequest)
-                onSuccess()
-            } catch (e: Exception) {
-                onFailure(mapError(e, context))
-            } finally {
-                setActionInProgress(false)
-            }
-        }
+    sealed class EmployeeAccountOperation {
+        data class Create(val data: EmployeeCreateAccountRequest) : EmployeeAccountOperation()
+        data class Update(val id: Long, val data: EmployeeUpdateRequest) : EmployeeAccountOperation()
     }
 
 
-    private fun showAccountCreateSuccessToast(context: Context) {
+
+    private fun showSuccessToast(context: Context, editMode: Boolean) {
+        val messageResId = if (editMode) {
+            R.string.employee_edit_success_message
+        } else {
+            R.string.create_account_success_message
+        }
+
         showToast(
             context = context,
-            text = context.getString(R.string.create_account_success_message),
+            text = context.getString(messageResId),
             toastLength = Toast.LENGTH_LONG
         )
     }
 
 
-    fun onAccountCreateSuccess(context: Context, navController: NavHostController) {
-        showAccountCreateSuccessToast(context)
-        navigateTo(navController, NavigationItem.CreateEmployeeAdmin)
+    fun onSuccess(context: Context, navController: NavHostController, editMode: Boolean) {
+        showSuccessToast(context, editMode)
+        navigateTo(navController, NavigationItem.EmployeesAdmin)
     }
 
 
-    fun onAccountCreateFailure(context: Context, error: ErrorResponse) {
+    fun onFailure(context: Context, error: ErrorResponse) {
         showErrorDialog(
             context = context,
             title = context.getString(R.string.error_title),

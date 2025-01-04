@@ -26,11 +26,11 @@ import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.employee.EmployeeStatus
 import com.thesis.arrivo.components.AppButton
+import com.thesis.arrivo.components.AppSpinner
 import com.thesis.arrivo.components.AppTextField
 import com.thesis.arrivo.components.FormType
 import com.thesis.arrivo.components.LoadingScreen
 import com.thesis.arrivo.components.PhoneVisualTransformation
-import com.thesis.arrivo.components.AppSpinner
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.view_models.AuthViewModel
@@ -88,6 +88,7 @@ fun CreateEditEmployeeView(
             editMode = editMode,
             navController = mainScaffoldViewModel.navController,
             employeeViewModel = employeeViewModel,
+            mainScaffoldViewModel = mainScaffoldViewModel,
             authViewModel = authViewModel,
             modifier = Modifier
                 .constrainAs(buttonRef) {
@@ -190,6 +191,7 @@ private fun EmployeeCreateButton(
     editMode: Boolean,
     modifier: Modifier = Modifier,
     employeeViewModel: EmployeeViewModel,
+    mainScaffoldViewModel: MainScaffoldViewModel,
     authViewModel: AuthViewModel,
     navController: NavHostController
 ) {
@@ -199,11 +201,13 @@ private fun EmployeeCreateButton(
 
     AppButton(
         onClick = {
-            employeeViewModel.createEmployeeAccount(
+            employeeViewModel.onCreateOrEditButtonClick(
                 context = context,
-                createAccountRequest = authViewModel.prepareEmployeeCreateRequest(),
-                onSuccess = { employeeViewModel.onAccountCreateSuccess(context, navController) },
-                onFailure = { error -> employeeViewModel.onAccountCreateFailure(context, error) },
+                mainScaffoldViewModel = mainScaffoldViewModel,
+                authViewModel = authViewModel,
+                onSuccess = { employeeViewModel.onSuccess(context, navController, editMode) },
+                onFailure = { error -> employeeViewModel.onFailure(context, error) },
+                editMode = editMode
             )
         },
         modifier = modifier,
