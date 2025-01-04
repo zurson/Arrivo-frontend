@@ -30,6 +30,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
+import com.thesis.arrivo.components.AppTextField
+import com.thesis.arrivo.components.PasswordTextField
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.AuthViewModel
@@ -40,6 +42,8 @@ import com.thesis.arrivo.view_models.MainScaffoldViewModel
 fun LoginView(mainScaffoldViewModel: MainScaffoldViewModel) {
     val context = LocalContext.current
     val authViewModel = AuthViewModel(mainScaffoldViewModel)
+
+    mainScaffoldViewModel.manageNavbarOnLogin()
 
     ConstraintLayout(
         modifier = Modifier
@@ -54,14 +58,15 @@ fun LoginView(mainScaffoldViewModel: MainScaffoldViewModel) {
         val infoBottomGuideline = createGuidelineFromTop(0.20f)
 
 
-        LoginImage(modifier = Modifier.constrainAs(infoImageRef) {
-            top.linkTo(infoTopGuideline)
-            bottom.linkTo(infoBottomGuideline)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            width = Dimension.fillToConstraints
-            height = Dimension.fillToConstraints
-        }
+        LoginImage(modifier = Modifier
+            .constrainAs(infoImageRef) {
+                top.linkTo(infoTopGuideline)
+                bottom.linkTo(infoBottomGuideline)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                width = Dimension.fillToConstraints
+                height = Dimension.fillToConstraints
+            }
             .padding(horizontal = 16.dp))
 
         LoginTitle(
@@ -100,11 +105,11 @@ fun LoginView(mainScaffoldViewModel: MainScaffoldViewModel) {
             }
 
         ) {
-            AuthTextField(
+            AppTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        horizontal = dimensionResource(R.dimen.auth_form_padding)
+                        horizontal = dimensionResource(R.dimen.text_filed_padding)
                     ),
                 keyboardType = KeyboardType.Email,
                 leadingIcon = Icons.Outlined.Email,
@@ -117,10 +122,10 @@ fun LoginView(mainScaffoldViewModel: MainScaffoldViewModel) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            AuthPasswordTextField(
+            PasswordTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = dimensionResource(R.dimen.auth_form_padding)),
+                    .padding(horizontal = dimensionResource(R.dimen.text_filed_padding)),
                 label = stringResource(R.string.login_password_label),
                 onValueChange = { authViewModel.password = it },
                 value = authViewModel.password,
@@ -144,10 +149,7 @@ fun LoginView(mainScaffoldViewModel: MainScaffoldViewModel) {
         /* Login Button */
 
         CustomOutlinedButton(
-            onClick = {
-                if (authViewModel.validateEmail() && authViewModel.validatePassword())
-                    authViewModel.loginViaEmail(context)
-            },
+            onClick = { authViewModel.onLoginButtonClick(context) },
             modifier = Modifier.constrainAs(loginButtonRef) {
                 top.linkTo(buttonsTopGuideline)
                 bottom.linkTo(buttonsBottomGuideline)
@@ -190,12 +192,14 @@ fun LoginView(mainScaffoldViewModel: MainScaffoldViewModel) {
 fun LoginImage(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(
-                topStart = 50.dp,
-                topEnd = 50.dp,
-                bottomStart = 50.dp,
-                bottomEnd = 50.dp
-            ))
+            .clip(
+                RoundedCornerShape(
+                    topStart = 50.dp,
+                    topEnd = 50.dp,
+                    bottomStart = 50.dp,
+                    bottomEnd = 50.dp
+                )
+            )
             .background(MaterialTheme.colorScheme.primary)
 
     )
@@ -235,7 +239,7 @@ fun LoginDescription(modifier: Modifier = Modifier) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Show() {
-    Theme.ArrivoTheme() {
-        LoginView(MainScaffoldViewModel(false, rememberNavController()))
+    Theme.ArrivoTheme {
+        LoginView(MainScaffoldViewModel(LocalContext.current, false, rememberNavController()))
     }
 }

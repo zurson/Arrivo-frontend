@@ -78,10 +78,17 @@ dependencies {
     implementation(libs.androidx.navigation.compose.v285)
 
     /** Firebase **/
-    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-auth")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
 
     /** Constraint Layout **/
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0")
+    implementation(libs.androidx.constraintlayout.compose)
+
+    /** Retrofit + Gson **/
+    implementation(libs.retrofit)
+    implementation(libs.retrofit2.converter.gson)
+
+    /** Coroutines **/
+    implementation(libs.kotlinx.coroutines.core)
 }

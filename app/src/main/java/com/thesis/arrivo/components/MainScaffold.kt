@@ -10,7 +10,6 @@ import com.thesis.arrivo.view_models.MainScaffoldViewModel
 
 @Composable
 fun MainScaffold(
-    navHostController: NavHostController,
     mainScaffoldViewModel: MainScaffoldViewModel,
     content: @Composable (PaddingValues) -> Unit
 ) {

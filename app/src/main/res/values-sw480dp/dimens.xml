@@ -16,12 +16,38 @@
     <dimen name="auth_divider_text_size">25sp</dimen>
     <dimen name="auth_terms_text_size">22sp</dimen>
 
-    <dimen name="auth_form_padding">100dp</dimen>
-    <dimen name="auth_form_label_text_size">20sp</dimen>
-    <dimen name="auth_form_text_size">24sp</dimen>
-    <dimen name="auth_form_ic_size">32dp</dimen>
-    <dimen name="auth_form_ic_padding">8dp</dimen>
+    <dimen name="form_label_text_size">20sp</dimen>
+    <dimen name="form_text_size">24sp</dimen>
+    <dimen name="form_ic_size">32dp</dimen>
+    <dimen name="form_ic_padding">8dp</dimen>
+    <dimen name="form_height">110dp</dimen>
+    <dimen name="form_error_size">20sp</dimen>
 
-    <dimen name="auth_form_error_size">20sp</dimen>
+    <!-- TEXT FIELD -->
+    <dimen name="text_filed_padding">50dp</dimen>
+
+    <!-- APP BUTTON -->
+    <dimen name="app_button_text_size">32sp</dimen>
+    <dimen name="app_button_icon_size">48sp</dimen>
+
+    <!-- PROGRESS INDICATOR -->
+    <dimen name="progress_indicator_size">64dp</dimen>
+
+    <!-- EMPLOYEE ACCOUNTS LIST -->
+    <dimen name="employees_icon_size">64dp</dimen>
+    <dimen name="employees_data_text_size">32sp</dimen>
+
+    <!-- ALERT DIALOG -->
+    <dimen name="alert_dialog_window_width">550dp</dimen>
+    <dimen name="alert_dialog_close_icon_size">48dp</dimen>
+    <dimen name="alert_dialog_title_font_size">32sp</dimen>
+    <dimen name="alert_dialog_content_vertical_space">16dp</dimen>
+
+    <!-- EMPLOYEE DETAILS -->
+    <dimen name="employee_details_label_text_size">28sp</dimen>
+    <dimen name="employee_details_value_text_size">28sp</dimen>
+    <dimen name="employee_details_edit_button_height">75dp</dimen>
+    <dimen name="employee_details_edit_button_horizontal_padding">75dp</dimen>
+    <dimen name="employee_details_edit_button_top_padding">48dp</dimen>
 
 </resources>

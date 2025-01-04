@@ -7,7 +7,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.thesis.arrivo.utilities.bounceClick
+import com.thesis.arrivo.components.bounceClick
 
 @Composable
 fun CustomOutlinedButton(

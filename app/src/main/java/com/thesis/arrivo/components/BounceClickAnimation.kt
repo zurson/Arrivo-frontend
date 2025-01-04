@@ -1,4 +1,4 @@
-package com.thesis.arrivo.utilities
+package com.thesis.arrivo.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
