@@ -91,4 +91,13 @@ dependencies {
 
     /** Coroutines **/
     implementation(libs.kotlinx.coroutines.core)
+
+    /** Google **/
+    implementation("com.google.android.gms:play-services-maps:19.0.0")
+    implementation("com.google.android.libraries.places:places:4.1.0") // NEW
+    implementation("com.google.maps.android:maps-compose:2.12.0")
+//    implementation(libs.places)
+//    implementation(libs.places.v330)
+//    implementation(libs.places.v320)
+//    implementation(libs.android.maps.compose)
 }

@@ -1,5 +1,6 @@
 package com.thesis.arrivo.ui
 
+import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.android.libraries.places.api.Places
 import com.thesis.arrivo.components.MainScaffold
 import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_accidents.AccidentsView
@@ -30,14 +32,16 @@ import com.thesis.arrivo.view_models.MainScaffoldViewModel
 
 @Composable
 fun MainView() {
+    val context = LocalContext.current
     val navHostController = rememberNavController()
     val mainScaffoldViewModel = MainScaffoldViewModel(
-        context = LocalContext.current,
+        context = context,
         adminMode = true,
         navController = navHostController
     )
 
     SetupMainScaffold(
+        context = context,
         navHostController = navHostController,
         mainScaffoldViewModel = mainScaffoldViewModel
     )
@@ -46,6 +50,7 @@ fun MainView() {
 
 @Composable
 private fun SetupMainScaffold(
+    context: Context,
     navHostController: NavHostController,
     mainScaffoldViewModel: MainScaffoldViewModel
 ) {
@@ -56,6 +61,13 @@ private fun SetupMainScaffold(
         startDestination = dest
         destLoaded = true
     }
+
+    val apiKey = "API_KEY"
+
+    if (!Places.isInitialized())
+        Places.initialize(context, apiKey)
+
+    val placesClient = Places.createClient(context)
 
     Theme.ArrivoTheme {
         MainScaffold(
@@ -77,7 +89,7 @@ private fun SetupMainScaffold(
 
                     /** Admin **/
                     composable(NavigationItem.AccidentsAdmin.route) { AccidentsView() }
-                    composable(NavigationItem.TasksAdmin.route) { TasksView() }
+                    composable(NavigationItem.TasksAdmin.route) { TasksView(placesClient) }
 
                     composable(NavigationItem.EmployeesAdmin.route) {
                         EmployeesView(mainScaffoldViewModel)
