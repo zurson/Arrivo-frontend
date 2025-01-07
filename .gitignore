@@ -163,4 +163,4 @@ google-services.json
 # Android Profiling
 *.hprof
 
-res/values/secrets.xml
+secrets.xml
