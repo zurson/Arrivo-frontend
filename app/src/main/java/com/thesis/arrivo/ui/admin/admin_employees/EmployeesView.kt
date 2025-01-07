@@ -131,7 +131,7 @@ fun EmployeesView(mainScaffoldViewModel: MainScaffoldViewModel) {
 
 
 @Composable
-fun ShowEmployeeDetails(
+private fun ShowEmployeeDetails(
     mainScaffoldViewModel: MainScaffoldViewModel,
     employeeViewModel: EmployeeViewModel
 ) {
@@ -142,6 +142,7 @@ fun ShowEmployeeDetails(
 
             onEditButtonClick = {
                 employeeViewModel.setEmployeeToEdit(mainScaffoldViewModel = mainScaffoldViewModel)
+                employeeViewModel.toggleShowEmployeeDetails()
                 navigateTo(
                     navController = mainScaffoldViewModel.navController,
                     navigationItem = NavigationItem.EditEmployeeAdmin

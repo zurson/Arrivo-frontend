@@ -2,6 +2,7 @@ package com.thesis.arrivo.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -17,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.TextStyle
 import com.thesis.arrivo.R
 import com.thesis.arrivo.utilities.dpToSp
@@ -28,7 +30,9 @@ fun AppSpinner(
     label: String,
     selectedItem: String,
     onItemSelected: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isError: Boolean = false,
+    errorMessage: String = ""
 ) {
     var expanded by remember { mutableStateOf(false) }
     var currentSelection by remember { mutableStateOf(selectedItem) }
@@ -70,6 +74,17 @@ fun AppSpinner(
                     errorContainerColor = MaterialTheme.colorScheme.background,
                     errorLeadingIconColor = MaterialTheme.colorScheme.error
                 ),
+                supportingText = {
+                    if (isError) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = errorMessage,
+                            color = MaterialTheme.colorScheme.error,
+                            fontSize = dpToSp(R.dimen.form_error_size)
+                        )
+                    }
+                },
+                isError = isError
             )
 
             ExposedDropdownMenu(
@@ -78,7 +93,14 @@ fun AppSpinner(
             ) {
                 items.forEach { item ->
                     DropdownMenuItem(
-                        text = { Text(text = item) },
+                        text = {
+                            Text(
+                                text = item,
+                                fontSize = dpToSp(R.dimen.app_spinner_item_text_size),
+                                modifier = Modifier
+                                    .padding(dimensionResource(R.dimen.app_spinner_item_padding))
+                            )
+                        },
                         onClick = {
                             currentSelection = item
                             onItemSelected(item)

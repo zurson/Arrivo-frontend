@@ -19,6 +19,7 @@ import com.thesis.arrivo.communication.ErrorResponse
 import com.thesis.arrivo.components.NavigationItem
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.Locale
 import kotlin.reflect.KClass
 
 fun runOnMainThread(
@@ -116,4 +117,9 @@ fun showErrorDialog(context: Context, title: String, errorResponse: ErrorRespons
         }
         .create()
         .show()
+}
+
+
+fun capitalize(value: String): String {
+    return value.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 }
