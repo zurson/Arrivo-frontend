@@ -1,4 +1,4 @@
-package com.thesis.arrivo.components
+package com.thesis.arrivo.utilities
 
 enum class FormType {
     FIRST_NAME,

@@ -28,7 +28,7 @@ import com.thesis.arrivo.communication.employee.EmployeeStatus
 import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.AppSpinner
 import com.thesis.arrivo.components.AppTextField
-import com.thesis.arrivo.components.FormType
+import com.thesis.arrivo.utilities.FormType
 import com.thesis.arrivo.components.LoadingScreen
 import com.thesis.arrivo.components.PhoneVisualTransformation
 import com.thesis.arrivo.ui.theme.Theme
