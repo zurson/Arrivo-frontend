@@ -19,6 +19,7 @@ import com.thesis.arrivo.ui.admin.admin_accidents.AccidentsView
 import com.thesis.arrivo.ui.admin.admin_employees.CreateEditEmployeeView
 import com.thesis.arrivo.ui.admin.admin_employees.EmployeesView
 import com.thesis.arrivo.ui.admin.admin_tasks.create_task.TasksView
+import com.thesis.arrivo.ui.admin.admin_tasks.tasks_list.TasksListView
 import com.thesis.arrivo.ui.authentication.LoginView
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.ui.user.user_account_view.AccountView
@@ -83,10 +84,11 @@ private fun SetupMainScaffold(
                     /** Admin **/
                     composable(NavigationItem.AccidentsAdmin.route) { AccidentsView() }
                     composable(NavigationItem.TasksAdmin.route) {
-                        TasksView(
+                        /*TasksView(
                             placesClient = placesClient,
                             navHostController = navHostController
-                        )
+                        )*/
+                        TasksListView(navHostController)
                     }
 
                     composable(NavigationItem.EmployeesAdmin.route) {
