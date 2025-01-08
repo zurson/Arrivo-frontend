@@ -31,7 +31,7 @@ fun AddProductAlertDialog(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.alert_dialog_content_vertical_space)),
         ) {
             AppSpinner(
-                items = newTaskViewModel.availableProducts.map { productResponse -> productResponse.name },
+                items = newTaskViewModel.getAvailableProducts().map { productResponse -> productResponse.name },
                 label = stringResource(R.string.add_product_spinner_label),
                 onItemSelected = { newTaskViewModel.onProductSelected(it) },
                 selectedItem = "",

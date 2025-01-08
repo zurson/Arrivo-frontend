@@ -51,6 +51,7 @@
     <string name="new_task_delivery_address_label">Delivery address</string>
     <string name="new_task_delivery_address_error_message">Delivery address is incorrect</string>
     <string name="new_task_products_section_title">Products</string>
+    <string name="new_task_create_success_message">Task created successfully!</string>
 
     <string name="new_task_no_products_text">Add first product!</string>
     <string name="new_task_create_task_button_text">Create Task</string>

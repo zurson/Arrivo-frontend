@@ -1,5 +1,6 @@
 package com.thesis.arrivo.ui.admin.admin_tasks
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,6 +50,7 @@ fun TasksView(
     placesClient: PlacesClient,
     navHostController: NavHostController
 ) {
+    val context = LocalContext.current
     val newTaskViewModel = remember { NewTaskViewModel(placesClient, navHostController) }
 
     ConstraintLayout(
@@ -87,6 +90,7 @@ fun TasksView(
         val buttonBottomGuideline = createGuidelineFromTop(0.96f)
 
         TaskCreateButton(newTaskViewModel = newTaskViewModel,
+            context = context,
             modifier = Modifier.constrainAs(buttonRef) {
                 top.linkTo(buttonTopGuideline)
                 bottom.linkTo(buttonBottomGuideline)
@@ -277,10 +281,11 @@ private fun ProductContainer(
 @Composable
 private fun TaskCreateButton(
     newTaskViewModel: NewTaskViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    context: Context
 ) {
     AppButton(
-        onClick = { newTaskViewModel.onTaskCreateButtonClick() },
+        onClick = { newTaskViewModel.onTaskCreateButtonClick(context) },
         text = stringResource(R.string.new_task_create_task_button_text),
         icon = Icons.Filled.Add,
         modifier = modifier

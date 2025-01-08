@@ -1,10 +1,14 @@
 package com.thesis.arrivo.view_models
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.AutocompletePrediction
@@ -13,17 +17,37 @@ import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.maps.android.compose.CameraPositionState
-import com.thesis.arrivo.ui.admin.admin_tasks.Product
+import com.thesis.arrivo.R
+import com.thesis.arrivo.communication.ErrorResponse
 import com.thesis.arrivo.communication.available_products.AvailableProduct
+import com.thesis.arrivo.communication.available_products.AvailableProductsRepository
+import com.thesis.arrivo.communication.task.TaskCreateRequest
+import com.thesis.arrivo.communication.task.TaskRepository
+import com.thesis.arrivo.components.NavigationItem
+import com.thesis.arrivo.ui.admin.admin_tasks.Product
+import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.capitalize
+import com.thesis.arrivo.utilities.mapError
+import com.thesis.arrivo.utilities.navigateTo
+import com.thesis.arrivo.utilities.showErrorDialog
+import com.thesis.arrivo.utilities.showToast
+import kotlinx.coroutines.launch
 
 class NewTaskViewModel(
     val placesClient: PlacesClient,
+    val navHostController: NavHostController
 ) : ViewModel() {
+
+    private val taskRepository: TaskRepository by lazy { TaskRepository() }
+    private val availableProductsRepository: AvailableProductsRepository by lazy { AvailableProductsRepository() }
 
     companion object {
         val DEFAULT_LOCATION: LatLng = LatLng(52.2370, 21.0175)
         const val DEFAULT_ZOOM: Float = 17f
+
+        private var _availableProducts: List<AvailableProduct> = emptyList()
+        private val availableProducts: List<AvailableProduct>
+            get() = _availableProducts
     }
 
 
@@ -31,39 +55,32 @@ class NewTaskViewModel(
      * Available products
      **/
 
-    private var _availableProducts: List<AvailableProduct> = emptyList()
-    val availableProducts: List<AvailableProduct>
-        get() = _availableProducts
+
+    fun getAvailableProducts(): List<AvailableProduct> = availableProducts
+
 
     private fun fetchAvailableProducts() {
-        val mockProducts = listOf(
-            AvailableProduct("Apple juice"),
-            AvailableProduct("Orange juice"),
-            AvailableProduct("Plump juice"),
-            AvailableProduct("Grape juice"),
-            AvailableProduct("Peach juice"),
-            AvailableProduct("Strawberry juice"),
-            AvailableProduct("Empty boxes"),
-            AvailableProduct("Glasses"),
-            AvailableProduct("Air fryer"),
-            AvailableProduct("Cooker"),
-            AvailableProduct("Fridge"),
+        if (availableProducts.isNotEmpty()) return
 
-        )
-
-        _availableProducts = mockProducts
+        println("Fetching available products...")
+        viewModelScope.launch {
+            try {
+                _availableProducts = availableProductsRepository.getAllAvailableProducts()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
-
     init {
-        if (availableProducts.isEmpty())
-            fetchAvailableProducts()
+        fetchAvailableProducts()
     }
 
 
     /**
      * Add product
      **/
+
 
     private val _showAddProductDialog = mutableStateOf(false)
     val showAddProductDialog: Boolean
@@ -171,6 +188,7 @@ class NewTaskViewModel(
      * Products
      **/
 
+
     private val _products = mutableStateListOf<Product>()
     var products: MutableList<Product>
         get() = _products
@@ -183,6 +201,7 @@ class NewTaskViewModel(
     /**
      * Location search
      **/
+
 
     private val _showLocationSearchDialog = mutableStateOf(false)
     val showLocationSearchDialog: Boolean
@@ -307,27 +326,91 @@ class NewTaskViewModel(
      * Create Task
      **/
 
+
+    var setActionInProgress by mutableStateOf(false)
+
+    private fun setActionInProgress(status: Boolean) {
+        setActionInProgress = status
+    }
+
     var taskTitleError by mutableStateOf(false)
     var deliveryAddressError by mutableStateOf(false)
 
-    fun onTaskCreateButtonClick() {
+    fun onTaskCreateButtonClick(context: Context) {
+        if (!validateTaskCreateConditions())
+            return
+
+        sendTaskCreateRequest(context)
+    }
+
+
+    private fun validateTaskCreateConditions(): Boolean {
         if (taskTitle.isEmpty()) {
             taskTitleError = true
-            return
+            return false
         }
 
         if (!isLocationSelected) {
             deliveryAddressError = true
-            return
+            return false
         }
 
+        return true
+    }
 
+
+    private fun sendTaskCreateRequest(context: Context) {
+        viewModelScope.launch {
+            try {
+                setActionInProgress(true)
+                taskRepository.createTask(createTaskCreateRequest())
+                onSuccess(context)
+            } catch (e: Exception) {
+                onFailure(context, mapError(e, context))
+            } finally {
+                setActionInProgress(false)
+            }
+        }
+    }
+
+
+    private fun createTaskCreateRequest(): TaskCreateRequest {
+        return TaskCreateRequest(
+            title = taskTitle,
+            location = Location(
+                latitude = selectedLocation.latitude,
+                longitude = selectedLocation.longitude
+            ),
+            addressText = finalAddress,
+            products = products
+        )
+    }
+
+
+    private fun onSuccess(context: Context) {
+        showToast(
+            context = context,
+            text = context.getString(R.string.new_task_create_success_message),
+            toastLength = Toast.LENGTH_LONG,
+        )
+
+        navigateTo(navHostController, NavigationItem.TasksAdmin)
+    }
+
+
+    private fun onFailure(context: Context, error: ErrorResponse) {
+        showErrorDialog(
+            context = context,
+            title = context.getString(R.string.error_title),
+            errorResponse = error
+        )
     }
 
 
     /**
      * Other
      **/
+
 
     fun getFullAddress(prediction: AutocompletePrediction): String {
         val fullAddress = prediction.getFullText(null).toString()
