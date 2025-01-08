@@ -27,17 +27,19 @@ import com.thesis.arrivo.utilities.dpToSp
 fun AppTextField(
     value: String,
     onValueChange: (String) -> Unit,
+    label: String?,
+    errorMessage: String = "",
     keyboardType: KeyboardType = KeyboardType.Text,
     leadingIcon: ImageVector? = null,
     trailingIcon: ImageVector? = null,
     onTrailingIconClick: () -> Unit = {},
     onLeadingIconClick: () -> Unit = {},
-    label: String,
     modifier: Modifier = Modifier,
     isError: Boolean = false,
-    errorMessage: String,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    maxLength: Int? = null
+    maxLength: Int? = null,
+    readOnly: Boolean = false,
+    maxLines: Int = 1,
 ) {
 
     OutlinedTextField(
@@ -45,6 +47,8 @@ fun AppTextField(
         modifier = modifier,
         value = value,
         singleLine = true,
+        readOnly = readOnly,
+        maxLines = maxLines,
         textStyle = TextStyle.Default.copy(
             fontSize = dpToSp(R.dimen.form_text_size)
         ),
@@ -62,7 +66,10 @@ fun AppTextField(
             focusedContainerColor = MaterialTheme.colorScheme.background,
             unfocusedContainerColor = MaterialTheme.colorScheme.background,
             errorContainerColor = MaterialTheme.colorScheme.background,
-            errorLeadingIconColor = MaterialTheme.colorScheme.error
+            errorLeadingIconColor = MaterialTheme.colorScheme.error,
+            errorTrailingIconColor = MaterialTheme.colorScheme.error,
+            focusedTrailingIconColor = MaterialTheme.colorScheme.onBackground,
+            unfocusedTrailingIconColor = MaterialTheme.colorScheme.onBackground
         ),
         leadingIcon = {
             leadingIcon?.let {
@@ -97,10 +104,12 @@ fun AppTextField(
             }
         },
         onValueChange = onValueChange,
-        label = { Text(
-            text = label,
-            fontSize = dpToSp(R.dimen.form_label_text_size)
-        ) },
+        label = { label?.let{
+            Text(
+                text = label,
+                fontSize = dpToSp(R.dimen.form_label_text_size)
+            )
+        } },
         supportingText = {
             if (isError) {
                 Text(

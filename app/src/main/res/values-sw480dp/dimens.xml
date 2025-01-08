@@ -26,6 +26,10 @@
     <!-- TEXT FIELD -->
     <dimen name="text_filed_padding">50dp</dimen>
 
+    <!-- APP SPINNER -->
+    <dimen name="app_spinner_item_text_size">24sp</dimen>
+    <dimen name="app_spinner_item_padding">16dp</dimen>
+
     <!-- APP BUTTON -->
     <dimen name="app_button_text_size">32sp</dimen>
     <dimen name="app_button_icon_size">48sp</dimen>
@@ -49,5 +53,22 @@
     <dimen name="employee_details_edit_button_height">75dp</dimen>
     <dimen name="employee_details_edit_button_horizontal_padding">75dp</dimen>
     <dimen name="employee_details_edit_button_top_padding">48dp</dimen>
+
+    <!-- NEW TASK -->
+    <dimen name="new_task_products_section_title_text_size">48dp</dimen>
+    <dimen name="new_task_no_products_message_text_size">40sp</dimen>
+    <dimen name="new_task_products_list_vertical_padding">72dp</dimen>
+    <dimen name="new_task_product_add_button_icon_size">72dp</dimen>
+    <dimen name="new_task_product_details_text_size">32sp</dimen>
+    <dimen name="new_task_product_details_name_end_padding">64dp</dimen>
+    <dimen name="new_task_product_delete_icon_size">48dp</dimen>
+
+    <dimen name="loc_search_dialog_map_height">400dp</dimen>
+    <dimen name="loc_search_dialog_button_top_padding">32dp</dimen>
+    <dimen name="loc_search_dialog_predictions_text_size">24sp</dimen>
+    <dimen name="loc_search_dialog_predictions_padding">16dp</dimen>
+
+    <dimen name="product_delete_confirmation_product_details_text_size">32sp</dimen>
+    <dimen name="product_delete_confirmation_product_buttons_horizontal_padding">32dp</dimen>
 
 </resources>

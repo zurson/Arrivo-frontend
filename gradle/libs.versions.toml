@@ -4,6 +4,8 @@ constraintlayoutCompose = "1.1.0"
 converterGson = "2.9.0"
 coreKtxVersion = "1.13.1"
 firebaseBom = "33.7.0"
+googlePlaces = "3.3.0"
+googlePlacesVersion = "3.2.0"
 gson = "2.11.0"
 kotlin = "1.9.0"
 coreKtx = "1.15.0"
@@ -15,13 +17,16 @@ lifecycleRuntimeKtx = "2.8.6"
 activityCompose = "1.9.3"
 composeBom = "2024.04.01"
 appcompat = "1.7.0"
+mapsCompose = "6.2.1"
 materialIconsExtended = "1.7.6"
 navigationComposeVersion = "2.8.5"
 navigationRuntimeKtx = "2.8.4"
 navigationCompose = "2.8.4"
+places = "4.1.0"
 retrofit = "2.11.0"
 
 [libraries]
+android-maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-ktx-v1131 = { module = "androidx.core:core-ktx", version.ref = "coreKtxVersion" }
@@ -49,6 +54,11 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
+maps-compose = { module = "com.google.maps.android:maps-compose" }
+places = { module = "com.google.android.libraries.places:places", version.ref = "places" }
+places-v320 = { module = "com.google.android.libraries.places:places", version.ref = "googlePlacesVersion" }
+places-v330 = { module = "com.google.android.libraries.places:places", version.ref = "googlePlaces" }
+play-services-maps = { module = "com.google.android.gms:play-services-maps" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit2-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 

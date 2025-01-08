@@ -43,7 +43,6 @@ fun AppButton(
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(4.dp)
         ) {
             val (textRef, iconRef) = createRefs()
             val separatorGuideline = createGuidelineFromStart(if (icon != null) 0.90f else 1f)
