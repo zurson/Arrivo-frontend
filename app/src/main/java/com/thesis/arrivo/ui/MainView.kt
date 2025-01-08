@@ -82,7 +82,12 @@ private fun SetupMainScaffold(
 
                     /** Admin **/
                     composable(NavigationItem.AccidentsAdmin.route) { AccidentsView() }
-                    composable(NavigationItem.TasksAdmin.route) { TasksView(placesClient = placesClient) }
+                    composable(NavigationItem.TasksAdmin.route) {
+                        TasksView(
+                            placesClient = placesClient,
+                            navHostController = navHostController
+                        )
+                    }
 
                     composable(NavigationItem.EmployeesAdmin.route) {
                         EmployeesView(mainScaffoldViewModel)

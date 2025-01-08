@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.navigation.NavHostController
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.thesis.arrivo.R
 import com.thesis.arrivo.components.AppButton
@@ -44,9 +45,10 @@ import com.thesis.arrivo.view_models.NewTaskViewModel
 
 @Composable
 fun TasksView(
-    placesClient: PlacesClient
+    placesClient: PlacesClient,
+    navHostController: NavHostController
 ) {
-    val newTaskViewModel = remember { NewTaskViewModel(placesClient) }
+    val newTaskViewModel = remember { NewTaskViewModel(placesClient, navHostController) }
 
     ConstraintLayout(
         modifier = Modifier
