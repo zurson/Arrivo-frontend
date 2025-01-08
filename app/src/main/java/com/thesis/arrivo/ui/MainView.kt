@@ -18,7 +18,7 @@ import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_accidents.AccidentsView
 import com.thesis.arrivo.ui.admin.admin_employees.CreateEditEmployeeView
 import com.thesis.arrivo.ui.admin.admin_employees.EmployeesView
-import com.thesis.arrivo.ui.admin.admin_tasks.TasksView
+import com.thesis.arrivo.ui.admin.admin_tasks.create_task.TasksView
 import com.thesis.arrivo.ui.authentication.LoginView
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.ui.user.user_account_view.AccountView

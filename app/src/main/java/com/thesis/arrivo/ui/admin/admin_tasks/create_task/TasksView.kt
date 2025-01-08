@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.admin.admin_tasks
+package com.thesis.arrivo.ui.admin.admin_tasks.create_task
 
 import android.content.Context
 import androidx.compose.foundation.background

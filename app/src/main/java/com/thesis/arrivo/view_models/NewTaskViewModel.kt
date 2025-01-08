@@ -24,7 +24,7 @@ import com.thesis.arrivo.communication.available_products.AvailableProductsRepos
 import com.thesis.arrivo.communication.task.TaskCreateRequest
 import com.thesis.arrivo.communication.task.TaskRepository
 import com.thesis.arrivo.components.NavigationItem
-import com.thesis.arrivo.ui.admin.admin_tasks.Product
+import com.thesis.arrivo.ui.admin.admin_tasks.create_task.Product
 import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.mapError
