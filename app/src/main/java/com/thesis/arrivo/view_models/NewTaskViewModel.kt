@@ -14,7 +14,7 @@ import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRe
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.maps.android.compose.CameraPositionState
 import com.thesis.arrivo.ui.admin.admin_tasks.Product
-import com.thesis.arrivo.ui.admin.admin_tasks.ProductResponse
+import com.thesis.arrivo.communication.available_products.AvailableProduct
 import com.thesis.arrivo.utilities.capitalize
 
 class NewTaskViewModel(
@@ -31,23 +31,23 @@ class NewTaskViewModel(
      * Available products
      **/
 
-    private var _availableProducts: List<ProductResponse> = emptyList()
-    val availableProducts: List<ProductResponse>
+    private var _availableProducts: List<AvailableProduct> = emptyList()
+    val availableProducts: List<AvailableProduct>
         get() = _availableProducts
 
     private fun fetchAvailableProducts() {
         val mockProducts = listOf(
-            ProductResponse("Apple juice"),
-            ProductResponse("Orange juice"),
-            ProductResponse("Plump juice"),
-            ProductResponse("Grape juice"),
-            ProductResponse("Peach juice"),
-            ProductResponse("Strawberry juice"),
-            ProductResponse("Empty boxes"),
-            ProductResponse("Glasses"),
-            ProductResponse("Air fryer"),
-            ProductResponse("Cooker"),
-            ProductResponse("Fridge"),
+            AvailableProduct("Apple juice"),
+            AvailableProduct("Orange juice"),
+            AvailableProduct("Plump juice"),
+            AvailableProduct("Grape juice"),
+            AvailableProduct("Peach juice"),
+            AvailableProduct("Strawberry juice"),
+            AvailableProduct("Empty boxes"),
+            AvailableProduct("Glasses"),
+            AvailableProduct("Air fryer"),
+            AvailableProduct("Cooker"),
+            AvailableProduct("Fridge"),
 
         )
 
