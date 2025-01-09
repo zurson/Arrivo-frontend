@@ -43,8 +43,8 @@ import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.employee.EmployeeResponse
 import com.thesis.arrivo.components.AppButton
+import com.thesis.arrivo.components.LoadingScreen
 import com.thesis.arrivo.components.NavigationItem
-import com.thesis.arrivo.components.ProgressIndicator
 import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.Settings
@@ -126,6 +126,7 @@ fun EmployeesView(mainScaffoldViewModel: MainScaffoldViewModel) {
                 }
         )
 
+        LoadingScreen(enabled = employeeViewModel.actionInProgress)
     }
 }
 
@@ -166,11 +167,6 @@ private fun EmployeesList(
             .background(MaterialTheme.colorScheme.surfaceContainerHigh),
         contentAlignment = Alignment.Center
     ) {
-        if (employeeViewModel.actionInProgress) {
-            ProgressIndicator()
-            return
-        }
-
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(32.dp),
             modifier = Modifier
