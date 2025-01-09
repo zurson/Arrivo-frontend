@@ -58,9 +58,15 @@ sealed class NavigationItem(
         icon = Icons.Outlined.ReportProblem
     )
 
-    data object TasksAdmin : NavigationItem(
-        route = "tasks_admin",
-        title = R.string.nav_tasks_label_admin,
+    data object TasksListAdmin : NavigationItem(
+        route = "tasks_list_admin",
+        title = R.string.nav_tasks_list_label_admin,
+        icon = Icons.Outlined.Task
+    )
+
+    data object TaskCreateAdmin : NavigationItem(
+        route = "task_create_admin",
+        title = R.string.nav_task_create_label_admin,
         icon = Icons.Outlined.Task
     )
 

@@ -163,7 +163,7 @@ private fun EmployeesList(
         modifier = modifier
             .fillMaxSize()
             .clip(RoundedCornerShape(15.dp))
-            .background(MaterialTheme.colorScheme.surface),
+            .background(MaterialTheme.colorScheme.surfaceContainerHighest),
         contentAlignment = Alignment.Center
     ) {
         if (employeeViewModel.actionInProgress) {

@@ -3,8 +3,8 @@ package com.thesis.arrivo.communication.task
 import com.thesis.arrivo.communication.RetrofitInstance
 import retrofit2.http.Body
 
-class TaskRepository {
-    private val taskService = RetrofitInstance.taskService
+class TasksRepository {
+    private val taskService = RetrofitInstance.tasksService
 
     suspend fun getAllTasks(): List<Task> {
         return taskService.getAllTasks()

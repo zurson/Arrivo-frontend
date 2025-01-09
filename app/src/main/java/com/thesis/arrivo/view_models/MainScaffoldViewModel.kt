@@ -40,7 +40,7 @@ class MainScaffoldViewModel(
 
     private val navbarElementsAdmin = listOf(
         NavigationItem.AccidentsAdmin,
-        NavigationItem.TasksAdmin,
+        NavigationItem.TasksListAdmin,
         NavigationItem.EmployeesAdmin,
     )
 

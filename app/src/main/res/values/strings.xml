@@ -15,7 +15,8 @@
 
     <!-- NavBar - Admin -->
     <string name="nav_accidents_label_admin">Accidents</string>
-    <string name="nav_tasks_label_admin">Tasks</string>
+    <string name="nav_tasks_list_label_admin">Tasks List</string>
+    <string name="nav_task_create_label_admin">Create Task</string>
     <string name="nav_employees_label_admin">Employees</string>
 
     <!-- LoginView -->

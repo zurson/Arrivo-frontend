@@ -22,7 +22,7 @@ import com.thesis.arrivo.communication.ErrorResponse
 import com.thesis.arrivo.communication.available_products.AvailableProduct
 import com.thesis.arrivo.communication.available_products.AvailableProductsRepository
 import com.thesis.arrivo.communication.task.TaskCreateRequest
-import com.thesis.arrivo.communication.task.TaskRepository
+import com.thesis.arrivo.communication.task.TasksRepository
 import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_tasks.create_task.Product
 import com.thesis.arrivo.utilities.Location
@@ -34,11 +34,11 @@ import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.launch
 
 class NewTaskViewModel(
-    val placesClient: PlacesClient,
-    val navHostController: NavHostController
+    private val placesClient: PlacesClient,
+    private val navHostController: NavHostController
 ) : ViewModel() {
 
-    private val taskRepository: TaskRepository by lazy { TaskRepository() }
+    private val tasksRepository: TasksRepository by lazy { TasksRepository() }
     private val availableProductsRepository: AvailableProductsRepository by lazy { AvailableProductsRepository() }
 
     companion object {
@@ -363,7 +363,7 @@ class NewTaskViewModel(
         viewModelScope.launch {
             try {
                 setActionInProgress(true)
-                taskRepository.createTask(createTaskCreateRequest())
+                tasksRepository.createTask(createTaskCreateRequest())
                 onSuccess(context)
             } catch (e: Exception) {
                 onFailure(context, mapError(e, context))
@@ -394,7 +394,7 @@ class NewTaskViewModel(
             toastLength = Toast.LENGTH_LONG,
         )
 
-        navigateTo(navHostController, NavigationItem.TasksAdmin)
+        navigateTo(navHostController, NavigationItem.TasksListAdmin, true)
     }
 
 

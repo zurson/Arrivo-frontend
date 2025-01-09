@@ -46,7 +46,7 @@ import com.thesis.arrivo.view_models.NewTaskViewModel
 
 
 @Composable
-fun TasksView(
+fun TaskCreateView(
     placesClient: PlacesClient,
     navHostController: NavHostController
 ) {
