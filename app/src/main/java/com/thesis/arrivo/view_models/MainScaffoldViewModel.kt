@@ -9,7 +9,10 @@ import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.thesis.arrivo.activities.MainActivity
 import com.thesis.arrivo.communication.employee.EmployeeResponse
+import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.components.NavigationItem
+import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskToEdit
+import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.Settings.Companion.AUTH_ACCOUNT_STATUS_CHECK_INTERVAL_MS
 import com.thesis.arrivo.utilities.changeActivity
 import com.thesis.arrivo.utilities.navigateTo
@@ -192,7 +195,19 @@ class MainScaffoldViewModel(
      * Employee Edit
      **/
 
+
     var employeeToEdit = EmployeeResponse.emptyEmployeeResponse()
+
+
+    /**
+     * Employee Edit
+     **/
+
+    var taskToEdit: TaskToEdit = TaskToEdit(
+        task = Task.emptyTask(),
+        address = "",
+        location = Location(0.0, 0.0)
+    )
 
 
     /**

@@ -12,7 +12,7 @@ data class EmployeeResponse(
     companion object {
         fun emptyEmployeeResponse(): EmployeeResponse {
             return EmployeeResponse(
-                id = 0,
+                id = -1,
                 firstName = "",
                 lastName = "",
                 email = "",

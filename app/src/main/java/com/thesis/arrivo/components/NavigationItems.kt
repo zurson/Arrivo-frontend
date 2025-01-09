@@ -64,16 +64,18 @@ sealed class NavigationItem(
         icon = Icons.Outlined.Task
     )
 
-    data object TaskCreateAdmin : NavigationItem(
-        route = "task_create_admin",
-        title = R.string.nav_task_create_label_admin,
-        icon = Icons.Outlined.Task
-    )
-
     data object EmployeesAdmin : NavigationItem(
         route = "employees_admin",
         title = R.string.nav_employees_label_admin,
         icon = Icons.Outlined.Person
+    )
+
+    data object TaskCreateAdmin : NavigationItem(
+        route = "task_create_admin",
+    )
+
+    data object TaskEditAdmin : NavigationItem(
+        route = "task_edit_admin",
     )
 
     data object CreateEmployeeAdmin : NavigationItem(

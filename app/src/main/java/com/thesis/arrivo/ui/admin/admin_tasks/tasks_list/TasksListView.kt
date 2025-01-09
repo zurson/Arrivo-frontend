@@ -47,12 +47,13 @@ import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.dpToSp
+import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.TasksListViewModel
 
 @Composable
-fun TasksListView(navHostController: NavHostController) {
+fun TasksListView(mainScaffoldViewModel: MainScaffoldViewModel) {
     val context = LocalContext.current
-    val tasksListViewModel = remember { TasksListViewModel(navHostController, context) }
+    val tasksListViewModel = remember { TasksListViewModel(context, mainScaffoldViewModel) }
 
     ConstraintLayout(
         modifier = Modifier
@@ -123,7 +124,7 @@ fun ShowTaskDetailsDialog(tasksListViewModel: TasksListViewModel) {
         TaskDetailsDialog(
             task = tasksListViewModel.selectedTask,
             onDismiss = { tasksListViewModel.onTaskDismiss() },
-            onEditButtonClick = { }
+            onEditButtonClick = { tasksListViewModel.onTaskEditButtonClick() }
         )
     }
 }
@@ -459,8 +460,8 @@ private fun Filter(
 @Preview
 @Composable
 private fun Preview() {
-    Theme.ArrivoTheme {
-        TasksListView(rememberNavController())
+//    Theme.ArrivoTheme {
+//        TasksListView(MainScaffoldViewModel())
 //        TaskContainer(
 //            task = Task(
 //                status = TaskStatus.UNASSIGNED,
@@ -472,5 +473,5 @@ private fun Preview() {
 //                employee = null,
 //            )
 //        )
-    }
+//    }
 }

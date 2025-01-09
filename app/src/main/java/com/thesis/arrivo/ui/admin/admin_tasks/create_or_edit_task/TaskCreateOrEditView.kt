@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.admin.admin_tasks.create_task
+package com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task
 
 import android.content.Context
 import androidx.compose.foundation.background
@@ -34,7 +34,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.navigation.NavHostController
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.thesis.arrivo.R
 import com.thesis.arrivo.components.AppButton
@@ -42,16 +41,22 @@ import com.thesis.arrivo.components.AppTextField
 import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
-import com.thesis.arrivo.view_models.NewTaskViewModel
+import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.TaskManagerViewModel
 
 
 @Composable
-fun TaskCreateView(
+fun TaskCreateOrEditView(
     placesClient: PlacesClient,
-    navHostController: NavHostController
+    mainScaffoldViewModel: MainScaffoldViewModel,
+    editMode: Boolean
 ) {
     val context = LocalContext.current
-    val newTaskViewModel = remember { NewTaskViewModel(placesClient, navHostController) }
+    val taskManagerViewModel =
+        remember { TaskManagerViewModel(placesClient, mainScaffoldViewModel) }
+
+    if (editMode)
+        taskManagerViewModel.prepareToEdit()
 
     ConstraintLayout(
         modifier = Modifier
@@ -59,9 +64,9 @@ fun TaskCreateView(
             .background(MaterialTheme.colorScheme.background)
     ) {
 
-        ShowProductAddAlertDialog(newTaskViewModel = newTaskViewModel)
-        ShowLocationSearchDialog(newTaskViewModel = newTaskViewModel)
-        ShowProductDeleteConfirmationDialog(newTaskViewModel = newTaskViewModel)
+        ShowProductAddAlertDialog(taskManagerViewModel = taskManagerViewModel)
+        ShowLocationSearchDialog(taskManagerViewModel = taskManagerViewModel)
+        ShowProductDeleteConfirmationDialog(taskManagerViewModel = taskManagerViewModel)
 
         /* CONFIGURATION */
         val startGuideline = createGuidelineFromStart(Settings.START_END_PERCENTAGE)
@@ -73,7 +78,7 @@ fun TaskCreateView(
         val formsBottomGuideline = createGuidelineFromTop(0.87f)
 
         Forms(
-            newTaskViewModel = newTaskViewModel,
+            taskManagerViewModel = taskManagerViewModel,
             modifier = Modifier.constrainAs(formsRef) {
                 top.linkTo(formsTopGuideline)
                 bottom.linkTo(formsBottomGuideline)
@@ -89,7 +94,8 @@ fun TaskCreateView(
         val buttonTopGuideline = createGuidelineFromTop(0.89f)
         val buttonBottomGuideline = createGuidelineFromTop(0.96f)
 
-        TaskCreateButton(newTaskViewModel = newTaskViewModel,
+        TaskCreateButton(taskManagerViewModel = taskManagerViewModel,
+            editMode = editMode,
             context = context,
             modifier = Modifier.constrainAs(buttonRef) {
                 top.linkTo(buttonTopGuideline)
@@ -106,7 +112,7 @@ fun TaskCreateView(
 
 @Composable
 private fun Forms(
-    newTaskViewModel: NewTaskViewModel,
+    taskManagerViewModel: TaskManagerViewModel,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -120,40 +126,40 @@ private fun Forms(
          * Title
          **/
         AppTextField(
-            value = newTaskViewModel.taskTitle,
-            onValueChange = { newTaskViewModel.onTaskTitleChange(it) },
-            label = stringResource(R.string.new_task_title_label),
+            value = taskManagerViewModel.taskTitle,
+            onValueChange = { taskManagerViewModel.onTaskTitleChange(it) },
+            label = stringResource(R.string.task_create_or_edit_title_label),
             modifier = Modifier.fillMaxWidth(),
-            isError = newTaskViewModel.taskTitleError,
-            errorMessage = stringResource(R.string.new_task_title_error_message)
+            isError = taskManagerViewModel.taskTitleError,
+            errorMessage = stringResource(R.string.task_create_or_edit_title_error_message)
         )
 
         /**
          * Location search
          **/
         AppTextField(
-            value = newTaskViewModel.finalAddress,
+            value = taskManagerViewModel.finalAddress,
             onValueChange = { },
             readOnly = true,
             trailingIcon = Icons.Filled.AddLocationAlt,
-            onTrailingIconClick = { newTaskViewModel.onOpenSearchLocationDialogButtonClick() },
-            label = stringResource(R.string.new_task_delivery_address_label),
+            onTrailingIconClick = { taskManagerViewModel.onOpenSearchLocationDialogButtonClick() },
+            label = stringResource(R.string.task_create_or_edit_delivery_address_label),
             modifier = Modifier.fillMaxWidth(),
-            isError = newTaskViewModel.deliveryAddressError,
-            errorMessage = stringResource(R.string.new_task_delivery_address_error_message)
+            isError = taskManagerViewModel.deliveryAddressError,
+            errorMessage = stringResource(R.string.task_create_or_edit_delivery_address_error_message)
         )
 
         /**
          * Products
          **/
         Text(
-            text = stringResource(R.string.new_task_products_section_title),
+            text = stringResource(R.string.task_create_or_edit_products_section_title),
             fontSize = dpToSp(R.dimen.new_task_products_section_title_text_size),
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
         )
 
-        ProductsList(newTaskViewModel = newTaskViewModel)
+        ProductsList(taskManagerViewModel = taskManagerViewModel)
     }
 }
 
@@ -161,13 +167,13 @@ private fun Forms(
 @Composable
 private fun ProductsList(
     modifier: Modifier = Modifier,
-    newTaskViewModel: NewTaskViewModel
+    taskManagerViewModel: TaskManagerViewModel
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         modifier = modifier
     ) {
-        val products = newTaskViewModel.products
+        val products = taskManagerViewModel.products
 
         if (products.isEmpty()) {
             Column(
@@ -177,10 +183,10 @@ private fun ProductsList(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ProductAddButton(newTaskViewModel = newTaskViewModel)
+                ProductAddButton(taskManagerViewModel = taskManagerViewModel)
 
                 Text(
-                    text = stringResource(R.string.new_task_no_products_text),
+                    text = stringResource(R.string.task_create_or_edit_no_products_text),
                     fontSize = dpToSp(R.dimen.new_task_no_products_message_text_size)
                 )
             }
@@ -191,17 +197,17 @@ private fun ProductsList(
                     .weight(1f)
                     .fillMaxSize()
             ) {
-                items(newTaskViewModel.products) { product ->
+                items(taskManagerViewModel.products) { product ->
                     ProductContainer(
                         name = product.name,
                         amount = product.amount,
-                        onDeleteClick = { newTaskViewModel.onProductDelete(product) }
+                        onDeleteClick = { taskManagerViewModel.onProductDelete(product) }
                     )
                 }
 
             }
 
-            ProductAddButton(newTaskViewModel = newTaskViewModel)
+            ProductAddButton(taskManagerViewModel = taskManagerViewModel)
         }
 
     }
@@ -210,7 +216,7 @@ private fun ProductsList(
 
 @Composable
 private fun ProductAddButton(
-    newTaskViewModel: NewTaskViewModel,
+    taskManagerViewModel: TaskManagerViewModel,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -225,7 +231,7 @@ private fun ProductAddButton(
             modifier = modifier
                 .requiredSize(dimensionResource(R.dimen.new_task_product_add_button_icon_size))
                 .bounceClick()
-                .clickable { newTaskViewModel.onNewProductButtonClick() }
+                .clickable { taskManagerViewModel.onNewProductButtonClick() }
         )
     }
 }
@@ -280,13 +286,20 @@ private fun ProductContainer(
 
 @Composable
 private fun TaskCreateButton(
-    newTaskViewModel: NewTaskViewModel,
+    taskManagerViewModel: TaskManagerViewModel,
     modifier: Modifier = Modifier,
-    context: Context
+    context: Context,
+    editMode: Boolean
 ) {
+    val buttonTextId =
+        if (editMode)
+            R.string.task_create_or_edit_task_edit_button_text
+        else
+            R.string.task_create_or_edit_task_create_button_text
+
     AppButton(
-        onClick = { newTaskViewModel.onTaskCreateButtonClick(context) },
-        text = stringResource(R.string.new_task_create_task_button_text),
+        onClick = { taskManagerViewModel.onButtonClick(context, editMode) },
+        text = stringResource(buttonTextId),
         icon = Icons.Filled.Add,
         modifier = modifier
     )
@@ -294,27 +307,27 @@ private fun TaskCreateButton(
 
 
 @Composable
-private fun ShowProductAddAlertDialog(newTaskViewModel: NewTaskViewModel) {
-    if (newTaskViewModel.showAddProductDialog)
-        AddProductAlertDialog(newTaskViewModel = newTaskViewModel)
+private fun ShowProductAddAlertDialog(taskManagerViewModel: TaskManagerViewModel) {
+    if (taskManagerViewModel.showAddProductDialog)
+        AddProductAlertDialog(taskManagerViewModel = taskManagerViewModel)
 }
 
 
 @Composable
-private fun ShowLocationSearchDialog(newTaskViewModel: NewTaskViewModel) {
-    if (newTaskViewModel.showLocationSearchDialog)
-        LocationSearchAlertDialog(newTaskViewModel = newTaskViewModel)
+private fun ShowLocationSearchDialog(taskManagerViewModel: TaskManagerViewModel) {
+    if (taskManagerViewModel.showLocationSearchDialog)
+        LocationSearchAlertDialog(taskManagerViewModel = taskManagerViewModel)
 }
 
 
 @Composable
 private fun ShowProductDeleteConfirmationDialog(
-    newTaskViewModel: NewTaskViewModel,
+    taskManagerViewModel: TaskManagerViewModel,
 ) {
-    if (newTaskViewModel.showDeleteConfirmationDialog)
+    if (taskManagerViewModel.showDeleteConfirmationDialog)
         ProductDeleteConfirmationDialog(
-            newTaskViewModel = newTaskViewModel,
-            onYesClick = { newTaskViewModel.onProductDeleteConfirmationYesClick() },
-            onNoClick = { newTaskViewModel.onProductDeleteConfirmationNoClick() }
+            taskManagerViewModel = taskManagerViewModel,
+            onYesClick = { taskManagerViewModel.onProductDeleteConfirmationYesClick() },
+            onNoClick = { taskManagerViewModel.onProductDeleteConfirmationNoClick() }
         )
 }

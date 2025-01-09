@@ -16,6 +16,8 @@ import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TaskStatus
 import com.thesis.arrivo.communication.task.TasksRepository
 import com.thesis.arrivo.components.NavigationItem
+import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskToEdit
+import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.mapError
@@ -27,7 +29,8 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 class TasksListViewModel(
-    private val navHostController: NavHostController, private val context: Context
+    private val context: Context,
+    private val mainScaffoldViewModel: MainScaffoldViewModel
 ) : ViewModel() {
 
     companion object {
@@ -94,7 +97,7 @@ class TasksListViewModel(
 
     fun onAddTaskButtonClick() {
         navigateTo(
-            navController = navHostController, navigationItem = NavigationItem.TaskCreateAdmin
+            navController = mainScaffoldViewModel.navController, navigationItem = NavigationItem.TaskCreateAdmin
         )
     }
 
@@ -112,7 +115,26 @@ class TasksListViewModel(
 
     fun onTaskSelected(task: Task) {
         _selectedTask.value = task
+        setTaskToEdit(task)
         toggleShowTaskDetailsDialog()
+    }
+
+
+    fun onTaskEditButtonClick() {
+        toggleShowTaskDetailsDialog()
+        navigateTo(
+            navController = mainScaffoldViewModel.navController,
+            navigationItem = NavigationItem.TaskEditAdmin,
+        )
+    }
+
+
+    private fun setTaskToEdit(task: Task) {
+        mainScaffoldViewModel.taskToEdit = TaskToEdit(
+            task = task,
+            address = task.addressText,
+            location = Location(task.location.latitude, task.location.longitude)
+        )
     }
 
 
