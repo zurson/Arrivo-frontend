@@ -38,6 +38,7 @@ import com.google.android.libraries.places.api.net.PlacesClient
 import com.thesis.arrivo.R
 import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.AppTextField
+import com.thesis.arrivo.components.LoadingScreen
 import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
@@ -106,6 +107,7 @@ fun TaskCreateOrEditView(
                 height = Dimension.fillToConstraints
             })
 
+        LoadingScreen(enabled = taskManagerViewModel.actionInProgress)
     }
 }
 

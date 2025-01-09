@@ -327,10 +327,10 @@ class TaskManagerViewModel(
      **/
 
 
-    var setActionInProgress by mutableStateOf(false)
+    var actionInProgress by mutableStateOf(false)
 
     private fun setActionInProgress(status: Boolean) {
-        setActionInProgress = status
+        actionInProgress = status
     }
 
     var taskTitleError by mutableStateOf(false)
