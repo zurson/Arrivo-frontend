@@ -44,12 +44,10 @@ import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.employee.EmployeeResponse
 import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.LoadingScreen
-import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
-import com.thesis.arrivo.utilities.navigateTo
 import com.thesis.arrivo.utilities.showErrorDialog
 import com.thesis.arrivo.view_models.EmployeeViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
@@ -140,16 +138,7 @@ private fun ShowEmployeeDetails(
         EmployeesDetailsAlertDialog(
             emp = employeeViewModel.clickedEmployee,
             onDismiss = { employeeViewModel.toggleShowEmployeeDetails() },
-
-            onEditButtonClick = {
-                employeeViewModel.setEmployeeToEdit(mainScaffoldViewModel = mainScaffoldViewModel)
-                employeeViewModel.toggleShowEmployeeDetails()
-                navigateTo(
-                    navController = mainScaffoldViewModel.navController,
-                    navigationItem = NavigationItem.EditEmployeeAdmin
-                )
-            }
-
+            onEditButtonClick = { employeeViewModel.onEmployeeEditButtonClick(mainScaffoldViewModel) }
         )
 }
 

@@ -105,6 +105,7 @@ class EmployeeViewModel : ViewModel() {
                     is EmployeeAccountOperation.Create -> {
                         repository.createEmployeeAccount(operation.data)
                     }
+
                     is EmployeeAccountOperation.Update -> {
                         repository.updateEmployeeAccount(operation.id, operation.data)
                     }
@@ -120,9 +121,9 @@ class EmployeeViewModel : ViewModel() {
 
     sealed class EmployeeAccountOperation {
         data class Create(val data: EmployeeCreateAccountRequest) : EmployeeAccountOperation()
-        data class Update(val id: Long, val data: EmployeeUpdateRequest) : EmployeeAccountOperation()
+        data class Update(val id: Long, val data: EmployeeUpdateRequest) :
+            EmployeeAccountOperation()
     }
-
 
 
     private fun showSuccessToast(context: Context, editMode: Boolean) {
@@ -155,7 +156,20 @@ class EmployeeViewModel : ViewModel() {
     }
 
 
-    fun setEmployeeToEdit(
+    fun onEmployeeEditButtonClick(
+        mainScaffoldViewModel: MainScaffoldViewModel,
+    ) {
+        setEmployeeToEdit(mainScaffoldViewModel = mainScaffoldViewModel)
+        toggleShowEmployeeDetails()
+
+        navigateTo(
+            navController = mainScaffoldViewModel.navController,
+            navigationItem = NavigationItem.EditEmployeeAdmin
+        )
+    }
+
+
+    private fun setEmployeeToEdit(
         mainScaffoldViewModel: MainScaffoldViewModel,
     ) {
         mainScaffoldViewModel.employeeToEdit = clickedEmployee
