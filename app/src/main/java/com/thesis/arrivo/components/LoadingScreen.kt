@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import com.thesis.arrivo.utilities.Settings.Companion.LOADING_SCREEN_BG
 
 @Composable
 fun LoadingScreen(enabled: Boolean) {
@@ -19,7 +20,7 @@ fun LoadingScreen(enabled: Boolean) {
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.surfaceContainer)
+                .background(LOADING_SCREEN_BG)
                 .pointerInput(Unit) {}
                 .clickable(
                     indication = null,
