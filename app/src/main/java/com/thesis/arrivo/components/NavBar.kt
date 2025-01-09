@@ -22,15 +22,10 @@ import com.thesis.arrivo.view_models.MainScaffoldViewModel
 
 @Composable
 fun NavBar(mainScaffoldViewModel: MainScaffoldViewModel) {
-
-    val containerColor = MaterialTheme.colorScheme.primary
-    val contentColor = MaterialTheme.colorScheme.onPrimary
     val navItems = mainScaffoldViewModel.getNavbarElements()
 
     AppNavigationBar(
         mainScaffoldViewModel = mainScaffoldViewModel,
-        containerColor = containerColor,
-        contentColor = contentColor,
         navItems = navItems
     )
 }
@@ -39,14 +34,10 @@ fun NavBar(mainScaffoldViewModel: MainScaffoldViewModel) {
 @Composable
 fun AppNavigationBar(
     mainScaffoldViewModel: MainScaffoldViewModel,
-    contentColor: Color,
-    containerColor: Color,
     navItems: List<NavigationItem>
 ) {
 
-    NavigationBar(
-        containerColor = containerColor, contentColor = contentColor
-    ) {
+    NavigationBar {
         navItems.forEach { item ->
             val selected = mainScaffoldViewModel.isSelected(item)
 
@@ -58,7 +49,6 @@ fun AppNavigationBar(
                     item.title?.let {
                         Text(
                             text = stringResource(it),
-                            color = MaterialTheme.colorScheme.onPrimary,
                             fontSize = dpToSp(R.dimen.navbar_text_size),
                             textAlign = TextAlign.Center
                         )
@@ -66,17 +56,6 @@ fun AppNavigationBar(
                 },
                 alwaysShowLabel = true,
                 selected = selected,
-
-                colors = NavigationBarItemColors(
-                    selectedIconColor = MaterialTheme.colorScheme.onPrimary,
-                    unselectedIconColor = MaterialTheme.colorScheme.onPrimary,
-                    selectedIndicatorColor = MaterialTheme.colorScheme.surface,
-                    disabledIconColor = MaterialTheme.colorScheme.onPrimary,
-                    disabledTextColor = MaterialTheme.colorScheme.onPrimary,
-                    selectedTextColor = MaterialTheme.colorScheme.onPrimary,
-                    unselectedTextColor = MaterialTheme.colorScheme.onPrimary
-
-                ),
 
                 icon = {
                     item.icon?.let {
