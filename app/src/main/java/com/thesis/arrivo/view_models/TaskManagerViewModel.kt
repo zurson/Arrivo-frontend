@@ -329,7 +329,7 @@ class TaskManagerViewModel(
 
     var actionInProgress by mutableStateOf(false)
 
-    private fun setActionInProgress(status: Boolean) {
+    private fun updateActionInProgress(status: Boolean) {
         actionInProgress = status
     }
 
@@ -365,13 +365,13 @@ class TaskManagerViewModel(
     private fun sendTaskCreateRequest(context: Context, editMode: Boolean) {
         viewModelScope.launch {
             try {
-                setActionInProgress(true)
+                updateActionInProgress(true)
                 tasksRepository.createTask(createTaskCreateRequest())
                 onSuccess(context, editMode)
             } catch (e: Exception) {
                 onFailure(context, mapError(e, context))
             } finally {
-                setActionInProgress(false)
+                updateActionInProgress(false)
             }
         }
     }
@@ -380,7 +380,7 @@ class TaskManagerViewModel(
     private fun sendTaskUpdateRequest(context: Context, editMode: Boolean) {
         viewModelScope.launch {
             try {
-                setActionInProgress(true)
+                updateActionInProgress(true)
                 tasksRepository.updateTask(
                     id = mainScaffoldViewModel.taskToEdit.task.id,
                     taskUpdateRequest = createTaskUpdateRequest()
@@ -389,7 +389,7 @@ class TaskManagerViewModel(
             } catch (e: Exception) {
                 onFailure(context, mapError(e, context))
             } finally {
-                setActionInProgress(false)
+                updateActionInProgress(false)
             }
         }
     }
