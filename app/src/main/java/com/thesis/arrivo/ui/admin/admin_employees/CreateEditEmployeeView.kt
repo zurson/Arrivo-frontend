@@ -83,7 +83,7 @@ fun CreateEditEmployeeView(
         val buttonTopGuideline = createGuidelineFromTop(0.87f)
         val buttonBottomGuideline = createGuidelineFromTop(0.95f)
 
-        EmployeeCreateButton(
+        ConfirmButton(
             context = context,
             editMode = editMode,
             navController = mainScaffoldViewModel.navController,
@@ -186,7 +186,7 @@ private fun Forms(
 
 
 @Composable
-private fun EmployeeCreateButton(
+private fun ConfirmButton(
     context: Context,
     editMode: Boolean,
     modifier: Modifier = Modifier,

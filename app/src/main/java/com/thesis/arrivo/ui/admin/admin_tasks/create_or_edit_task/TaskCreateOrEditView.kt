@@ -94,7 +94,7 @@ fun TaskCreateOrEditView(
         val buttonTopGuideline = createGuidelineFromTop(0.89f)
         val buttonBottomGuideline = createGuidelineFromTop(0.96f)
 
-        TaskCreateButton(taskManagerViewModel = taskManagerViewModel,
+        ConfirmButton(taskManagerViewModel = taskManagerViewModel,
             editMode = editMode,
             context = context,
             modifier = Modifier.constrainAs(buttonRef) {
@@ -285,7 +285,7 @@ private fun ProductContainer(
 
 
 @Composable
-private fun TaskCreateButton(
+private fun ConfirmButton(
     taskManagerViewModel: TaskManagerViewModel,
     modifier: Modifier = Modifier,
     context: Context,

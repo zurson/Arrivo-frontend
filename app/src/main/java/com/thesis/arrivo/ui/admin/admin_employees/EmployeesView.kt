@@ -111,7 +111,7 @@ fun EmployeesView(mainScaffoldViewModel: MainScaffoldViewModel) {
         val buttonBottomGuideline = createGuidelineFromTop(0.96f)
         val buttonStartGuideline = createGuidelineFromStart(0.3f)
 
-        EmployeeCreateButton(
+        ConfirmButton(
             mainScaffoldViewModel = mainScaffoldViewModel,
             modifier = Modifier
                 .constrainAs(buttonRef) {
@@ -236,7 +236,7 @@ private fun EmployeeContainer(
 
 
 @Composable
-private fun EmployeeCreateButton(
+private fun ConfirmButton(
     modifier: Modifier = Modifier,
     mainScaffoldViewModel: MainScaffoldViewModel
 ) {
