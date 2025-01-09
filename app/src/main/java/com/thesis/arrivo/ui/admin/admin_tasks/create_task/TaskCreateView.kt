@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.admin.admin_tasks
+package com.thesis.arrivo.ui.admin.admin_tasks.create_task
 
 import android.content.Context
 import androidx.compose.foundation.background
@@ -46,7 +46,7 @@ import com.thesis.arrivo.view_models.NewTaskViewModel
 
 
 @Composable
-fun TasksView(
+fun TaskCreateView(
     placesClient: PlacesClient,
     navHostController: NavHostController
 ) {
@@ -111,7 +111,7 @@ private fun Forms(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.alert_dialog_content_vertical_space)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         modifier = modifier
             .fillMaxSize()
     ) {
@@ -164,7 +164,7 @@ private fun ProductsList(
     newTaskViewModel: NewTaskViewModel
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.alert_dialog_content_vertical_space)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         modifier = modifier
     ) {
         val products = newTaskViewModel.products

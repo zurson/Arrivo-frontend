@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -44,17 +45,19 @@ fun InfoAlertDialog(
 ) {
 
     BasicAlertDialog(
-        onDismissRequest = { onDismiss() }, modifier = modifier
+        onDismissRequest = { onDismiss() }, modifier = modifier.wrapContentSize()
     ) {
 
         Column(
             modifier = Modifier
                 .width(dimensionResource(R.dimen.alert_dialog_window_width))
                 .background(
-                    MaterialTheme.colorScheme.background, RoundedCornerShape(24.dp)
+                    MaterialTheme.colorScheme.background,
+                    RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius))
                 )
                 .border(
-                    BorderStroke(4.dp, MaterialTheme.colorScheme.primary), RoundedCornerShape(24.dp)
+                    BorderStroke(5.dp, MaterialTheme.colorScheme.primary),
+                    RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius))
                 )
                 .padding(bottom = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -63,12 +66,14 @@ fun InfoAlertDialog(
             Row(
                 modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
             ) {
+                val exitIconPadding = dimensionResource(R.dimen.alert_dialog_exit_icon_padding)
+
                 Icon(imageVector = Icons.Filled.Close,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier
                         .bounceClick()
-                        .padding(end = 10.dp, top = 10.dp)
+                        .padding(end = exitIconPadding, top = exitIconPadding)
                         .clickable { onDismiss() }
                         .size(dimensionResource(R.dimen.alert_dialog_close_icon_size)))
             }

@@ -6,7 +6,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
+import com.thesis.arrivo.R
 import com.thesis.arrivo.components.bounceClick
 
 @Composable
@@ -16,7 +18,7 @@ fun CustomOutlinedButton(
     content: @Composable () -> Unit
 ) {
     OutlinedButton(
-        shape = RoundedCornerShape(10.dp),
+        shape = RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)),
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 4.dp)

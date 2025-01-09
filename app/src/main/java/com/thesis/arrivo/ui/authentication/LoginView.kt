@@ -203,13 +203,6 @@ fun LoginImage(modifier: Modifier = Modifier) {
             .background(MaterialTheme.colorScheme.primary)
 
     )
-//    Image(
-//        painter = painterResource(R.drawable.login_image),
-//        contentDescription = null,
-//        contentScale = ContentScale.FillBounds,
-//        colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.surface),
-//        modifier = modifier
-//    )
 }
 
 @Composable

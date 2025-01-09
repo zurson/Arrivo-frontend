@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.admin.admin_tasks
+package com.thesis.arrivo.ui.admin.admin_tasks.create_task
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,7 +38,7 @@ fun ProductDeleteConfirmationDialog(
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.alert_dialog_content_vertical_space)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         ) {
             Text(
                 text = productToDelete.name,

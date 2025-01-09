@@ -23,6 +23,9 @@
     <dimen name="form_height">50dp</dimen>
     <dimen name="form_error_size">12sp</dimen>
 
+    <!-- DATE PICKER -->
+    <dimen name="date_picker_text_size">20sp</dimen>
+
     <!-- TEXT FIELD -->
     <dimen name="text_filed_padding">10dp</dimen>
 
@@ -33,6 +36,7 @@
     <!-- APP BUTTON -->
     <dimen name="app_button_text_size">16sp</dimen>
     <dimen name="app_button_icon_size">24dp</dimen>
+    <dimen name="app_button_padding">2dp</dimen>
 
     <!-- PROGRESS INDICATOR -->
     <dimen name="progress_indicator_size">32dp</dimen>
@@ -41,18 +45,26 @@
     <dimen name="employees_icon_size">32dp</dimen>
     <dimen name="employees_data_text_size">20sp</dimen>
 
+    <!-- SURFACES CORNER CLIP RADIUS -->
+    <dimen name="surfaces_corner_clip_radius">15dp</dimen>
+
     <!-- ALERT DIALOG -->
-    <dimen name="alert_dialog_window_width">350dp</dimen>
+    <dimen name="alert_dialog_window_width">500dp</dimen>
     <dimen name="alert_dialog_close_icon_size">32dp</dimen>
     <dimen name="alert_dialog_title_font_size">24sp</dimen>
-    <dimen name="alert_dialog_content_vertical_space">8dp</dimen>
+    <dimen name="alert_dialog_record_horizontal_space">8dp</dimen>
+    <dimen name="alert_dialog_exit_icon_padding">10dp</dimen>
+
+    <dimen name="alert_dialog_button_height">50dp</dimen>
+    <dimen name="alert_dialog_button_horizontal_padding">16dp</dimen>
+    <dimen name="alert_dialog_button_top_padding">16dp</dimen>
+
+    <!-- LIST ELEMENTS PADDING -->
+    <dimen name="lists_elements_vertical_space">16dp</dimen>
 
     <!-- EMPLOYEE DETAILS -->
     <dimen name="employee_details_label_text_size">16sp</dimen>
     <dimen name="employee_details_value_text_size">16sp</dimen>
-    <dimen name="employee_details_edit_button_height">50dp</dimen>
-    <dimen name="employee_details_edit_button_horizontal_padding">16dp</dimen>
-    <dimen name="employee_details_edit_button_top_padding">16dp</dimen>
 
     <!-- NEW TASK -->
     <dimen name="new_task_products_section_title_text_size">24dp</dimen>
@@ -70,5 +82,25 @@
 
     <dimen name="product_delete_confirmation_product_details_text_size">16sp</dimen>
     <dimen name="product_delete_confirmation_product_buttons_horizontal_padding">16dp</dimen>
+
+    <!-- TASKS LIST -->
+    <dimen name="tasks_list_arrow_right_icon_size">50dp</dimen>
+    <dimen name="tasks_list_task_circle_icon_size">40dp</dimen>
+    <dimen name="tasks_list_task_title_text_size">20sp</dimen>
+    <dimen name="tasks_list_task_employee_text_size">24sp</dimen>
+    <dimen name="tasks_list_task_location_text_size">16sp</dimen>
+    <dimen name="tasks_list_container_padding">8dp</dimen>
+
+    <dimen name="tasks_list_bottom_sector_vertical_space">24dp</dimen>
+    <dimen name="tasks_list_bottom_sector_horizontal_space">64dp</dimen>
+    <dimen name="tasks_list_bottom_sector_divider_height">5dp</dimen>
+
+    <dimen name="tasks_list_legend_horizontal_space">8dp</dimen>
+    <dimen name="tasks_list_legend_vertical_space">4dp</dimen>
+    <dimen name="tasks_list_legend_circle_size">22dp</dimen>
+    <dimen name="tasks_list_legend_text_size">12sp</dimen>
+
+    <dimen name="tasks_list_filter_text_size">20sp</dimen>
+    <dimen name="tasks_list_filter_padding">8dp</dimen>
 
 </resources>

@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.admin.admin_tasks
+package com.thesis.arrivo.ui.admin.admin_tasks.create_task
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -51,7 +51,7 @@ fun LocationSearchAlertDialog(
         modifier = modifier
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.alert_dialog_content_vertical_space)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         ) {
             SearchField(
                 cameraPositionState = cameraPositionState,
@@ -64,7 +64,7 @@ fun LocationSearchAlertDialog(
                     cameraPositionState = cameraPositionState,
                     modifier = Modifier
                         .height(dimensionResource(R.dimen.loc_search_dialog_map_height))
-                        .clip(RoundedCornerShape(15.dp))
+                        .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
                         .border(width = 1.dp, color = MaterialTheme.colorScheme.primary)
                 )
             }

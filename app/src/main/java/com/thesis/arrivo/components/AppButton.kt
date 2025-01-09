@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
@@ -23,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.thesis.arrivo.R
+import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.dpToSp
 
 @Composable
@@ -37,8 +37,9 @@ fun AppButton(
         modifier = modifier
             .bounceClick()
             .fillMaxWidth()
-            .clip(RoundedCornerShape(15.dp))
+            .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
             .background(MaterialTheme.colorScheme.primary)
+            .padding(dimensionResource(R.dimen.app_button_padding))
     ) {
         ConstraintLayout(
             modifier = Modifier
@@ -52,14 +53,16 @@ fun AppButton(
                 maxLines = 1,
                 textAlign = TextAlign.Center,
                 fontSize = dpToSp(R.dimen.app_button_text_size),
-                modifier = Modifier.constrainAs(textRef) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(separatorGuideline)
-                    width = Dimension.fillToConstraints
+                color = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier
+                    .constrainAs(textRef) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(separatorGuideline)
+                        width = Dimension.fillToConstraints
 //                    height = Dimension.fillToConstraints
-                }
+                    }
                     .padding(end = 4.dp)
             )
 
@@ -89,9 +92,11 @@ fun AppButton(
 @Preview
 @Composable
 private fun Preview() {
-    AppButton(
-        onClick = {},
-        text = "Create account",
-        icon = Icons.Outlined.Close
-    )
+    Theme.ArrivoTheme {
+        AppButton(
+            onClick = {},
+            text = "Create account",
+            icon = Icons.Outlined.Close
+        )
+    }
 }

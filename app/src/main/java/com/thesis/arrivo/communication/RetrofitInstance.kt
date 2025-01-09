@@ -2,7 +2,7 @@ package com.thesis.arrivo.communication
 
 import com.thesis.arrivo.communication.available_products.AvailableProductsService
 import com.thesis.arrivo.communication.employee.EmployeeService
-import com.thesis.arrivo.communication.task.TaskService
+import com.thesis.arrivo.communication.task.TasksService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -19,8 +19,8 @@ object RetrofitInstance {
         retrofit.create(EmployeeService::class.java)
     }
 
-    val taskService: TaskService by lazy {
-        retrofit.create(TaskService::class.java)
+    val tasksService: TasksService by lazy {
+        retrofit.create(TasksService::class.java)
     }
 
     val availableProductsService: AvailableProductsService by lazy {

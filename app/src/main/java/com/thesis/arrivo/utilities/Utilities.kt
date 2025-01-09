@@ -19,6 +19,9 @@ import com.thesis.arrivo.communication.ErrorResponse
 import com.thesis.arrivo.components.NavigationItem
 import retrofit2.HttpException
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.util.Date
 import java.util.Locale
 import kotlin.reflect.KClass
 
@@ -123,3 +126,12 @@ fun showErrorDialog(context: Context, title: String, errorResponse: ErrorRespons
 fun capitalize(value: String): String {
     return value.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 }
+
+
+fun convertMillisToDate(millis: Long): String {
+    val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    return formatter.format(Date(millis))
+}
+
+
+fun getCurrentDateMillis() = Instant.now().toEpochMilli()

@@ -1,5 +1,8 @@
 package com.thesis.arrivo.utilities
 
+import androidx.compose.ui.graphics.Color
+
+
 class Settings {
 
     companion object {
@@ -13,6 +16,10 @@ class Settings {
         const val PHONE_NUMBER_MASK_LETTER = '0'
 
         const val AUTH_ACCOUNT_STATUS_CHECK_INTERVAL_MS: Long = 10_000
+
+        val TASK_FREE_COLOR = Color(0xFF4CAF50)
+        val TASK_ASSIGNED_COLOR = Color(0xFFFFC107)
+        val TASK_FINISHED_COLOR = Color(0xFFCC3333)
     }
 
 }

@@ -162,8 +162,8 @@ private fun EmployeesList(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .clip(RoundedCornerShape(15.dp))
-            .background(MaterialTheme.colorScheme.surface),
+            .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh),
         contentAlignment = Alignment.Center
     ) {
         if (employeeViewModel.actionInProgress) {
