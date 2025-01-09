@@ -29,7 +29,7 @@ fun EmployeesDetailsAlertDialog(
         modifier = modifier
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.alert_dialog_content_vertical_space)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         ) {
             DialogRecord(
                 label = "Email",

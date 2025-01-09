@@ -2,6 +2,7 @@ package com.thesis.arrivo.utilities
 
 import androidx.compose.ui.graphics.Color
 
+
 class Settings {
 
     companion object {

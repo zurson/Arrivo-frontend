@@ -3,6 +3,7 @@ package com.thesis.arrivo.components.date_picker
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
@@ -28,22 +29,28 @@ fun DatePickerField(
 ) {
     var showModal by remember { mutableStateOf(false) }
 
-    AppTextField(
-        value = convertMillisToDate(selectedDate),
-        onValueChange = { },
-        label = stringResource(R.string.date_picker_label),
-        readOnly = true,
-        trailingIcon = Icons.Default.DateRange,
+    Box(
         modifier = modifier
-            .fillMaxWidth()
-            .pointerInput(selectedDate) {
-                awaitEachGesture {
-                    awaitFirstDown(pass = PointerEventPass.Initial)
-                    val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
-                    if (upEvent != null) showModal = true
+    ) {
+        AppTextField(
+            value = convertMillisToDate(selectedDate),
+            onValueChange = { },
+            label = stringResource(R.string.date_picker_label),
+            readOnly = true,
+            trailingIcon = Icons.Default.DateRange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .pointerInput(selectedDate) {
+                    awaitEachGesture {
+                        awaitFirstDown(pass = PointerEventPass.Initial)
+                        val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
+                        if (upEvent != null) showModal = true
+                    }
                 }
-            }
-    )
+        )
+    }
+
+
 
     if (showModal) {
         DatePickerModal(

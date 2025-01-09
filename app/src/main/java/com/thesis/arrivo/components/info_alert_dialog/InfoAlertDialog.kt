@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -50,12 +51,8 @@ fun InfoAlertDialog(
         Column(
             modifier = Modifier
                 .width(dimensionResource(R.dimen.alert_dialog_window_width))
-                .background(
-                    MaterialTheme.colorScheme.background, RoundedCornerShape(24.dp)
-                )
-                .border(
-                    BorderStroke(4.dp, MaterialTheme.colorScheme.primary), RoundedCornerShape(24.dp)
-                )
+                .background(MaterialTheme.colorScheme.background, RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
+                .border(BorderStroke(5.dp, MaterialTheme.colorScheme.primary), RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
                 .padding(bottom = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center

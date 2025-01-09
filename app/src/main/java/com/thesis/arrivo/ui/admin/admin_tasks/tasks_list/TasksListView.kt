@@ -24,15 +24,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TaskStatus
 import com.thesis.arrivo.components.AppButton
@@ -42,11 +44,10 @@ import com.thesis.arrivo.components.LoadingScreen
 import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.components.date_picker.DatePickerField
 import com.thesis.arrivo.ui.theme.Theme
-import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.capitalize
+import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.TasksListViewModel
-import java.time.LocalDateTime
 
 @Composable
 fun TasksListView(navHostController: NavHostController) {
@@ -125,7 +126,7 @@ private fun TasksList(
             .fillMaxSize()
     ) {
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         ) {
             items(tasksListViewModel.tasksToShow) { task ->
                 TaskContainer(task = task)
@@ -153,22 +154,22 @@ private fun TaskCompletedOrFreeContainer(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         modifier = Modifier
             .bounceClick()
-            .clip(RoundedCornerShape(15.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .wrapContentHeight()
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(dimensionResource(R.dimen.tasks_list_container_padding))
     ) {
         Circle(
-            size = 40.dp,
+            size = dimensionResource(R.dimen.tasks_list_task_circle_icon_size),
             color = TasksListViewModel.getFilterColor(task.status),
         )
 
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.weight(1f)
         ) {
@@ -176,7 +177,7 @@ private fun TaskCompletedOrFreeContainer(
             TaskAddress(address = task.addressText)
         }
 
-        ArrowRightIcon(size = 50.dp)
+        ArrowRightIcon(size = dimensionResource(R.dimen.tasks_list_arrow_right_icon_size))
     }
 }
 
@@ -187,22 +188,22 @@ private fun TaskAssignedContainer(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         modifier = Modifier
             .bounceClick()
-            .clip(RoundedCornerShape(15.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .wrapContentHeight()
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(dimensionResource(R.dimen.tasks_list_container_padding))
     ) {
         Circle(
-            size = 40.dp,
+            size = dimensionResource(R.dimen.tasks_list_task_circle_icon_size),
             color = TasksListViewModel.getFilterColor(task.status),
         )
 
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.weight(1f)
         ) {
@@ -214,7 +215,7 @@ private fun TaskAssignedContainer(
             TaskAddress(address = task.addressText)
         }
 
-        ArrowRightIcon(size = 50.dp)
+        ArrowRightIcon(size = dimensionResource(R.dimen.tasks_list_arrow_right_icon_size))
     }
 }
 
@@ -227,7 +228,7 @@ fun TaskTitle(
         text = title,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.onBackground,
-        fontSize = 20.sp,
+        fontSize = dpToSp(R.dimen.tasks_list_task_title_text_size),
         maxLines = 2,
         textAlign = TextAlign.Center,
         overflow = TextOverflow.Ellipsis,
@@ -243,7 +244,7 @@ fun TaskAddress(
         text = address,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.primary,
-        fontSize = 16.sp,
+        fontSize = dpToSp(R.dimen.tasks_list_task_location_text_size),
         maxLines = 2,
         textAlign = TextAlign.Center,
         overflow = TextOverflow.Ellipsis,
@@ -256,13 +257,13 @@ fun TaskEmployeeData(
     firstName: String?,
     lastName: String?
 ) {
-    val finalFirstName = firstName ?: "Error"
-    val finalLastName = lastName ?: "Error"
+    val finalFirstName = firstName ?: stringResource(R.string.tasks_list_emp_name_error)
+    val finalLastName = lastName ?: stringResource(R.string.tasks_list_emp_name_error)
 
     Text(
         text = "$finalFirstName $finalLastName",
         color = MaterialTheme.colorScheme.primary,
-        fontSize = 24.sp,
+        fontSize = dpToSp(R.dimen.tasks_list_task_employee_text_size),
         maxLines = 2,
         textAlign = TextAlign.Center,
         overflow = TextOverflow.Ellipsis,
@@ -276,20 +277,20 @@ private fun BottomSector(
     tasksListViewModel: TasksListViewModel
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(24.dp),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.tasks_list_bottom_sector_vertical_space)),
         modifier = modifier
             .fillMaxSize()
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(5.dp)
+                .height(dimensionResource(R.dimen.tasks_list_bottom_sector_divider_height))
                 .background(MaterialTheme.colorScheme.onBackground)
         )
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(64.dp),
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.tasks_list_bottom_sector_horizontal_space)),
             modifier = Modifier
                 .fillMaxWidth()
         ) {
@@ -297,7 +298,7 @@ private fun BottomSector(
 
             AppButton(
                 onClick = { tasksListViewModel.onAddTaskButtonClick() },
-                text = "Add task",
+                text = stringResource(R.string.tasks_List_add_tasks_button_text),
                 icon = Icons.Filled.Add,
             )
         }
@@ -308,7 +309,7 @@ private fun BottomSector(
 @Composable
 private fun Legend() {
     Column(
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.tasks_list_legend_vertical_space))
     ) {
         LegendItem(filter = TaskStatus.COMPLETED)
         LegendItem(filter = TaskStatus.UNASSIGNED)
@@ -322,17 +323,18 @@ private fun LegendItem(
     filter: TaskStatus,
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.tasks_list_legend_horizontal_space)),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Circle(
-            size = 22.dp,
+            size = dimensionResource(R.dimen.tasks_list_legend_circle_size),
             color = TasksListViewModel.getFilterColor(filter)
         )
 
         Text(
             text = TasksListViewModel.getRenamedFilter(filter),
             color = MaterialTheme.colorScheme.onBackground,
-            fontSize = 12.sp
+            fontSize = dpToSp(R.dimen.tasks_list_legend_text_size)
         )
     }
 }
@@ -348,28 +350,31 @@ private fun DatePickerAndFilters(
      **/
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.SpaceEvenly,
         modifier = modifier
             .fillMaxSize()
     ) {
         DatePickerField(
             selectedDate = tasksListViewModel.getSelectedDate(),
-            onDateSelected = { tasksListViewModel.onDateSelected(it) }
+            onDateSelected = { tasksListViewModel.onDateSelected(it) },
         )
 
-        FiltersList(tasksListViewModel = tasksListViewModel)
+        FiltersList(
+            tasksListViewModel = tasksListViewModel,
+        )
     }
 }
 
 
 @Composable
 private fun FiltersList(
-    tasksListViewModel: TasksListViewModel
+    tasksListViewModel: TasksListViewModel,
+    modifier: Modifier = Modifier
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
+        modifier = modifier
             .fillMaxWidth()
     ) {
         Filter(
@@ -400,22 +405,23 @@ private fun Filter(
     tasksListViewModel: TasksListViewModel
 ) {
     val active = tasksListViewModel.getActiveFilters().contains(filter)
-    val color = if (active) Settings.TASK_FREE_COLOR else MaterialTheme.colorScheme.surfaceContainerHighest
+    val color =
+        if (active) Settings.TASK_FREE_COLOR else MaterialTheme.colorScheme.surfaceContainerHighest
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .bounceClick()
-            .clip(RoundedCornerShape(15.dp))
+            .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
             .background(color)
             .clickable { tasksListViewModel.toggleFilterActive(filter) }
     ) {
         Text(
             text = capitalize(TasksListViewModel.getRenamedFilter(filter).lowercase()),
             color = MaterialTheme.colorScheme.onSurface,
-            fontSize = 20.sp,
+            fontSize = dpToSp(R.dimen.tasks_list_filter_text_size),
             modifier = Modifier
-                .padding(8.dp)
+                .padding(dimensionResource(R.dimen.tasks_list_filter_padding))
         )
     }
 }
@@ -425,17 +431,17 @@ private fun Filter(
 @Composable
 private fun Preview() {
     Theme.ArrivoTheme {
-//        TasksListView(rememberNavController())
-        TaskContainer(
-            task = Task(
-                status = TaskStatus.UNASSIGNED,
-                id = 1,
-                title = "Test title",
-                location = Location(longitude = 52.1231, latitude = 22.3212),
-                addressText = "Opoczno Spacerowa 1",
-                assignedDate = null,
-                employee = null,
-            )
-        )
+        TasksListView(rememberNavController())
+//        TaskContainer(
+//            task = Task(
+//                status = TaskStatus.UNASSIGNED,
+//                id = 1,
+//                title = "Test title",
+//                location = Location(longitude = 52.1231, latitude = 22.3212),
+//                addressText = "Opoczno Spacerowa 1",
+//                assignedDate = null,
+//                employee = null,
+//            )
+//        )
     }
 }

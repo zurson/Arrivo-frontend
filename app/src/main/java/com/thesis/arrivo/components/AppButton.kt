@@ -37,8 +37,9 @@ fun AppButton(
         modifier = modifier
             .bounceClick()
             .fillMaxWidth()
-            .clip(RoundedCornerShape(15.dp))
+            .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
             .background(MaterialTheme.colorScheme.primary)
+            .padding(dimensionResource(R.dimen.app_button_padding))
     ) {
         ConstraintLayout(
             modifier = Modifier
