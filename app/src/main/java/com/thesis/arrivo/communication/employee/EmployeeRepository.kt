@@ -6,7 +6,7 @@ import retrofit2.http.Body
 class EmployeeRepository {
     private val employeeService = RetrofitInstance.employeeService
 
-    suspend fun getAllEmployees(): List<EmployeeResponse> {
+    suspend fun getAllEmployees(): List<Employee> {
         return employeeService.getAllEmployees()
     }
 

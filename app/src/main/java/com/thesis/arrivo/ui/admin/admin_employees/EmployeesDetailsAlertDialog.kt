@@ -6,14 +6,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
 import com.thesis.arrivo.R
-import com.thesis.arrivo.communication.employee.EmployeeResponse
-import com.thesis.arrivo.components.AppButton
+import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.components.info_alert_dialog.AlertDialogSingleButton
 import com.thesis.arrivo.components.info_alert_dialog.DialogRecord
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
@@ -21,7 +18,7 @@ import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
 @Composable
 fun EmployeesDetailsAlertDialog(
     modifier: Modifier = Modifier,
-    emp: EmployeeResponse,
+    emp: Employee,
     onDismiss: () -> Unit,
     onEditButtonClick: () -> Unit
 ) {

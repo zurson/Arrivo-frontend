@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.thesis.arrivo.activities.MainActivity
-import com.thesis.arrivo.communication.employee.EmployeeResponse
+import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskToEdit
@@ -196,7 +196,7 @@ class MainScaffoldViewModel(
      **/
 
 
-    var employeeToEdit = EmployeeResponse.emptyEmployeeResponse()
+    var employeeToEdit = Employee.emptyEmployee()
 
 
     /**

@@ -41,7 +41,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
-import com.thesis.arrivo.communication.employee.EmployeeResponse
+import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.LoadingScreen
 import com.thesis.arrivo.components.bounceClick
@@ -147,7 +147,7 @@ private fun ShowEmployeeDetails(
 private fun EmployeesList(
     modifier: Modifier = Modifier,
     employeeViewModel: EmployeeViewModel,
-    employees: List<EmployeeResponse>
+    employees: List<Employee>
 ) {
     Box(
         modifier = modifier
@@ -176,7 +176,7 @@ private fun EmployeesList(
 @Composable
 private fun EmployeeContainer(
     employeeViewModel: EmployeeViewModel,
-    employee: EmployeeResponse
+    employee: Employee
 ) {
     Column(
         modifier = Modifier
