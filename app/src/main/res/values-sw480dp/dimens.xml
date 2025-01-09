@@ -49,9 +49,11 @@
     <dimen name="surfaces_corner_clip_radius">20dp</dimen>
 
     <!-- ALERT DIALOG -->
-    <dimen name="alert_dialog_window_width">550dp</dimen>
+    <dimen name="alert_dialog_window_width">650dp</dimen>
     <dimen name="alert_dialog_close_icon_size">48dp</dimen>
     <dimen name="alert_dialog_title_font_size">32sp</dimen>
+    <dimen name="alert_dialog_record_horizontal_space">16dp</dimen>
+    <dimen name="alert_dialog_exit_icon_padding">15dp</dimen>
 
     <!-- LIST ELEMENTS PADDING -->
     <dimen name="lists_elements_vertical_space">24dp</dimen>
@@ -59,9 +61,9 @@
     <!-- EMPLOYEE DETAILS -->
     <dimen name="employee_details_label_text_size">28sp</dimen>
     <dimen name="employee_details_value_text_size">28sp</dimen>
-    <dimen name="employee_details_edit_button_height">75dp</dimen>
-    <dimen name="employee_details_edit_button_horizontal_padding">75dp</dimen>
-    <dimen name="employee_details_edit_button_top_padding">48dp</dimen>
+    <dimen name="alert_dialog_button_height">75dp</dimen>
+    <dimen name="alert_dialog_button_horizontal_padding">75dp</dimen>
+    <dimen name="alert_dialog_button_top_padding">48dp</dimen>
 
     <!-- NEW TASK -->
     <dimen name="new_task_products_section_title_text_size">48dp</dimen>

@@ -59,6 +59,8 @@ fun TasksListView(navHostController: NavHostController) {
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
+        ShowTaskDetailsDialog(tasksListViewModel)
+
         /* CONFIGURATION */
         val startGuideline = createGuidelineFromStart(Settings.START_END_PERCENTAGE)
         val endGuideline = createGuidelineFromEnd(Settings.START_END_PERCENTAGE)
@@ -115,6 +117,17 @@ fun TasksListView(navHostController: NavHostController) {
     }
 }
 
+@Composable
+fun ShowTaskDetailsDialog(tasksListViewModel: TasksListViewModel) {
+    if (tasksListViewModel.showTaskDetailsDialog) {
+        TaskDetailsDialog(
+            task = tasksListViewModel.selectedTask,
+            onDismiss = { tasksListViewModel.onTaskDismiss() },
+            onEditButtonClick = { }
+        )
+    }
+}
+
 
 @Composable
 private fun TasksList(
@@ -129,7 +142,7 @@ private fun TasksList(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         ) {
             items(tasksListViewModel.tasksToShow) { task ->
-                TaskContainer(task = task)
+                TaskContainer(task = task, tasksListViewModel = tasksListViewModel)
             }
         }
     }
@@ -138,18 +151,31 @@ private fun TasksList(
 
 @Composable
 private fun TaskContainer(
+    tasksListViewModel: TasksListViewModel,
     task: Task
 ) {
     when (task.status) {
-        TaskStatus.COMPLETED -> TaskCompletedOrFreeContainer(task = task)
-        TaskStatus.UNASSIGNED -> TaskCompletedOrFreeContainer(task = task)
-        TaskStatus.IN_PROGRESS -> TaskAssignedContainer(task = task)
+        TaskStatus.COMPLETED -> TaskCompletedOrFreeContainer(
+            task = task,
+            tasksListViewModel = tasksListViewModel
+        )
+
+        TaskStatus.UNASSIGNED -> TaskCompletedOrFreeContainer(
+            task = task,
+            tasksListViewModel = tasksListViewModel
+        )
+
+        TaskStatus.IN_PROGRESS -> TaskAssignedContainer(
+            task = task,
+            tasksListViewModel = tasksListViewModel
+        )
     }
 }
 
 
 @Composable
 private fun TaskCompletedOrFreeContainer(
+    tasksListViewModel: TasksListViewModel,
     task: Task
 ) {
     Row(
@@ -157,6 +183,7 @@ private fun TaskCompletedOrFreeContainer(
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         modifier = Modifier
             .bounceClick()
+            .clickable { tasksListViewModel.onTaskSelected(task) }
             .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .wrapContentHeight()
@@ -184,6 +211,7 @@ private fun TaskCompletedOrFreeContainer(
 
 @Composable
 private fun TaskAssignedContainer(
+    tasksListViewModel: TasksListViewModel,
     task: Task
 ) {
     Row(
@@ -191,6 +219,7 @@ private fun TaskAssignedContainer(
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         modifier = Modifier
             .bounceClick()
+            .clickable { tasksListViewModel.onTaskSelected(task) }
             .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .wrapContentHeight()

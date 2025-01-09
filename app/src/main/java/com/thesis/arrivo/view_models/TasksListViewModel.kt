@@ -27,8 +27,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 class TasksListViewModel(
-    private val navHostController: NavHostController,
-    private val context: Context
+    private val navHostController: NavHostController, private val context: Context
 ) : ViewModel() {
 
     companion object {
@@ -47,8 +46,7 @@ class TasksListViewModel(
         )
 
         fun getRenamedFilter(filer: TaskStatus) = RENAMED_FILTERS.getOrDefault(
-            key = filer,
-            defaultValue = filer.name
+            key = filer, defaultValue = filer.name
         )
 
 
@@ -82,10 +80,8 @@ class TasksListViewModel(
     fun getActiveFilters() = activeFilters
 
     fun toggleFilterActive(taskFilter: TaskStatus) {
-        if (activeFilters.contains(taskFilter))
-            _activeFilters.remove(taskFilter)
-        else
-            _activeFilters.add(taskFilter)
+        if (activeFilters.contains(taskFilter)) _activeFilters.remove(taskFilter)
+        else _activeFilters.add(taskFilter)
 
         filterTasks()
     }
@@ -98,9 +94,35 @@ class TasksListViewModel(
 
     fun onAddTaskButtonClick() {
         navigateTo(
-            navController = navHostController,
-            navigationItem = NavigationItem.TaskCreateAdmin
+            navController = navHostController, navigationItem = NavigationItem.TaskCreateAdmin
         )
+    }
+
+
+    /**
+     * Task details
+     **/
+
+
+    var showTaskDetailsDialog by mutableStateOf(false)
+    private val _selectedTask = mutableStateOf(Task.emptyTask())
+    val selectedTask: Task
+        get() = _selectedTask.value
+
+
+    fun onTaskSelected(task: Task) {
+        _selectedTask.value = task
+        toggleShowTaskDetailsDialog()
+    }
+
+
+    fun onTaskDismiss() {
+        toggleShowTaskDetailsDialog()
+    }
+
+
+    fun toggleShowTaskDetailsDialog() {
+        showTaskDetailsDialog = !showTaskDetailsDialog
     }
 
 
@@ -140,7 +162,9 @@ class TasksListViewModel(
                 val matchesStatus = task.status in activeFilters || activeFilters.isEmpty()
 
                 val matchesDate = task.assignedDate?.let {
-                    val selectedDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(selectedDate), ZoneId.systemDefault())
+                    val selectedDateTime = LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(selectedDate), ZoneId.systemDefault()
+                    )
                     task.assignedDate.toLocalDate() == selectedDateTime.toLocalDate()
                 } ?: true
 

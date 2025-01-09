@@ -14,4 +14,19 @@ data class Task(
     val assignedDate: LocalDateTime?,
     val employee: EmployeeResponse?,
     val products: List<Product> = listOf()
-)
+) {
+    companion object {
+        fun emptyTask(): Task {
+            return Task (
+                id = 0,
+                title = "",
+                location = Location(0.0,0.0),
+                addressText = "",
+                status = TaskStatus.UNASSIGNED,
+                assignedDate = null,
+                employee = null,
+                products = emptyList()
+            )
+        }
+    }
+}
