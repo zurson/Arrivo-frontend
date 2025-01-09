@@ -18,7 +18,7 @@ data class Task(
     companion object {
         fun emptyTask(): Task {
             return Task (
-                id = 0,
+                id = -1,
                 title = "",
                 location = Location(0.0,0.0),
                 addressText = "",
