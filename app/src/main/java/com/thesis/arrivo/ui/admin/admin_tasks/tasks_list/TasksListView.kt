@@ -306,7 +306,7 @@ private fun BottomSector(
     tasksListViewModel: TasksListViewModel
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.tasks_list_bottom_sector_vertical_space)),
+        verticalArrangement = Arrangement.SpaceEvenly,
         modifier = modifier
             .fillMaxSize()
     ) {
