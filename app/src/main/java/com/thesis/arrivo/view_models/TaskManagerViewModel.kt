@@ -8,7 +8,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.AutocompletePrediction
@@ -22,9 +21,10 @@ import com.thesis.arrivo.communication.ErrorResponse
 import com.thesis.arrivo.communication.available_products.AvailableProduct
 import com.thesis.arrivo.communication.available_products.AvailableProductsRepository
 import com.thesis.arrivo.communication.task.TaskCreateRequest
+import com.thesis.arrivo.communication.task.TaskUpdateRequest
 import com.thesis.arrivo.communication.task.TasksRepository
 import com.thesis.arrivo.components.NavigationItem
-import com.thesis.arrivo.ui.admin.admin_tasks.create_task.Product
+import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.Product
 import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.mapError
@@ -33,9 +33,9 @@ import com.thesis.arrivo.utilities.showErrorDialog
 import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.launch
 
-class NewTaskViewModel(
+class TaskManagerViewModel(
     private val placesClient: PlacesClient,
-    private val navHostController: NavHostController
+    private val mainScaffoldViewModel: MainScaffoldViewModel
 ) : ViewModel() {
 
     private val tasksRepository: TasksRepository by lazy { TasksRepository() }
@@ -323,7 +323,7 @@ class NewTaskViewModel(
 
 
     /**
-     * Create Task
+     * Create or Save Task
      **/
 
 
@@ -336,15 +336,18 @@ class NewTaskViewModel(
     var taskTitleError by mutableStateOf(false)
     var deliveryAddressError by mutableStateOf(false)
 
-    fun onTaskCreateButtonClick(context: Context) {
-        if (!validateTaskCreateConditions())
+    fun onButtonClick(context: Context, editMode: Boolean) {
+        if (!validateConditions())
             return
 
-        sendTaskCreateRequest(context)
+        if (editMode)
+            sendTaskUpdateRequest(context, editMode)
+        else
+            sendTaskCreateRequest(context, editMode)
     }
 
 
-    private fun validateTaskCreateConditions(): Boolean {
+    private fun validateConditions(): Boolean {
         if (taskTitle.isEmpty()) {
             taskTitleError = true
             return false
@@ -359,12 +362,30 @@ class NewTaskViewModel(
     }
 
 
-    private fun sendTaskCreateRequest(context: Context) {
+    private fun sendTaskCreateRequest(context: Context, editMode: Boolean) {
         viewModelScope.launch {
             try {
                 setActionInProgress(true)
                 tasksRepository.createTask(createTaskCreateRequest())
-                onSuccess(context)
+                onSuccess(context, editMode)
+            } catch (e: Exception) {
+                onFailure(context, mapError(e, context))
+            } finally {
+                setActionInProgress(false)
+            }
+        }
+    }
+
+
+    private fun sendTaskUpdateRequest(context: Context, editMode: Boolean) {
+        viewModelScope.launch {
+            try {
+                setActionInProgress(true)
+                tasksRepository.updateTask(
+                    id = mainScaffoldViewModel.taskToEdit.task.id,
+                    taskUpdateRequest = createTaskUpdateRequest()
+                )
+                onSuccess(context, editMode)
             } catch (e: Exception) {
                 onFailure(context, mapError(e, context))
             } finally {
@@ -387,14 +408,38 @@ class NewTaskViewModel(
     }
 
 
-    private fun onSuccess(context: Context) {
+    private fun createTaskUpdateRequest(): TaskUpdateRequest {
+        val taskToEdit = mainScaffoldViewModel.taskToEdit.task
+
+        return TaskUpdateRequest(
+            title = taskTitle,
+            location = Location(
+                latitude = selectedLocation.latitude,
+                longitude = selectedLocation.longitude
+            ),
+            addressText = finalAddress,
+            products = products,
+            status = taskToEdit.status,
+            assignedDate = taskToEdit.assignedDate,
+            employeeId = taskToEdit.employee?.id
+        )
+    }
+
+
+    private fun onSuccess(context: Context, editMode: Boolean) {
+        val messageId =
+            if (editMode)
+                R.string.task_create_or_edit_edit_success_message
+            else
+                R.string.task_create_or_edit_create_success_message
+
         showToast(
             context = context,
-            text = context.getString(R.string.new_task_create_success_message),
+            text = context.getString(messageId),
             toastLength = Toast.LENGTH_LONG,
         )
 
-        navigateTo(navHostController, NavigationItem.TasksListAdmin, true)
+        navigateTo(mainScaffoldViewModel.navController, NavigationItem.TasksListAdmin, true)
     }
 
 
@@ -404,6 +449,24 @@ class NewTaskViewModel(
             title = context.getString(R.string.error_title),
             errorResponse = error
         )
+    }
+
+
+    /**
+     * Task Edit Mode
+     **/
+
+
+    fun prepareToEdit() {
+        val taskToEdit = mainScaffoldViewModel.taskToEdit
+        val task = taskToEdit.task
+
+        taskTitle = task.title
+        products = task.products.toMutableList()
+        finalAddress = task.addressText
+        query = task.addressText
+        setSelectedLocation(task.location.toLatLon())
+        isLocationSelected = true
     }
 
 

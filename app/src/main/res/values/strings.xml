@@ -15,8 +15,7 @@
 
     <!-- NavBar - Admin -->
     <string name="nav_accidents_label_admin">Accidents</string>
-    <string name="nav_tasks_list_label_admin">Tasks List</string>
-    <string name="nav_task_create_label_admin">Create Task</string>
+    <string name="nav_tasks_list_label_admin">Tasks</string>
     <string name="nav_employees_label_admin">Employees</string>
 
     <!-- LoginView -->
@@ -47,15 +46,17 @@
     <string name="employee_edit_success_message">Data updated successfully!</string>
 
     <!-- New Task -->
-    <string name="new_task_title_label">Task title</string>
-    <string name="new_task_title_error_message">Task title is incorrect</string>
-    <string name="new_task_delivery_address_label">Delivery address</string>
-    <string name="new_task_delivery_address_error_message">Delivery address is incorrect</string>
-    <string name="new_task_products_section_title">Products</string>
-    <string name="new_task_create_success_message">Task created successfully!</string>
+    <string name="task_create_or_edit_title_label">Task title</string>
+    <string name="task_create_or_edit_title_error_message">Task title is incorrect</string>
+    <string name="task_create_or_edit_delivery_address_label">Delivery address</string>
+    <string name="task_create_or_edit_delivery_address_error_message">Delivery address is incorrect</string>
+    <string name="task_create_or_edit_products_section_title">Products</string>
+    <string name="task_create_or_edit_create_success_message">Task created successfully!</string>
+    <string name="task_create_or_edit_edit_success_message">Task edited successfully!</string>
 
-    <string name="new_task_no_products_text">Add first product!</string>
-    <string name="new_task_create_task_button_text">Create Task</string>
+    <string name="task_create_or_edit_no_products_text">Add first product!</string>
+    <string name="task_create_or_edit_task_create_button_text">Create Task</string>
+    <string name="task_create_or_edit_task_edit_button_text">Save Task</string>
 
     <string name="loc_search_dialog_title">Find location</string>
     <string name="loc_search_dialog_button_text">Select location</string>

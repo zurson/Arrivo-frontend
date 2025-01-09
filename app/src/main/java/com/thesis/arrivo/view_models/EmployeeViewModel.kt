@@ -10,7 +10,7 @@ import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.ErrorResponse
 import com.thesis.arrivo.communication.employee.EmployeeCreateAccountRequest
 import com.thesis.arrivo.communication.employee.EmployeeRepository
-import com.thesis.arrivo.communication.employee.EmployeeResponse
+import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.employee.EmployeeUpdateRequest
 import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.utilities.mapError
@@ -26,8 +26,8 @@ class EmployeeViewModel : ViewModel() {
 
     private val repository: EmployeeRepository by lazy { EmployeeRepository() }
 
-    private val _employees = MutableStateFlow<List<EmployeeResponse>>(emptyList())
-    val employees: StateFlow<List<EmployeeResponse>> = _employees.asStateFlow()
+    private val _employees = MutableStateFlow<List<Employee>>(emptyList())
+    val employees: StateFlow<List<Employee>> = _employees.asStateFlow()
 
     private val _actionInProgress = mutableStateOf(false)
     val actionInProgress: Boolean
@@ -36,7 +36,7 @@ class EmployeeViewModel : ViewModel() {
     private val _showEmployeeDetails = mutableStateOf(false)
     val showEmployeeDetails: Boolean get() = _showEmployeeDetails.value
 
-    private val _clickedEmployee = mutableStateOf(EmployeeResponse.emptyEmployeeResponse())
+    private val _clickedEmployee = mutableStateOf(Employee.emptyEmployee())
     var clickedEmployee = _clickedEmployee.value
 
 
@@ -105,6 +105,7 @@ class EmployeeViewModel : ViewModel() {
                     is EmployeeAccountOperation.Create -> {
                         repository.createEmployeeAccount(operation.data)
                     }
+
                     is EmployeeAccountOperation.Update -> {
                         repository.updateEmployeeAccount(operation.id, operation.data)
                     }
@@ -120,9 +121,9 @@ class EmployeeViewModel : ViewModel() {
 
     sealed class EmployeeAccountOperation {
         data class Create(val data: EmployeeCreateAccountRequest) : EmployeeAccountOperation()
-        data class Update(val id: Long, val data: EmployeeUpdateRequest) : EmployeeAccountOperation()
+        data class Update(val id: Long, val data: EmployeeUpdateRequest) :
+            EmployeeAccountOperation()
     }
-
 
 
     private fun showSuccessToast(context: Context, editMode: Boolean) {
@@ -142,7 +143,7 @@ class EmployeeViewModel : ViewModel() {
 
     fun onSuccess(context: Context, navController: NavHostController, editMode: Boolean) {
         showSuccessToast(context, editMode)
-        navigateTo(navController, NavigationItem.EmployeesAdmin)
+        navigateTo(navController, NavigationItem.EmployeesAdmin, true)
     }
 
 
@@ -155,7 +156,20 @@ class EmployeeViewModel : ViewModel() {
     }
 
 
-    fun setEmployeeToEdit(
+    fun onEmployeeEditButtonClick(
+        mainScaffoldViewModel: MainScaffoldViewModel,
+    ) {
+        setEmployeeToEdit(mainScaffoldViewModel = mainScaffoldViewModel)
+        toggleShowEmployeeDetails()
+
+        navigateTo(
+            navController = mainScaffoldViewModel.navController,
+            navigationItem = NavigationItem.EditEmployeeAdmin
+        )
+    }
+
+
+    private fun setEmployeeToEdit(
         mainScaffoldViewModel: MainScaffoldViewModel,
     ) {
         mainScaffoldViewModel.employeeToEdit = clickedEmployee

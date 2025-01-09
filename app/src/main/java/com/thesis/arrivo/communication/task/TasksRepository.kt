@@ -18,6 +18,6 @@ class TasksRepository {
         id: Long,
         taskUpdateRequest: TaskUpdateRequest
     ) {
-        taskService.updateTest(id, taskUpdateRequest)
+        taskService.updateTask(id, taskUpdateRequest)
     }
 }

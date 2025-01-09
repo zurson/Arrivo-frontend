@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.admin.admin_tasks.create_task
+package com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -30,24 +30,24 @@ import com.thesis.arrivo.components.AppTextField
 import com.thesis.arrivo.components.GoogleMapView
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
 import com.thesis.arrivo.utilities.dpToSp
-import com.thesis.arrivo.view_models.NewTaskViewModel
+import com.thesis.arrivo.view_models.TaskManagerViewModel
 
 
 @Composable
 fun LocationSearchAlertDialog(
     modifier: Modifier = Modifier,
-    newTaskViewModel: NewTaskViewModel
+    taskManagerViewModel: TaskManagerViewModel
 ) {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
-            newTaskViewModel.selectedLocation,
-            NewTaskViewModel.DEFAULT_ZOOM
+            taskManagerViewModel.selectedLocation,
+            TaskManagerViewModel.DEFAULT_ZOOM
         )
     }
 
     InfoAlertDialog(
         title = stringResource(R.string.loc_search_dialog_title),
-        onDismiss = { newTaskViewModel.toggleLocationSearchDialog() },
+        onDismiss = { taskManagerViewModel.toggleLocationSearchDialog() },
         modifier = modifier
     ) {
         Column(
@@ -55,12 +55,12 @@ fun LocationSearchAlertDialog(
         ) {
             SearchField(
                 cameraPositionState = cameraPositionState,
-                newTaskViewModel = newTaskViewModel
+                taskManagerViewModel = taskManagerViewModel
             )
 
-            if (newTaskViewModel.predictions.isEmpty()) {
+            if (taskManagerViewModel.predictions.isEmpty()) {
                 GoogleMapView(
-                    selectedLocation = newTaskViewModel.selectedLocation,
+                    selectedLocation = taskManagerViewModel.selectedLocation,
                     cameraPositionState = cameraPositionState,
                     modifier = Modifier
                         .height(dimensionResource(R.dimen.loc_search_dialog_map_height))
@@ -74,7 +74,7 @@ fun LocationSearchAlertDialog(
                 icon = Icons.Outlined.LocationOn,
                 modifier = Modifier
                     .padding(top = dimensionResource(R.dimen.loc_search_dialog_button_top_padding)),
-                onClick = { newTaskViewModel.onSelectLocationButtonClick() },
+                onClick = { taskManagerViewModel.onSelectLocationButtonClick() },
             )
         }
     }
@@ -83,24 +83,24 @@ fun LocationSearchAlertDialog(
 
 @Composable
 private fun SearchField(
-    newTaskViewModel: NewTaskViewModel,
+    taskManagerViewModel: TaskManagerViewModel,
     cameraPositionState: CameraPositionState
 ) {
     AppTextField(
-        value = newTaskViewModel.query,
-        onValueChange = { newTaskViewModel.onSearchBarValueChange(it) },
+        value = taskManagerViewModel.query,
+        onValueChange = { taskManagerViewModel.onSearchBarValueChange(it) },
         trailingIcon = Icons.Filled.Close,
-        onTrailingIconClick = { newTaskViewModel.onLocationSearchBarTrailingIconClick() },
+        onTrailingIconClick = { taskManagerViewModel.onLocationSearchBarTrailingIconClick() },
         label = stringResource(R.string.loc_search_dialog_search_field_label),
         maxLines = 1,
         modifier = Modifier.fillMaxWidth(),
-        isError = newTaskViewModel.locationSearchBarError,
+        isError = taskManagerViewModel.locationSearchBarError,
         errorMessage = stringResource(R.string.loc_search_dialog_search_field_error_message)
     )
 
     LazyColumn {
-        items(newTaskViewModel.predictions) { prediction ->
-            val locationText = newTaskViewModel.getFullAddress(prediction)
+        items(taskManagerViewModel.predictions) { prediction ->
+            val locationText = taskManagerViewModel.getFullAddress(prediction)
 
             Text(
                 text = locationText,
@@ -108,7 +108,7 @@ private fun SearchField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(dimensionResource(R.dimen.loc_search_dialog_predictions_padding))
-                    .clickable { newTaskViewModel.onAddressClick(prediction, cameraPositionState) }
+                    .clickable { taskManagerViewModel.onAddressClick(prediction, cameraPositionState) }
             )
         }
     }

@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.admin.admin_tasks.create_task
+package com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,45 +15,45 @@ import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.AppSpinner
 import com.thesis.arrivo.components.AppTextField
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
-import com.thesis.arrivo.view_models.NewTaskViewModel
+import com.thesis.arrivo.view_models.TaskManagerViewModel
 
 @Composable
 fun AddProductAlertDialog(
     modifier: Modifier = Modifier,
-    newTaskViewModel: NewTaskViewModel
+    taskManagerViewModel: TaskManagerViewModel
 ) {
     InfoAlertDialog(
         title = stringResource(R.string.add_product_dialog_title),
-        onDismiss = { newTaskViewModel.toggleShowAddProductDialog() },
+        onDismiss = { taskManagerViewModel.toggleShowAddProductDialog() },
         modifier = modifier
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         ) {
             AppSpinner(
-                items = newTaskViewModel.getAvailableProducts().map { productResponse -> productResponse.name },
+                items = taskManagerViewModel.getAvailableProducts().map { productResponse -> productResponse.name },
                 label = stringResource(R.string.add_product_spinner_label),
-                onItemSelected = { newTaskViewModel.onProductSelected(it) },
+                onItemSelected = { taskManagerViewModel.onProductSelected(it) },
                 selectedItem = "",
                 modifier = Modifier.fillMaxWidth(),
-                isError = newTaskViewModel.isProductSpinnerError,
+                isError = taskManagerViewModel.isProductSpinnerError,
                 errorMessage = stringResource(R.string.add_product_spinner_error_message)
             )
 
             AppTextField(
-                value = newTaskViewModel.selectedProductAmount,
-                onValueChange = { newTaskViewModel.onProductAmountValueChange(it) },
+                value = taskManagerViewModel.selectedProductAmount,
+                onValueChange = { taskManagerViewModel.onProductAmountValueChange(it) },
                 label = stringResource(R.string.add_product_amount_label),
                 keyboardType = KeyboardType.Number,
                 modifier = Modifier.fillMaxWidth(),
-                isError = newTaskViewModel.isProductAmountError,
+                isError = taskManagerViewModel.isProductAmountError,
                 errorMessage = stringResource(R.string.add_product_amount_error_message)
             )
 
             AppButton(
                 text = stringResource(R.string.add_product_button_text),
                 icon = Icons.Outlined.AddCircle,
-                onClick = { newTaskViewModel.onProductAddButtonClick() }
+                onClick = { taskManagerViewModel.onProductAddButtonClick() }
             )
         }
     }

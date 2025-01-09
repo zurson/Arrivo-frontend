@@ -1,6 +1,6 @@
 package com.thesis.arrivo.communication.employee
 
-data class EmployeeResponse(
+data class Employee(
     val id: Long,
     var firstName: String,
     var lastName: String,
@@ -10,9 +10,9 @@ data class EmployeeResponse(
 ) {
 
     companion object {
-        fun emptyEmployeeResponse(): EmployeeResponse {
-            return EmployeeResponse(
-                id = 0,
+        fun emptyEmployee(): Employee {
+            return Employee(
+                id = -1,
                 firstName = "",
                 lastName = "",
                 email = "",

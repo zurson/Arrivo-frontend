@@ -9,7 +9,7 @@ import retrofit2.http.Path
 interface EmployeeService {
 
     @GET("employees")
-    suspend fun getAllEmployees(): List<EmployeeResponse>
+    suspend fun getAllEmployees(): List<Employee>
 
     @POST("employees")
     suspend fun createEmployeeAccount(@Body createAccountRequest: EmployeeCreateAccountRequest)

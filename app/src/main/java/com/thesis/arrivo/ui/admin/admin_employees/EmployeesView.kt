@@ -41,15 +41,13 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
-import com.thesis.arrivo.communication.employee.EmployeeResponse
+import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.LoadingScreen
-import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
-import com.thesis.arrivo.utilities.navigateTo
 import com.thesis.arrivo.utilities.showErrorDialog
 import com.thesis.arrivo.view_models.EmployeeViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
@@ -113,7 +111,7 @@ fun EmployeesView(mainScaffoldViewModel: MainScaffoldViewModel) {
         val buttonBottomGuideline = createGuidelineFromTop(0.96f)
         val buttonStartGuideline = createGuidelineFromStart(0.3f)
 
-        EmployeeCreateButton(
+        ConfirmButton(
             mainScaffoldViewModel = mainScaffoldViewModel,
             modifier = Modifier
                 .constrainAs(buttonRef) {
@@ -140,16 +138,7 @@ private fun ShowEmployeeDetails(
         EmployeesDetailsAlertDialog(
             emp = employeeViewModel.clickedEmployee,
             onDismiss = { employeeViewModel.toggleShowEmployeeDetails() },
-
-            onEditButtonClick = {
-                employeeViewModel.setEmployeeToEdit(mainScaffoldViewModel = mainScaffoldViewModel)
-                employeeViewModel.toggleShowEmployeeDetails()
-                navigateTo(
-                    navController = mainScaffoldViewModel.navController,
-                    navigationItem = NavigationItem.EditEmployeeAdmin
-                )
-            }
-
+            onEditButtonClick = { employeeViewModel.onEmployeeEditButtonClick(mainScaffoldViewModel) }
         )
 }
 
@@ -158,7 +147,7 @@ private fun ShowEmployeeDetails(
 private fun EmployeesList(
     modifier: Modifier = Modifier,
     employeeViewModel: EmployeeViewModel,
-    employees: List<EmployeeResponse>
+    employees: List<Employee>
 ) {
     Box(
         modifier = modifier
@@ -187,7 +176,7 @@ private fun EmployeesList(
 @Composable
 private fun EmployeeContainer(
     employeeViewModel: EmployeeViewModel,
-    employee: EmployeeResponse
+    employee: Employee
 ) {
     Column(
         modifier = Modifier
@@ -247,7 +236,7 @@ private fun EmployeeContainer(
 
 
 @Composable
-private fun EmployeeCreateButton(
+private fun ConfirmButton(
     modifier: Modifier = Modifier,
     mainScaffoldViewModel: MainScaffoldViewModel
 ) {

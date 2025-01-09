@@ -84,7 +84,7 @@
     <dimen name="product_delete_confirmation_product_buttons_horizontal_padding">16dp</dimen>
 
     <!-- TASKS LIST -->
-    <dimen name="tasks_list_arrow_right_icon_size">50dp</dimen>
+    <dimen name="tasks_list_arrow_right_icon_size">40dp</dimen>
     <dimen name="tasks_list_task_circle_icon_size">40dp</dimen>
     <dimen name="tasks_list_task_title_text_size">20sp</dimen>
     <dimen name="tasks_list_task_employee_text_size">24sp</dimen>

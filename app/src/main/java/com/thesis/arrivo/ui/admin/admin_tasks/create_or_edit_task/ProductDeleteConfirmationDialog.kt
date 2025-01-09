@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.admin.admin_tasks.create_task
+package com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,24 +15,24 @@ import com.thesis.arrivo.R
 import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
 import com.thesis.arrivo.utilities.dpToSp
-import com.thesis.arrivo.view_models.NewTaskViewModel
+import com.thesis.arrivo.view_models.TaskManagerViewModel
 
 @Composable
 fun ProductDeleteConfirmationDialog(
     modifier: Modifier = Modifier,
-    newTaskViewModel: NewTaskViewModel,
+    taskManagerViewModel: TaskManagerViewModel,
     onYesClick: () -> Unit,
     onNoClick: () -> Unit
 ) {
     InfoAlertDialog(
         title = stringResource(R.string.product_delete_confirmation_dialog_title),
-        onDismiss = { newTaskViewModel.toggleShowProductDeleteConfirmationDialog() },
+        onDismiss = { taskManagerViewModel.toggleShowProductDeleteConfirmationDialog() },
         modifier = modifier,
     ) {
-        val productToDelete = newTaskViewModel.productToDelete
+        val productToDelete = taskManagerViewModel.productToDelete
 
         if (productToDelete == null) {
-            newTaskViewModel.toggleShowProductDeleteConfirmationDialog()
+            taskManagerViewModel.toggleShowProductDeleteConfirmationDialog()
             return@InfoAlertDialog
         }
 

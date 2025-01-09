@@ -1,7 +1,7 @@
 package com.thesis.arrivo.communication.task
 
-import com.thesis.arrivo.communication.employee.EmployeeResponse
-import com.thesis.arrivo.ui.admin.admin_tasks.create_task.Product
+import com.thesis.arrivo.communication.employee.Employee
+import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.Product
 import com.thesis.arrivo.utilities.Location
 import java.time.LocalDateTime
 
@@ -12,13 +12,13 @@ data class Task(
     val addressText: String,
     val status: TaskStatus,
     val assignedDate: LocalDateTime?,
-    val employee: EmployeeResponse?,
+    val employee: Employee?,
     val products: List<Product> = listOf()
 ) {
     companion object {
         fun emptyTask(): Task {
             return Task (
-                id = 0,
+                id = -1,
                 title = "",
                 location = Location(0.0,0.0),
                 addressText = "",

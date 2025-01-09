@@ -15,7 +15,7 @@ interface TasksService {
     suspend fun createTask(@Body taskCreateRequest: TaskCreateRequest)
 
     @PATCH("tasks/{id}")
-    suspend fun updateTest(
+    suspend fun updateTask(
         @Path("id") id: Long,
         @Body taskUpdateRequest: TaskUpdateRequest
     )
