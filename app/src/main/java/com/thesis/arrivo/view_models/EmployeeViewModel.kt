@@ -143,7 +143,7 @@ class EmployeeViewModel : ViewModel() {
 
     fun onSuccess(context: Context, navController: NavHostController, editMode: Boolean) {
         showSuccessToast(context, editMode)
-        navigateTo(navController, NavigationItem.EmployeesAdmin)
+        navigateTo(navController, NavigationItem.EmployeesAdmin, true)
     }
 
 
