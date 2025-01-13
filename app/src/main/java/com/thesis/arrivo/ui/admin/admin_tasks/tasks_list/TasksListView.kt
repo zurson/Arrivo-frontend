@@ -184,7 +184,7 @@ private fun TaskCompletedOrFreeContainer(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_horizontal_space)),
         modifier = Modifier
             .bounceClick()
             .clickable { tasksListViewModel.onTaskSelected(task) }
@@ -254,7 +254,7 @@ private fun TaskAssignedContainer(
 
 
 @Composable
-fun TaskTitle(
+private fun TaskTitle(
     title: String
 ) {
     Text(
@@ -270,7 +270,7 @@ fun TaskTitle(
 
 
 @Composable
-fun TaskAddress(
+private fun TaskAddress(
     address: String
 ) {
     Text(
@@ -286,7 +286,7 @@ fun TaskAddress(
 
 
 @Composable
-fun TaskEmployeeData(
+private fun TaskEmployeeData(
     firstName: String?,
     lastName: String?
 ) {

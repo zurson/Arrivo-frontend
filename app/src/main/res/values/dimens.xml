@@ -61,6 +61,7 @@
 
     <!-- LIST ELEMENTS PADDING -->
     <dimen name="lists_elements_vertical_space">16dp</dimen>
+    <dimen name="lists_elements_horizontal_space">16dp</dimen>
 
     <!-- EMPLOYEE DETAILS -->
     <dimen name="employee_details_label_text_size">16sp</dimen>
@@ -110,5 +111,10 @@
     <!-- ROAD ACCIDENTS LIST -->
     <dimen name="accidents_filter_text_size">16sp</dimen>
     <dimen name="accidents_filter_padding">8dp</dimen>
+
+    <dimen name="accidents_container_padding">8dp</dimen>
+    <dimen name="accidents_container_participant_text_size">20sp</dimen>
+    <dimen name="accidents_container_category_text_size">16sp</dimen>
+    <dimen name="accidents_container_circle_icon_size">40dp</dimen>
 
 </resources>
