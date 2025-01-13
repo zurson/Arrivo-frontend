@@ -28,10 +28,9 @@ import com.thesis.arrivo.communication.employee.EmployeeStatus
 import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.AppSpinner
 import com.thesis.arrivo.components.AppTextField
-import com.thesis.arrivo.utilities.FormType
-import com.thesis.arrivo.components.LoadingScreen
 import com.thesis.arrivo.components.PhoneVisualTransformation
 import com.thesis.arrivo.ui.theme.Theme
+import com.thesis.arrivo.utilities.FormType
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.view_models.AuthViewModel
 import com.thesis.arrivo.view_models.EmployeeViewModel
@@ -43,7 +42,7 @@ fun CreateEditEmployeeView(
     editMode: Boolean = false
 ) {
     val context = LocalContext.current
-    val employeeViewModel = EmployeeViewModel()
+    val employeeViewModel = EmployeeViewModel(mainScaffoldViewModel)
     val authViewModel = AuthViewModel(mainScaffoldViewModel)
 
     if (editMode) authViewModel.prepareToEdit()
@@ -100,8 +99,6 @@ fun CreateEditEmployeeView(
                     height = Dimension.fillToConstraints
                 }
         )
-
-        LoadingScreen(enabled = employeeViewModel.actionInProgress)
     }
 }
 

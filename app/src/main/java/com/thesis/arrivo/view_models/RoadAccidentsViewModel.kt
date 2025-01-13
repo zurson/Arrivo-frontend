@@ -19,6 +19,7 @@ import com.thesis.arrivo.utilities.Settings.Companion.ROAD_ACCIDENTS_ACTIVE_COLO
 import com.thesis.arrivo.utilities.Settings.Companion.ROAD_ACCIDENTS_FINISHED_COLOR
 import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.mapError
 import com.thesis.arrivo.utilities.showErrorDialog
 import com.thesis.arrivo.utilities.showToast
@@ -27,6 +28,7 @@ import java.time.LocalDate
 
 class RoadAccidentsViewModel(
     private val context: Context,
+    private val loadingScreenManager: LoadingScreenManager
 ) : ViewModel() {
 
     companion object {
@@ -93,8 +95,6 @@ class RoadAccidentsViewModel(
      * Fetching and Sending Data
      **/
 
-    var showLoadingScreen by mutableStateOf(false)
-
     private val roadAccidentsRepository = RoadAccidentsRepository()
 
     private val _accidentsToShow = mutableStateListOf<RoadAccident>()
@@ -106,14 +106,14 @@ class RoadAccidentsViewModel(
     private fun fetchRoadAccidents() {
         viewModelScope.launch {
             try {
-                showLoadingScreen = true
+                loadingScreenManager.showLoadingScreen()
                 _allAccidents.clear()
                 _allAccidents.addAll(roadAccidentsRepository.getAllRoadAccidents())
                 filterList()
             } catch (e: Exception) {
                 onFailure(e)
             } finally {
-                showLoadingScreen = false
+                loadingScreenManager.hideLoadingScreen()
             }
         }
     }
@@ -181,11 +181,11 @@ class RoadAccidentsViewModel(
     private fun markAccidentAsResolved() {
         viewModelScope.launch {
             try {
-                showLoadingScreen = true
+                loadingScreenManager.showLoadingScreen()
                 roadAccidentsRepository.markRoadAccidentAsResolved(selectedAccident.id)
                 onUpdateSuccess()
             } catch (e: Exception) {
-                showLoadingScreen = false
+                loadingScreenManager.hideLoadingScreen()
                 onFailure(e)
             }
         }

@@ -38,7 +38,6 @@ import com.google.android.libraries.places.api.net.PlacesClient
 import com.thesis.arrivo.R
 import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.AppTextField
-import com.thesis.arrivo.components.LoadingScreen
 import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
@@ -54,7 +53,13 @@ fun TaskCreateOrEditView(
 ) {
     val context = LocalContext.current
     val taskManagerViewModel =
-        remember { TaskManagerViewModel(placesClient, mainScaffoldViewModel) }
+        remember {
+            TaskManagerViewModel(
+                placesClient,
+                mainScaffoldViewModel,
+                mainScaffoldViewModel
+            )
+        }
 
     if (editMode)
         taskManagerViewModel.prepareToEdit()
@@ -106,8 +111,6 @@ fun TaskCreateOrEditView(
                 width = Dimension.fillToConstraints
                 height = Dimension.fillToConstraints
             })
-
-        LoadingScreen(enabled = taskManagerViewModel.actionInProgress)
     }
 }
 

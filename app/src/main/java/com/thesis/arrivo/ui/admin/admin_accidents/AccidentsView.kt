@@ -36,7 +36,6 @@ import com.thesis.arrivo.communication.road_accidents.RoadAccident
 import com.thesis.arrivo.components.ArrowRightIcon
 import com.thesis.arrivo.components.Circle
 import com.thesis.arrivo.components.EmptyList
-import com.thesis.arrivo.components.LoadingScreen
 import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.components.date_picker.DatePickerField
 import com.thesis.arrivo.ui.theme.Theme
@@ -49,7 +48,7 @@ import com.thesis.arrivo.view_models.RoadAccidentsViewModel
 @Composable
 fun AccidentsView(mainScaffoldViewModel: MainScaffoldViewModel) {
     val context = LocalContext.current
-    val roadAccidentsViewModel = remember { RoadAccidentsViewModel(context) }
+    val roadAccidentsViewModel = remember { RoadAccidentsViewModel(context, mainScaffoldViewModel) }
 
     ConstraintLayout(
         modifier = Modifier
@@ -93,8 +92,6 @@ fun AccidentsView(mainScaffoldViewModel: MainScaffoldViewModel) {
                 width = Dimension.fillToConstraints
                 height = Dimension.fillToConstraints
             })
-
-        LoadingScreen(enabled = roadAccidentsViewModel.showLoadingScreen)
     }
 }
 

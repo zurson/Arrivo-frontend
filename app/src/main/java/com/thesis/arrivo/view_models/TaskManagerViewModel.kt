@@ -27,6 +27,7 @@ import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.Product
 import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.capitalize
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.mapError
 import com.thesis.arrivo.utilities.navigateTo
 import com.thesis.arrivo.utilities.showErrorDialog
@@ -35,7 +36,8 @@ import kotlinx.coroutines.launch
 
 class TaskManagerViewModel(
     private val placesClient: PlacesClient,
-    private val mainScaffoldViewModel: MainScaffoldViewModel
+    private val mainScaffoldViewModel: MainScaffoldViewModel,
+    private val loadingScreenManager: LoadingScreenManager
 ) : ViewModel() {
 
     private val tasksRepository: TasksRepository by lazy { TasksRepository() }
@@ -327,12 +329,6 @@ class TaskManagerViewModel(
      **/
 
 
-    var actionInProgress by mutableStateOf(false)
-
-    private fun updateActionInProgress(status: Boolean) {
-        actionInProgress = status
-    }
-
     var taskTitleError by mutableStateOf(false)
     var deliveryAddressError by mutableStateOf(false)
 
@@ -365,13 +361,13 @@ class TaskManagerViewModel(
     private fun sendTaskCreateRequest(context: Context, editMode: Boolean) {
         viewModelScope.launch {
             try {
-                updateActionInProgress(true)
+                loadingScreenManager.showLoadingScreen()
                 tasksRepository.createTask(createTaskCreateRequest())
                 onSuccess(context, editMode)
             } catch (e: Exception) {
                 onFailure(context, mapError(e, context))
             } finally {
-                updateActionInProgress(false)
+                loadingScreenManager.hideLoadingScreen()
             }
         }
     }
@@ -380,7 +376,7 @@ class TaskManagerViewModel(
     private fun sendTaskUpdateRequest(context: Context, editMode: Boolean) {
         viewModelScope.launch {
             try {
-                updateActionInProgress(true)
+                loadingScreenManager.showLoadingScreen()
                 tasksRepository.updateTask(
                     id = mainScaffoldViewModel.taskToEdit.task.id,
                     taskUpdateRequest = createTaskUpdateRequest()
@@ -389,7 +385,7 @@ class TaskManagerViewModel(
             } catch (e: Exception) {
                 onFailure(context, mapError(e, context))
             } finally {
-                updateActionInProgress(false)
+                loadingScreenManager.hideLoadingScreen()
             }
         }
     }

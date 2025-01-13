@@ -19,6 +19,7 @@ import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.mapError
 import com.thesis.arrivo.utilities.navigateTo
 import com.thesis.arrivo.utilities.showErrorDialog
@@ -27,7 +28,8 @@ import java.time.LocalDate
 
 class TasksListViewModel(
     private val context: Context,
-    private val mainScaffoldViewModel: MainScaffoldViewModel
+    private val mainScaffoldViewModel: MainScaffoldViewModel,
+    private val loadingScreenManager: LoadingScreenManager
 ) : ViewModel() {
 
     companion object {
@@ -160,20 +162,19 @@ class TasksListViewModel(
         get() = _tasksToShow
 
     private val _allTasks = mutableStateListOf<Task>()
-    var tasksFetchingInProgress by mutableStateOf(false)
 
 
     private fun fetchTasks() {
         viewModelScope.launch {
             try {
-                tasksFetchingInProgress = true
+                loadingScreenManager.showLoadingScreen()
                 _allTasks.clear()
                 _allTasks.addAll(tasksRepository.getAllTasks())
                 filterTasks()
             } catch (e: Exception) {
                 onFailure(e)
             } finally {
-                tasksFetchingInProgress = false
+                loadingScreenManager.hideLoadingScreen()
             }
         }
     }

@@ -3,7 +3,9 @@ package com.thesis.arrivo.view_models
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
@@ -15,6 +17,7 @@ import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskToEdit
 import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.Settings.Companion.AUTH_ACCOUNT_STATUS_CHECK_INTERVAL_MS
 import com.thesis.arrivo.utilities.changeActivity
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.navigateTo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +30,7 @@ class MainScaffoldViewModel(
     val context: Context,
     var adminMode: Boolean,
     val navController: NavHostController
-) : ViewModel() {
+) : ViewModel(), LoadingScreenManager {
 
     /**
      * NavBar elements
@@ -99,6 +102,9 @@ class MainScaffoldViewModel(
     }
 
     fun onNavItemClick(clickedItem: NavigationItem) {
+        if (isLoadingScreenEnabled())
+            return
+
         if (clickedItem.route == selectedView.route)
             return
 
@@ -221,5 +227,23 @@ class MainScaffoldViewModel(
             navigationItem = NavigationItem.CreateEmployeeAdmin
         )
     }
+
+
+    /**
+     * Loading Screen Manager
+     **/
+
+
+    private var loadingScreenEnabled by mutableStateOf(false)
+
+    override fun showLoadingScreen() {
+        loadingScreenEnabled = true
+    }
+
+    override fun hideLoadingScreen() {
+        loadingScreenEnabled = false
+    }
+
+    override fun isLoadingScreenEnabled(): Boolean = loadingScreenEnabled
 
 }
