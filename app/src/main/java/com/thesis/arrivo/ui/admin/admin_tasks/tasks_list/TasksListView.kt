@@ -38,6 +38,7 @@ import com.thesis.arrivo.communication.task.TaskStatus
 import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.ArrowRightIcon
 import com.thesis.arrivo.components.Circle
+import com.thesis.arrivo.components.EmptyList
 import com.thesis.arrivo.components.LoadingScreen
 import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.components.date_picker.DatePickerField
@@ -136,6 +137,11 @@ private fun TasksList(
         modifier = modifier
             .fillMaxSize()
     ) {
+        if (tasksListViewModel.tasksToShow.isEmpty()) {
+            EmptyList()
+            return
+        }
+
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         ) {
