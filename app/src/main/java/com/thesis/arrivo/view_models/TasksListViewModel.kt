@@ -17,14 +17,13 @@ import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskToEdit
 import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.Settings
+import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.mapError
 import com.thesis.arrivo.utilities.navigateTo
 import com.thesis.arrivo.utilities.showErrorDialog
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
+import java.time.LocalDate
 
 class TasksListViewModel(
     private val context: Context,
@@ -70,6 +69,7 @@ class TasksListViewModel(
 
     fun onDateSelected(dateMillis: Long?) {
         _selectedDate.longValue = dateMillis ?: getCurrentDateMillis()
+        selectedLocalDate = convertLongToLocalDate(selectedDate)
         filterTasks()
     }
 
@@ -153,6 +153,8 @@ class TasksListViewModel(
 
     private val tasksRepository = TasksRepository()
 
+    private var selectedLocalDate: LocalDate = convertLongToLocalDate(selectedDate)
+
     private val _tasksToShow = mutableStateListOf<Task>()
     val tasksToShow: List<Task>
         get() = _tasksToShow
@@ -183,10 +185,7 @@ class TasksListViewModel(
                 val matchesStatus = task.status in activeFilters || activeFilters.isEmpty()
 
                 val matchesDate = task.assignedDate?.let {
-                    val selectedDateTime = LocalDateTime.ofInstant(
-                        Instant.ofEpochMilli(selectedDate), ZoneId.systemDefault()
-                    )
-                    task.assignedDate.toLocalDate() == selectedDateTime.toLocalDate()
+                    task.assignedDate.toLocalDate().toEpochDay() == selectedLocalDate.toEpochDay()
                 } ?: true
 
                 matchesStatus && matchesDate
