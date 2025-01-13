@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.libraries.places.api.net.PlacesClient
+import com.thesis.arrivo.components.LoadingScreen
 import com.thesis.arrivo.components.MainScaffold
 import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_accidents.AccidentsView
@@ -82,7 +83,11 @@ private fun SetupMainScaffold(
                     composable(NavigationItem.AccountUser.route) { AccountView() }
 
                     /** Admin **/
-                    composable(NavigationItem.AccidentsAdmin.route) { AccidentsView() }
+                    composable(NavigationItem.AccidentsAdmin.route) {
+                        AccidentsView(
+                            mainScaffoldViewModel
+                        )
+                    }
                     composable(NavigationItem.TasksListAdmin.route) {
                         TasksListView(mainScaffoldViewModel)
                     }
@@ -120,8 +125,10 @@ private fun SetupMainScaffold(
                         LoginView(mainScaffoldViewModel = mainScaffoldViewModel)
                     }
                 }
+
             }
 
+            LoadingScreen(mainScaffoldViewModel.isLoadingScreenEnabled())
             mainScaffoldViewModel.startAuthListeners()
         }
     }

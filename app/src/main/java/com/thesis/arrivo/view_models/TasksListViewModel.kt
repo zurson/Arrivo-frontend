@@ -9,9 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.thesis.arrivo.R
-import com.thesis.arrivo.communication.ErrorResponse
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TaskStatus
 import com.thesis.arrivo.communication.task.TasksRepository
@@ -19,18 +17,19 @@ import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskToEdit
 import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.Settings
+import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.mapError
 import com.thesis.arrivo.utilities.navigateTo
 import com.thesis.arrivo.utilities.showErrorDialog
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
+import java.time.LocalDate
 
 class TasksListViewModel(
     private val context: Context,
-    private val mainScaffoldViewModel: MainScaffoldViewModel
+    private val mainScaffoldViewModel: MainScaffoldViewModel,
+    private val loadingScreenManager: LoadingScreenManager
 ) : ViewModel() {
 
     companion object {
@@ -38,7 +37,7 @@ class TasksListViewModel(
         private val selectedDate: Long
             get() = _selectedDate.longValue
 
-        private val _activeFilters = mutableStateListOf<TaskStatus>()
+        private val _activeFilters = mutableStateListOf(TaskStatus.UNASSIGNED)
         private val activeFilters: List<TaskStatus>
             get() = _activeFilters
 
@@ -72,6 +71,7 @@ class TasksListViewModel(
 
     fun onDateSelected(dateMillis: Long?) {
         _selectedDate.longValue = dateMillis ?: getCurrentDateMillis()
+        selectedLocalDate = convertLongToLocalDate(selectedDate)
         filterTasks()
     }
 
@@ -97,7 +97,8 @@ class TasksListViewModel(
 
     fun onAddTaskButtonClick() {
         navigateTo(
-            navController = mainScaffoldViewModel.navController, navigationItem = NavigationItem.TaskCreateAdmin
+            navController = mainScaffoldViewModel.navController,
+            navigationItem = NavigationItem.TaskCreateAdmin
         )
     }
 
@@ -154,25 +155,26 @@ class TasksListViewModel(
 
     private val tasksRepository = TasksRepository()
 
+    private var selectedLocalDate: LocalDate = convertLongToLocalDate(selectedDate)
+
     private val _tasksToShow = mutableStateListOf<Task>()
     val tasksToShow: List<Task>
         get() = _tasksToShow
 
     private val _allTasks = mutableStateListOf<Task>()
-    var tasksFetchingInProgress by mutableStateOf(false)
 
 
     private fun fetchTasks() {
         viewModelScope.launch {
             try {
-                tasksFetchingInProgress = true
+                loadingScreenManager.showLoadingScreen()
                 _allTasks.clear()
                 _allTasks.addAll(tasksRepository.getAllTasks())
                 filterTasks()
             } catch (e: Exception) {
-                onFailure(context, mapError(e, context))
+                onFailure(e)
             } finally {
-                tasksFetchingInProgress = false
+                loadingScreenManager.hideLoadingScreen()
             }
         }
     }
@@ -184,10 +186,7 @@ class TasksListViewModel(
                 val matchesStatus = task.status in activeFilters || activeFilters.isEmpty()
 
                 val matchesDate = task.assignedDate?.let {
-                    val selectedDateTime = LocalDateTime.ofInstant(
-                        Instant.ofEpochMilli(selectedDate), ZoneId.systemDefault()
-                    )
-                    task.assignedDate.toLocalDate() == selectedDateTime.toLocalDate()
+                    task.assignedDate.toLocalDate().toEpochDay() == selectedLocalDate.toEpochDay()
                 } ?: true
 
                 matchesStatus && matchesDate
@@ -199,11 +198,11 @@ class TasksListViewModel(
     }
 
 
-    private fun onFailure(context: Context, error: ErrorResponse) {
+    private fun onFailure(exception: Exception) {
         showErrorDialog(
             context = context,
             title = context.getString(R.string.error_title),
-            errorResponse = error
+            errorResponse = mapError(exception, context)
         )
     }
 

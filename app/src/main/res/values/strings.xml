@@ -71,14 +71,47 @@
     <string name="add_product_button_text">Add Product</string>
 
     <string name="product_delete_confirmation_dialog_title">Remove product</string>
-    <string name="product_delete_confirmation_dialog_yes_button_text">YES</string>
-    <string name="product_delete_confirmation_dialog_no_button_text">NO</string>
+
+    <!-- CONFIRMATION DIALOG -->
+    <string name="confirmation_dialog_yes_button_text">YES</string>
+    <string name="confirmation_dialog_no_button_text">NO</string>
 
     <!-- DATE PICKER -->
     <string name="date_picker_label">Date</string>
 
+    <!-- PHONE CALL -->
+    <string name="call_incorrect_phone_number">Phone number is incorrect!</string>
+
+    <!-- EMPTY LIST -->
+    <string name="empty_list_text">No content to show</string>
+
     <!-- TASKS LIST -->
     <string name="tasks_list_emp_name_error">Error</string>
-    <string name="tasks_List_add_tasks_button_text">Add task</string>
+    <string name="tasks_list_add_tasks_button_text">Add task</string>
+
+    <string name="tasks_list_details_dialog_button_text">Edit</string>
+    <string name="tasks_list_details_dialog_window_title">Task Details</string>
+    <string name="tasks_list_details_dialog_title">Title</string>
+    <string name="tasks_list_details_dialog_status">Status</string>
+    <string name="tasks_list_details_dialog_address">Address</string>
+    <string name="tasks_list_details_dialog_date">Date</string>
+    <string name="tasks_list_details_dialog_employee">Employee</string>
+
+
+    <!-- ROAD ACCIDENTS -->
+    <string name="accidents_details_mark_as_resolved_button_text">Mark as Resolved</string>
+    <string name="accidents_details_dialog_title">Accident Details</string>
+    <string name="accidents_details_dialog_employee">Employee</string>
+    <string name="accidents_details_dialog_date">Date</string>
+    <string name="accidents_details_dialog_status">Status</string>
+    <string name="accidents_details_dialog_category">Category</string>
+    <string name="accidents_details_dialog_vehicle">Vehicle</string>
+    <string name="accidents_details_dialog_description">Description</string>
+    <string name="accidents_details_dialog_map_button_text">Map</string>
+    <string name="accidents_details_dialog_call_button_text">Call</string>
+
+    <string name="accidents_mark_as_resolved_success_text">Report marked as resolved successfully!</string>
+    <string name="accidents_location_dialog_title">Accident Location</string>
+    <string name="accident_location_dialog_dismiss_button_text">OK</string>
 
 </resources>

@@ -32,18 +32,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TaskStatus
 import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.ArrowRightIcon
 import com.thesis.arrivo.components.Circle
-import com.thesis.arrivo.components.LoadingScreen
+import com.thesis.arrivo.components.EmptyList
 import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.components.date_picker.DatePickerField
-import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.dpToSp
@@ -53,7 +50,8 @@ import com.thesis.arrivo.view_models.TasksListViewModel
 @Composable
 fun TasksListView(mainScaffoldViewModel: MainScaffoldViewModel) {
     val context = LocalContext.current
-    val tasksListViewModel = remember { TasksListViewModel(context, mainScaffoldViewModel) }
+    val tasksListViewModel =
+        remember { TasksListViewModel(context, mainScaffoldViewModel, mainScaffoldViewModel) }
 
     ConstraintLayout(
         modifier = Modifier
@@ -113,13 +111,11 @@ fun TasksListView(mainScaffoldViewModel: MainScaffoldViewModel) {
                 width = Dimension.fillToConstraints
                 height = Dimension.fillToConstraints
             })
-
-        LoadingScreen(enabled = tasksListViewModel.tasksFetchingInProgress)
     }
 }
 
 @Composable
-fun ShowTaskDetailsDialog(tasksListViewModel: TasksListViewModel) {
+private fun ShowTaskDetailsDialog(tasksListViewModel: TasksListViewModel) {
     if (tasksListViewModel.showTaskDetailsDialog) {
         TaskDetailsDialog(
             task = tasksListViewModel.selectedTask,
@@ -139,6 +135,11 @@ private fun TasksList(
         modifier = modifier
             .fillMaxSize()
     ) {
+        if (tasksListViewModel.tasksToShow.isEmpty()) {
+            EmptyList()
+            return
+        }
+
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         ) {
@@ -181,14 +182,14 @@ private fun TaskCompletedOrFreeContainer(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_horizontal_space)),
         modifier = Modifier
             .bounceClick()
-            .clickable { tasksListViewModel.onTaskSelected(task) }
             .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .wrapContentHeight()
             .fillMaxWidth()
+            .clickable { tasksListViewModel.onTaskSelected(task) }
             .padding(dimensionResource(R.dimen.tasks_list_container_padding))
     ) {
         Circle(
@@ -220,11 +221,11 @@ private fun TaskAssignedContainer(
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         modifier = Modifier
             .bounceClick()
-            .clickable { tasksListViewModel.onTaskSelected(task) }
             .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .wrapContentHeight()
             .fillMaxWidth()
+            .clickable { tasksListViewModel.onTaskSelected(task) }
             .padding(dimensionResource(R.dimen.tasks_list_container_padding))
     ) {
         Circle(
@@ -251,7 +252,7 @@ private fun TaskAssignedContainer(
 
 
 @Composable
-fun TaskTitle(
+private fun TaskTitle(
     title: String
 ) {
     Text(
@@ -267,7 +268,7 @@ fun TaskTitle(
 
 
 @Composable
-fun TaskAddress(
+private fun TaskAddress(
     address: String
 ) {
     Text(
@@ -283,7 +284,7 @@ fun TaskAddress(
 
 
 @Composable
-fun TaskEmployeeData(
+private fun TaskEmployeeData(
     firstName: String?,
     lastName: String?
 ) {
@@ -328,7 +329,7 @@ private fun BottomSector(
 
             AppButton(
                 onClick = { tasksListViewModel.onAddTaskButtonClick() },
-                text = stringResource(R.string.tasks_List_add_tasks_button_text),
+                text = stringResource(R.string.tasks_list_add_tasks_button_text),
                 icon = Icons.Filled.Add,
             )
         }
@@ -375,9 +376,6 @@ private fun DatePickerAndFilters(
     modifier: Modifier = Modifier,
     tasksListViewModel: TasksListViewModel
 ) {
-    /**
-     * Title
-     **/
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly,
@@ -436,7 +434,7 @@ private fun Filter(
 ) {
     val active = tasksListViewModel.getActiveFilters().contains(filter)
     val color =
-        if (active) Settings.TASK_FREE_COLOR else MaterialTheme.colorScheme.surfaceContainerHighest
+        if (active) Settings.FILTER_ACTIVE_COLOR else MaterialTheme.colorScheme.surfaceContainerHighest
 
     Box(
         contentAlignment = Alignment.Center,

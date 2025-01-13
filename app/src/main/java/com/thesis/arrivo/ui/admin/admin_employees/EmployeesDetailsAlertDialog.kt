@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.components.info_alert_dialog.AlertDialogSingleButton
@@ -51,6 +52,7 @@ fun EmployeesDetailsAlertDialog(
             )
 
             AlertDialogSingleButton(
+                text = stringResource(R.string.employees_list_edit_button_text),
                 onEditButtonClick = { onEditButtonClick() },
                 icon = Icons.Filled.Edit,
                 modifier = Modifier

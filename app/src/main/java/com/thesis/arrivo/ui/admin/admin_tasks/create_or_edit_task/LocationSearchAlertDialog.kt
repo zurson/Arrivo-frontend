@@ -29,6 +29,7 @@ import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.AppTextField
 import com.thesis.arrivo.components.GoogleMapView
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
+import com.thesis.arrivo.utilities.Settings.Companion.DEFAULT_MAP_ZOOM
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.TaskManagerViewModel
 
@@ -41,7 +42,7 @@ fun LocationSearchAlertDialog(
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
             taskManagerViewModel.selectedLocation,
-            TaskManagerViewModel.DEFAULT_ZOOM
+            DEFAULT_MAP_ZOOM
         )
     }
 
@@ -65,7 +66,11 @@ fun LocationSearchAlertDialog(
                     modifier = Modifier
                         .height(dimensionResource(R.dimen.loc_search_dialog_map_height))
                         .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
-                        .border(width = 1.dp, color = MaterialTheme.colorScheme.primary)
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.primary,
+                            RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius))
+                        )
                 )
             }
 
@@ -108,7 +113,12 @@ private fun SearchField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(dimensionResource(R.dimen.loc_search_dialog_predictions_padding))
-                    .clickable { taskManagerViewModel.onAddressClick(prediction, cameraPositionState) }
+                    .clickable {
+                        taskManagerViewModel.onAddressClick(
+                            prediction,
+                            cameraPositionState
+                        )
+                    }
             )
         }
     }

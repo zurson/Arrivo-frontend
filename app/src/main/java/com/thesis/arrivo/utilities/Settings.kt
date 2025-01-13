@@ -21,7 +21,14 @@ class Settings {
         val TASK_ASSIGNED_COLOR = Color(0xFFFFC107)
         val TASK_FINISHED_COLOR = Color(0xFFCC3333)
 
+        val FILTER_ACTIVE_COLOR = Color(0xFF4CAF50)
+
+        val ROAD_ACCIDENTS_ACTIVE_COLOR = Color(0xFF4CAF50)
+        val ROAD_ACCIDENTS_FINISHED_COLOR = Color(0xFFCC3333)
+
         val LOADING_SCREEN_BG = Color(0x80CECCC8)
+
+        const val DEFAULT_MAP_ZOOM: Float = 17f
     }
 
 }

@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.task.Task
@@ -25,7 +26,7 @@ fun TaskDetailsDialog(
     onEditButtonClick: () -> Unit
 ) {
     InfoAlertDialog(
-        title = "Task Details",
+        title = stringResource(R.string.tasks_list_details_dialog_window_title),
         onDismiss = { onDismiss() },
         modifier = modifier
     ) {
@@ -33,19 +34,19 @@ fun TaskDetailsDialog(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         ) {
             DialogRecord(
-                label = "Title",
+                label = stringResource(R.string.tasks_list_details_dialog_title),
                 value = task.title,
                 maxLines = 2,
                 textOverflow = TextOverflow.Ellipsis
             )
 
             DialogRecord(
-                label = "Status",
+                label = stringResource(R.string.tasks_list_details_dialog_status),
                 value = TasksListViewModel.getRenamedFilter(task.status)
             )
 
             DialogRecord(
-                label = "Address",
+                label = stringResource(R.string.tasks_list_details_dialog_address),
                 value = task.addressText,
                 maxLines = 2,
                 textOverflow = TextOverflow.Ellipsis
@@ -53,19 +54,20 @@ fun TaskDetailsDialog(
 
             task.assignedDate?.let {
                 DialogRecord(
-                    label = "Date",
-                    value = task.assignedDate
+                    label = stringResource(R.string.tasks_list_details_dialog_date),
+                    value = task.assignedDate.toLocalDate()
                 )
             }
 
             task.employee?.let {
                 DialogRecord(
-                    label = "Employee",
+                    label = stringResource(R.string.tasks_list_details_dialog_employee),
                     value = "${task.employee.firstName} ${task.employee.lastName}"
                 )
             }
 
             AlertDialogSingleButton(
+                text = stringResource(R.string.tasks_list_details_dialog_button_text),
                 onEditButtonClick = { onEditButtonClick() },
                 icon = Icons.Filled.Edit,
                 modifier = Modifier

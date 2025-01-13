@@ -43,7 +43,7 @@ import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.components.AppButton
-import com.thesis.arrivo.components.LoadingScreen
+import com.thesis.arrivo.components.EmptyList
 import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.Settings
@@ -56,7 +56,7 @@ import com.thesis.arrivo.view_models.MainScaffoldViewModel
 fun EmployeesView(mainScaffoldViewModel: MainScaffoldViewModel) {
     val context = LocalContext.current
 
-    val employeeViewModel = remember { EmployeeViewModel() }
+    val employeeViewModel = remember { EmployeeViewModel(mainScaffoldViewModel) }
     val employees by employeeViewModel.employees.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -123,8 +123,6 @@ fun EmployeesView(mainScaffoldViewModel: MainScaffoldViewModel) {
                     height = Dimension.fillToConstraints
                 }
         )
-
-        LoadingScreen(enabled = employeeViewModel.actionInProgress)
     }
 }
 
@@ -156,6 +154,11 @@ private fun EmployeesList(
             .background(MaterialTheme.colorScheme.surfaceContainerHigh),
         contentAlignment = Alignment.Center
     ) {
+        if (employees.isEmpty()) {
+            EmptyList()
+            return
+        }
+
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(32.dp),
             modifier = Modifier

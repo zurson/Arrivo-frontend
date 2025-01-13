@@ -8,11 +8,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.ErrorResponse
+import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.employee.EmployeeCreateAccountRequest
 import com.thesis.arrivo.communication.employee.EmployeeRepository
-import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.employee.EmployeeUpdateRequest
 import com.thesis.arrivo.components.NavigationItem
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.mapError
 import com.thesis.arrivo.utilities.navigateTo
 import com.thesis.arrivo.utilities.showErrorDialog
@@ -22,16 +23,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class EmployeeViewModel : ViewModel() {
+class EmployeeViewModel(private val loadingScreenManager: LoadingScreenManager) : ViewModel() {
 
     private val repository: EmployeeRepository by lazy { EmployeeRepository() }
 
     private val _employees = MutableStateFlow<List<Employee>>(emptyList())
     val employees: StateFlow<List<Employee>> = _employees.asStateFlow()
-
-    private val _actionInProgress = mutableStateOf(false)
-    val actionInProgress: Boolean
-        get() = _actionInProgress.value
 
     private val _showEmployeeDetails = mutableStateOf(false)
     val showEmployeeDetails: Boolean get() = _showEmployeeDetails.value
@@ -45,21 +42,16 @@ class EmployeeViewModel : ViewModel() {
     }
 
 
-    private fun setActionInProgress(status: Boolean) {
-        _actionInProgress.value = status
-    }
-
-
     fun fetchEmployeesList(context: Context, onFailure: (ErrorResponse) -> Unit) {
         viewModelScope.launch {
             try {
-                setActionInProgress(true)
+                loadingScreenManager.showLoadingScreen()
                 val employeeList = repository.getAllEmployees()
                 _employees.value = employeeList
             } catch (e: Exception) {
                 onFailure(mapError(e, context))
             } finally {
-                setActionInProgress(false)
+                loadingScreenManager.hideLoadingScreen()
             }
         }
     }
@@ -100,7 +92,7 @@ class EmployeeViewModel : ViewModel() {
     ) {
         viewModelScope.launch {
             try {
-                setActionInProgress(true)
+                loadingScreenManager.showLoadingScreen()
                 when (operation) {
                     is EmployeeAccountOperation.Create -> {
                         repository.createEmployeeAccount(operation.data)
@@ -114,7 +106,7 @@ class EmployeeViewModel : ViewModel() {
             } catch (e: Exception) {
                 onFailure(mapError(e, context))
             } finally {
-                setActionInProgress(false)
+                loadingScreenManager.hideLoadingScreen()
             }
         }
     }
