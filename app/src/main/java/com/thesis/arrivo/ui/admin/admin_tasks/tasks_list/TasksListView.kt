@@ -187,11 +187,11 @@ private fun TaskCompletedOrFreeContainer(
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_horizontal_space)),
         modifier = Modifier
             .bounceClick()
-            .clickable { tasksListViewModel.onTaskSelected(task) }
             .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .wrapContentHeight()
             .fillMaxWidth()
+            .clickable { tasksListViewModel.onTaskSelected(task) }
             .padding(dimensionResource(R.dimen.tasks_list_container_padding))
     ) {
         Circle(
@@ -223,11 +223,11 @@ private fun TaskAssignedContainer(
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         modifier = Modifier
             .bounceClick()
-            .clickable { tasksListViewModel.onTaskSelected(task) }
             .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .wrapContentHeight()
             .fillMaxWidth()
+            .clickable { tasksListViewModel.onTaskSelected(task) }
             .padding(dimensionResource(R.dimen.tasks_list_container_padding))
     ) {
         Circle(
