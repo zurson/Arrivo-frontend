@@ -32,8 +32,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TaskStatus
@@ -43,7 +41,6 @@ import com.thesis.arrivo.components.Circle
 import com.thesis.arrivo.components.LoadingScreen
 import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.components.date_picker.DatePickerField
-import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.dpToSp
@@ -375,9 +372,6 @@ private fun DatePickerAndFilters(
     modifier: Modifier = Modifier,
     tasksListViewModel: TasksListViewModel
 ) {
-    /**
-     * Title
-     **/
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly,
@@ -436,7 +430,7 @@ private fun Filter(
 ) {
     val active = tasksListViewModel.getActiveFilters().contains(filter)
     val color =
-        if (active) Settings.TASK_FREE_COLOR else MaterialTheme.colorScheme.surfaceContainerHighest
+        if (active) Settings.FILTER_ACTIVE_COLOR else MaterialTheme.colorScheme.surfaceContainerHighest
 
     Box(
         contentAlignment = Alignment.Center,

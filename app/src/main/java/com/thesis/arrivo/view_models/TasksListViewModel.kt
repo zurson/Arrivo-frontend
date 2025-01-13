@@ -9,9 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.thesis.arrivo.R
-import com.thesis.arrivo.communication.ErrorResponse
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TaskStatus
 import com.thesis.arrivo.communication.task.TasksRepository
@@ -97,7 +95,8 @@ class TasksListViewModel(
 
     fun onAddTaskButtonClick() {
         navigateTo(
-            navController = mainScaffoldViewModel.navController, navigationItem = NavigationItem.TaskCreateAdmin
+            navController = mainScaffoldViewModel.navController,
+            navigationItem = NavigationItem.TaskCreateAdmin
         )
     }
 
@@ -170,7 +169,7 @@ class TasksListViewModel(
                 _allTasks.addAll(tasksRepository.getAllTasks())
                 filterTasks()
             } catch (e: Exception) {
-                onFailure(context, mapError(e, context))
+                onFailure(e)
             } finally {
                 tasksFetchingInProgress = false
             }
@@ -199,11 +198,11 @@ class TasksListViewModel(
     }
 
 
-    private fun onFailure(context: Context, error: ErrorResponse) {
+    private fun onFailure(exception: Exception) {
         showErrorDialog(
             context = context,
             title = context.getString(R.string.error_title),
-            errorResponse = error
+            errorResponse = mapError(exception, context)
         )
     }
 
