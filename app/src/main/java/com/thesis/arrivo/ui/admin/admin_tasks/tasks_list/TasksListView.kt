@@ -117,7 +117,7 @@ fun TasksListView(mainScaffoldViewModel: MainScaffoldViewModel) {
 }
 
 @Composable
-fun ShowTaskDetailsDialog(tasksListViewModel: TasksListViewModel) {
+private fun ShowTaskDetailsDialog(tasksListViewModel: TasksListViewModel) {
     if (tasksListViewModel.showTaskDetailsDialog) {
         TaskDetailsDialog(
             task = tasksListViewModel.selectedTask,
