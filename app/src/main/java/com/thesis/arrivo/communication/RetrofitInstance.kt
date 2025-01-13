@@ -1,18 +1,30 @@
 package com.thesis.arrivo.communication
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.thesis.arrivo.communication.available_products.AvailableProductsService
 import com.thesis.arrivo.communication.employee.EmployeeService
+import com.thesis.arrivo.communication.gson.LocalDateAdapter
+import com.thesis.arrivo.communication.gson.LocalDateTimeAdapter
 import com.thesis.arrivo.communication.road_accidents.RoadAccidentsService
 import com.thesis.arrivo.communication.task.TasksService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 object RetrofitInstance {
     private const val BASE_URL = "http://10.0.2.2:8080/"
+
+    private val gson: Gson = GsonBuilder()
+        .registerTypeAdapter(LocalDate::class.java, LocalDateAdapter())
+        .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeAdapter())
+        .create()
+
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
 
