@@ -41,7 +41,7 @@ fun RoadAccidentDetailsDialog(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         ) {
             DialogRecord(
-                label = stringResource(R.string.accidents_details_dialog_title),
+                label = stringResource(R.string.accidents_details_dialog_employee),
                 value = "${accident.employee.firstName} ${accident.employee.lastName}",
                 maxLines = 1,
                 textOverflow = TextOverflow.Ellipsis
