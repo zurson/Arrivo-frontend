@@ -178,7 +178,7 @@ class MainScaffoldViewModel(
 
 
     fun onAuthenticationSuccess() {
-        getStartDestination { dest -> navigateTo(navController, dest) }
+        getStartDestination { dest -> navigateTo(navController, dest, true) }
         setNavbarVisibility(true)
     }
 
