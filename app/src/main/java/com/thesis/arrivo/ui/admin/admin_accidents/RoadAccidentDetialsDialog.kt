@@ -22,7 +22,7 @@ import com.thesis.arrivo.view_models.RoadAccidentsViewModel
 fun RoadAccidentDetailsDialog(
     accident: RoadAccident,
     onDismiss: () -> Unit,
-    onEditButtonClick: () -> Unit,
+    onButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     InfoAlertDialog(
@@ -75,10 +75,23 @@ fun RoadAccidentDetailsDialog(
                 textOverflow = TextOverflow.Ellipsis
             )
 
+//            val cameraPositionState = rememberCameraPositionState {
+//                position = CameraPosition.fromLatLngZoom(
+//                    accident.location.toLatLon(),
+//                    17f
+//                )
+//            }
+//
+//            GoogleMapView(
+//                modifier = Modifier.height(200.dp),
+//                selectedLocation = accident.location.toLatLon(),
+//                cameraPositionState = cameraPositionState
+//            )
+
             if (accident.status != RoadAccidentStatus.ENDED) {
                 AlertDialogSingleButton(
                     text = stringResource(R.string.accidents_details_mark_as_resolved_button_text),
-                    onEditButtonClick = { onEditButtonClick() },
+                    onEditButtonClick = { onButtonClick() },
                     icon = Icons.Filled.Edit,
                     modifier = Modifier
                         .padding(top = dimensionResource(R.dimen.alert_dialog_button_top_padding))

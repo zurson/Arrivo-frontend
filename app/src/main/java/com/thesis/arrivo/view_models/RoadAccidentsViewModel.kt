@@ -155,6 +155,13 @@ class RoadAccidentsViewModel(
     val selectedAccident: RoadAccident
         get() = _selectedAccident.value
 
+    var showConfirmationDialog by mutableStateOf(false)
+
+
+    private fun toggleShowConfirmationDialog() {
+        showConfirmationDialog = !showConfirmationDialog
+    }
+
 
     private fun toggleShowAccidentDetailsDialog() {
         showAccidentDetailsDialog = !showAccidentDetailsDialog
@@ -173,8 +180,8 @@ class RoadAccidentsViewModel(
 
 
     fun onAccidentFinishButtonClick() {
-        toggleShowAccidentDetailsDialog()
-        markAccidentAsResolved()
+//        toggleShowAccidentDetailsDialog()
+        toggleShowConfirmationDialog()
     }
 
 
@@ -200,6 +207,23 @@ class RoadAccidentsViewModel(
         )
 
         fetchRoadAccidents()
+    }
+
+
+    fun onConfirmationYesClick() {
+        toggleShowConfirmationDialog()
+        toggleShowAccidentDetailsDialog()
+        markAccidentAsResolved()
+    }
+
+
+    fun onConfirmationNoClick() {
+        toggleShowConfirmationDialog()
+    }
+
+
+    fun onConfirmationDismiss() {
+        toggleShowConfirmationDialog()
     }
 
 }

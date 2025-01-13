@@ -172,6 +172,11 @@ class TaskManagerViewModel(
         toggleShowProductDeleteConfirmationDialog()
     }
 
+
+    fun onProductDeleteConfirmationDismiss() {
+        toggleShowProductDeleteConfirmationDialog()
+    }
+
     /**
      * Task title
      **/

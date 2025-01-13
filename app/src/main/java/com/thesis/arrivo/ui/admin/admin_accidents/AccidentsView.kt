@@ -35,6 +35,7 @@ import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.road_accidents.RoadAccident
 import com.thesis.arrivo.components.ArrowRightIcon
 import com.thesis.arrivo.components.Circle
+import com.thesis.arrivo.components.ConfirmationDialog
 import com.thesis.arrivo.components.EmptyList
 import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.components.date_picker.DatePickerField
@@ -57,6 +58,7 @@ fun AccidentsView(mainScaffoldViewModel: MainScaffoldViewModel) {
             .padding(bottom = 16.dp)
     ) {
         ShowAccidentDetailsDialog(roadAccidentsViewModel)
+        MarkAsResolvedConfirmationDialog(roadAccidentsViewModel)
 
         /* CONFIGURATION */
         val startGuideline = createGuidelineFromStart(Settings.START_END_PERCENTAGE)
@@ -290,9 +292,25 @@ private fun ShowAccidentDetailsDialog(roadAccidentsViewModel: RoadAccidentsViewM
         RoadAccidentDetailsDialog(
             accident = roadAccidentsViewModel.selectedAccident,
             onDismiss = { roadAccidentsViewModel.onAccidentDialogDismiss() },
-            onEditButtonClick = { roadAccidentsViewModel.onAccidentFinishButtonClick() }
+            onButtonClick = { roadAccidentsViewModel.onAccidentFinishButtonClick() }
         )
     }
+}
+
+
+@Composable
+private fun MarkAsResolvedConfirmationDialog(roadAccidentsViewModel: RoadAccidentsViewModel) {
+    if (!roadAccidentsViewModel.showConfirmationDialog)
+        return
+
+    ConfirmationDialog(
+        dialogTitle = "Confirmation",
+        lineOne = "Mark accident as resolved?",
+        lineTwo = null,
+        onYesClick = { roadAccidentsViewModel.onConfirmationYesClick() },
+        onNoClick = { roadAccidentsViewModel.onConfirmationNoClick() },
+        onDismiss = { roadAccidentsViewModel.onConfirmationDismiss() },
+    )
 }
 
 

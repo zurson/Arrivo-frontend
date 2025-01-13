@@ -85,8 +85,9 @@
     <dimen name="loc_search_dialog_predictions_text_size">16sp</dimen>
     <dimen name="loc_search_dialog_predictions_padding">8dp</dimen>
 
-    <dimen name="product_delete_confirmation_product_details_text_size">16sp</dimen>
-    <dimen name="product_delete_confirmation_product_buttons_horizontal_padding">16dp</dimen>
+    <!-- CONFIRMATION DIALOG -->
+    <dimen name="confirmation_dialog_text_size">16sp</dimen>
+    <dimen name="confirmation_dialog_buttons_horizontal_padding">16dp</dimen>
 
     <!-- TASKS LIST -->
     <dimen name="tasks_list_arrow_right_icon_size">40dp</dimen>

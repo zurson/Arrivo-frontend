@@ -38,6 +38,7 @@ import com.google.android.libraries.places.api.net.PlacesClient
 import com.thesis.arrivo.R
 import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.AppTextField
+import com.thesis.arrivo.components.ConfirmationDialog
 import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
@@ -329,10 +330,19 @@ private fun ShowLocationSearchDialog(taskManagerViewModel: TaskManagerViewModel)
 private fun ShowProductDeleteConfirmationDialog(
     taskManagerViewModel: TaskManagerViewModel,
 ) {
-    if (taskManagerViewModel.showDeleteConfirmationDialog)
-        ProductDeleteConfirmationDialog(
-            taskManagerViewModel = taskManagerViewModel,
+    if (!taskManagerViewModel.showDeleteConfirmationDialog)
+        return
+
+    val productToDelete = taskManagerViewModel.productToDelete
+
+    if (productToDelete != null) {
+        ConfirmationDialog(
+            dialogTitle = stringResource(R.string.product_delete_confirmation_dialog_title),
+            lineOne = productToDelete.name,
+            lineTwo = "${productToDelete.amount} pcs",
             onYesClick = { taskManagerViewModel.onProductDeleteConfirmationYesClick() },
-            onNoClick = { taskManagerViewModel.onProductDeleteConfirmationNoClick() }
+            onNoClick = { taskManagerViewModel.onProductDeleteConfirmationNoClick() },
+            onDismiss = { taskManagerViewModel.onProductDeleteConfirmationDismiss() },
         )
+    }
 }
