@@ -21,6 +21,7 @@ import retrofit2.HttpException
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.LocalDate
 import java.util.Date
 import java.util.Locale
 import kotlin.reflect.KClass
@@ -135,3 +136,7 @@ fun convertMillisToDate(millis: Long): String {
 
 
 fun getCurrentDateMillis() = Instant.now().toEpochMilli()
+
+
+fun convertLongToLocalDate(longVal: Long): LocalDate =
+    LocalDate.ofEpochDay(longVal / 86400000L)

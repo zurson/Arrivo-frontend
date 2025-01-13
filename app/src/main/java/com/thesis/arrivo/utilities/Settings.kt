@@ -23,6 +23,9 @@ class Settings {
 
         val FILTER_ACTIVE_COLOR = Color(0xFF4CAF50)
 
+        val ROAD_ACCIDENTS_ACTIVE_COLOR = Color(0xFF4CAF50)
+        val ROAD_ACCIDENTS_FINISHED_COLOR = Color(0xFFCC3333)
+
         val LOADING_SCREEN_BG = Color(0x80CECCC8)
     }
 

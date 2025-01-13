@@ -20,4 +20,8 @@ class RoadAccidentsRepository {
     ) {
         roadAccidentsService.updateRoadAccident(id, roadAccidentUpdateRequest)
     }
+
+    suspend fun markRoadAccidentAsResolved(id: Long) {
+        roadAccidentsService.markRoadAccidentAsResolved(id)
+    }
 }

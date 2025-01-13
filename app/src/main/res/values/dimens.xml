@@ -116,5 +116,6 @@
     <dimen name="accidents_container_participant_text_size">20sp</dimen>
     <dimen name="accidents_container_category_text_size">16sp</dimen>
     <dimen name="accidents_container_circle_icon_size">40dp</dimen>
+    <dimen name="accidents_container_arrow_right_icon_size">40dp</dimen>
 
 </resources>

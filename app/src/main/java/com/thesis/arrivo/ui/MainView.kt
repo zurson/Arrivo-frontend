@@ -82,7 +82,11 @@ private fun SetupMainScaffold(
                     composable(NavigationItem.AccountUser.route) { AccountView() }
 
                     /** Admin **/
-                    composable(NavigationItem.AccidentsAdmin.route) { AccidentsView() }
+                    composable(NavigationItem.AccidentsAdmin.route) {
+                        AccidentsView(
+                            mainScaffoldViewModel
+                        )
+                    }
                     composable(NavigationItem.TasksListAdmin.route) {
                         TasksListView(mainScaffoldViewModel)
                     }
@@ -120,6 +124,7 @@ private fun SetupMainScaffold(
                         LoginView(mainScaffoldViewModel = mainScaffoldViewModel)
                     }
                 }
+
             }
 
             mainScaffoldViewModel.startAuthListeners()

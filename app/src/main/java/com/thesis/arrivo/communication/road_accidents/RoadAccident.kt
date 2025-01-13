@@ -15,4 +15,19 @@ class RoadAccident(
     val date: LocalDate,
     val description: String,
     val employee: Employee
-)
+) {
+    companion object {
+        fun emptyRoadAccident(): RoadAccident {
+            return RoadAccident(
+                id = -1,
+                status = RoadAccidentStatus.ACTIVE,
+                location = Location(0.0, 0.0),
+                category = RoadAccidentCategory.OTHER,
+                licensePlate = "",
+                date = LocalDate.now(),
+                description = "",
+                employee = Employee.emptyEmployee()
+            )
+        }
+    }
+}
