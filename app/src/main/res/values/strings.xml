@@ -82,7 +82,8 @@
 
     <!-- TASKS LIST -->
     <string name="tasks_list_emp_name_error">Error</string>
-    <string name="tasks_List_add_tasks_button_text">Add task</string>
+    <string name="tasks_list_add_tasks_button_text">Add task</string>
+    <string name="tasks_list_details_dialog_title">Task Details</string>
 
 
 </resources>

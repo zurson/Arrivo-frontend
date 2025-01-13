@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.task.Task
@@ -25,7 +26,7 @@ fun TaskDetailsDialog(
     onEditButtonClick: () -> Unit
 ) {
     InfoAlertDialog(
-        title = "Task Details",
+        title = stringResource(R.string.tasks_list_details_dialog_title),
         onDismiss = { onDismiss() },
         modifier = modifier
     ) {

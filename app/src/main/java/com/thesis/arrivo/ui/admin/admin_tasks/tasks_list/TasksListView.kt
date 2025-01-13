@@ -331,7 +331,7 @@ private fun BottomSector(
 
             AppButton(
                 onClick = { tasksListViewModel.onAddTaskButtonClick() },
-                text = stringResource(R.string.tasks_List_add_tasks_button_text),
+                text = stringResource(R.string.tasks_list_add_tasks_button_text),
                 icon = Icons.Filled.Add,
             )
         }
