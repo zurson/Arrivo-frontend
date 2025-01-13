@@ -35,7 +35,7 @@ class TasksListViewModel(
         private val selectedDate: Long
             get() = _selectedDate.longValue
 
-        private val _activeFilters = mutableStateListOf<TaskStatus>()
+        private val _activeFilters = mutableStateListOf(TaskStatus.UNASSIGNED)
         private val activeFilters: List<TaskStatus>
             get() = _activeFilters
 
