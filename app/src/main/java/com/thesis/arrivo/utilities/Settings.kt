@@ -27,6 +27,8 @@ class Settings {
         val ROAD_ACCIDENTS_FINISHED_COLOR = Color(0xFFCC3333)
 
         val LOADING_SCREEN_BG = Color(0x80CECCC8)
+
+        const val DEFAULT_MAP_ZOOM: Float = 17f
     }
 
 }

@@ -2,17 +2,22 @@ package com.thesis.arrivo.ui.admin.admin_accidents
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.outlined.Call
+import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.road_accidents.RoadAccident
+import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.info_alert_dialog.AlertDialogSingleButton
 import com.thesis.arrivo.components.info_alert_dialog.DialogRecord
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
@@ -23,6 +28,8 @@ fun RoadAccidentDetailsDialog(
     accident: RoadAccident,
     onDismiss: () -> Unit,
     onButtonClick: () -> Unit,
+    onMapButtonClick: () -> Unit,
+    onCallButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     InfoAlertDialog(
@@ -75,26 +82,34 @@ fun RoadAccidentDetailsDialog(
                 textOverflow = TextOverflow.Ellipsis
             )
 
-//            val cameraPositionState = rememberCameraPositionState {
-//                position = CameraPosition.fromLatLngZoom(
-//                    accident.location.toLatLon(),
-//                    17f
-//                )
-//            }
-//
-//            GoogleMapView(
-//                modifier = Modifier.height(200.dp),
-//                selectedLocation = accident.location.toLatLon(),
-//                cameraPositionState = cameraPositionState
-//            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.alert_dialog_button_horizontal_padding))
+            ) {
+
+                AppButton(
+                    onClick = { onMapButtonClick() },
+                    text = stringResource(R.string.accidents_details_dialog_map_button_text),
+                    icon = Icons.Outlined.LocationOn,
+                    modifier = Modifier.weight(1f),
+                )
+
+                if (accident.status != RoadAccidentStatus.ENDED) {
+                    AppButton(
+                        onClick = { onCallButtonClick() },
+                        text = stringResource(R.string.accidents_details_dialog_call_button_text),
+                        icon = Icons.Outlined.Call,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            }
 
             if (accident.status != RoadAccidentStatus.ENDED) {
                 AlertDialogSingleButton(
                     text = stringResource(R.string.accidents_details_mark_as_resolved_button_text),
                     onEditButtonClick = { onButtonClick() },
-                    icon = Icons.Filled.Edit,
+                    icon = Icons.Filled.Check,
                     modifier = Modifier
-                        .padding(top = dimensionResource(R.dimen.alert_dialog_button_top_padding))
                         .padding(horizontal = dimensionResource(R.dimen.alert_dialog_button_horizontal_padding))
                         .height(dimensionResource(R.dimen.alert_dialog_button_height))
                 )

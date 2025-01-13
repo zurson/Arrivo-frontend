@@ -26,6 +26,7 @@ import com.thesis.arrivo.communication.task.TasksRepository
 import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.Product
 import com.thesis.arrivo.utilities.Location
+import com.thesis.arrivo.utilities.Settings.Companion.DEFAULT_MAP_ZOOM
 import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.mapError
@@ -45,7 +46,6 @@ class TaskManagerViewModel(
 
     companion object {
         val DEFAULT_LOCATION: LatLng = LatLng(52.2370, 21.0175)
-        const val DEFAULT_ZOOM: Float = 17f
 
         private var _availableProducts: List<AvailableProduct> = emptyList()
         private val availableProducts: List<AvailableProduct>
@@ -239,7 +239,7 @@ class TaskManagerViewModel(
     }
 
 
-    fun getCameraPosition() = CameraPosition.fromLatLngZoom(selectedLocation, DEFAULT_ZOOM)
+    fun getCameraPosition() = CameraPosition.fromLatLngZoom(selectedLocation, DEFAULT_MAP_ZOOM)
 
 
     fun toggleLocationSearchDialog() {

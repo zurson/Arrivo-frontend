@@ -85,7 +85,7 @@
     <dimen name="loc_search_dialog_predictions_padding">16dp</dimen>
 
     <!-- CONFIRMATION DIALOG -->
-    <dimen name="confirmation_dialog_text_size">16sp</dimen>
+    <dimen name="confirmation_dialog_text_size">30sp</dimen>
     <dimen name="confirmation_dialog_buttons_horizontal_padding">16dp</dimen>
 
     <!-- TASKS LIST -->
@@ -117,5 +117,7 @@
     <dimen name="accidents_container_category_text_size">26sp</dimen>
     <dimen name="accidents_container_circle_icon_size">50dp</dimen>
     <dimen name="accidents_container_arrow_right_icon_size">50dp</dimen>
+
+    <dimen name="accidents_dialog_map_height">450dp</dimen>
 
 </resources>

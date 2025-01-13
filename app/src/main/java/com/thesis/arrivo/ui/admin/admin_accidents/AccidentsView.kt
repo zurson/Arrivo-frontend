@@ -1,6 +1,7 @@
 package com.thesis.arrivo.ui.admin.admin_accidents
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -33,12 +36,15 @@ import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.road_accidents.RoadAccident
+import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.ArrowRightIcon
 import com.thesis.arrivo.components.Circle
 import com.thesis.arrivo.components.ConfirmationDialog
 import com.thesis.arrivo.components.EmptyList
+import com.thesis.arrivo.components.GoogleMapView
 import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.components.date_picker.DatePickerField
+import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.capitalize
@@ -57,8 +63,9 @@ fun AccidentsView(mainScaffoldViewModel: MainScaffoldViewModel) {
             .background(MaterialTheme.colorScheme.background)
             .padding(bottom = 16.dp)
     ) {
-        ShowAccidentDetailsDialog(roadAccidentsViewModel)
+        AccidentDetailsDialog(roadAccidentsViewModel)
         MarkAsResolvedConfirmationDialog(roadAccidentsViewModel)
+        AccidentLocationOnMap(roadAccidentsViewModel)
 
         /* CONFIGURATION */
         val startGuideline = createGuidelineFromStart(Settings.START_END_PERCENTAGE)
@@ -287,12 +294,14 @@ private fun AccidentCategory(
 
 
 @Composable
-private fun ShowAccidentDetailsDialog(roadAccidentsViewModel: RoadAccidentsViewModel) {
+private fun AccidentDetailsDialog(roadAccidentsViewModel: RoadAccidentsViewModel) {
     if (roadAccidentsViewModel.showAccidentDetailsDialog) {
         RoadAccidentDetailsDialog(
             accident = roadAccidentsViewModel.selectedAccident,
             onDismiss = { roadAccidentsViewModel.onAccidentDialogDismiss() },
-            onButtonClick = { roadAccidentsViewModel.onAccidentFinishButtonClick() }
+            onButtonClick = { roadAccidentsViewModel.onAccidentMarkAsResolvedButtonClick() },
+            onMapButtonClick = { roadAccidentsViewModel.onMapButtonClick() },
+            onCallButtonClick = { roadAccidentsViewModel.onCallButtonClick() }
         )
     }
 }
@@ -311,6 +320,40 @@ private fun MarkAsResolvedConfirmationDialog(roadAccidentsViewModel: RoadAcciden
         onNoClick = { roadAccidentsViewModel.onConfirmationNoClick() },
         onDismiss = { roadAccidentsViewModel.onConfirmationDismiss() },
     )
+}
+
+
+@Composable
+private fun AccidentLocationOnMap(roadAccidentsViewModel: RoadAccidentsViewModel) {
+    if (!roadAccidentsViewModel.showAccidentLocationOnMap)
+        return
+
+    InfoAlertDialog(
+        title = stringResource(R.string.accidents_location_dialog_title),
+        onDismiss = { roadAccidentsViewModel.onAccidentLocationMapDismiss() }
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space))
+        ) {
+            GoogleMapView(
+                selectedLocation = roadAccidentsViewModel.selectedAccident.location.toLatLon(),
+                modifier = Modifier
+                    .height(dimensionResource(R.dimen.accidents_dialog_map_height))
+                    .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                        RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius))
+                    )
+            )
+
+            AppButton(
+                text = stringResource(R.string.accident_location_dialog_dismiss_button_text),
+                onClick = { roadAccidentsViewModel.onAccidentLocationMapDismiss() }
+            )
+        }
+    }
 }
 
 

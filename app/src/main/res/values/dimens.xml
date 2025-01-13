@@ -35,7 +35,7 @@
 
     <!-- APP BUTTON -->
     <dimen name="app_button_text_size">16sp</dimen>
-    <dimen name="app_button_icon_size">24dp</dimen>
+    <dimen name="app_button_icon_size">28dp</dimen>
     <dimen name="app_button_padding">2dp</dimen>
 
     <!-- PROGRESS INDICATOR -->
@@ -86,7 +86,7 @@
     <dimen name="loc_search_dialog_predictions_padding">8dp</dimen>
 
     <!-- CONFIRMATION DIALOG -->
-    <dimen name="confirmation_dialog_text_size">16sp</dimen>
+    <dimen name="confirmation_dialog_text_size">20sp</dimen>
     <dimen name="confirmation_dialog_buttons_horizontal_padding">16dp</dimen>
 
     <!-- TASKS LIST -->
@@ -118,5 +118,7 @@
     <dimen name="accidents_container_category_text_size">16sp</dimen>
     <dimen name="accidents_container_circle_icon_size">40dp</dimen>
     <dimen name="accidents_container_arrow_right_icon_size">40dp</dimen>
+
+    <dimen name="accidents_dialog_map_height">300dp</dimen>
 
 </resources>

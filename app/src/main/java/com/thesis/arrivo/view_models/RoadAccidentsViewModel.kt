@@ -21,10 +21,12 @@ import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.mapError
+import com.thesis.arrivo.utilities.preparePhoneCall
 import com.thesis.arrivo.utilities.showErrorDialog
 import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+
 
 class RoadAccidentsViewModel(
     private val context: Context,
@@ -156,6 +158,12 @@ class RoadAccidentsViewModel(
         get() = _selectedAccident.value
 
     var showConfirmationDialog by mutableStateOf(false)
+    var showAccidentLocationOnMap by mutableStateOf(false)
+
+
+    private fun toggleShowAccidentLocationOnMap() {
+        showAccidentLocationOnMap = !showAccidentLocationOnMap
+    }
 
 
     private fun toggleShowConfirmationDialog() {
@@ -179,9 +187,24 @@ class RoadAccidentsViewModel(
     }
 
 
-    fun onAccidentFinishButtonClick() {
-//        toggleShowAccidentDetailsDialog()
+    fun onAccidentMarkAsResolvedButtonClick() {
         toggleShowConfirmationDialog()
+    }
+
+
+    fun onCallButtonClick() {
+        val phoneNumber = selectedAccident.employee.phoneNumber
+        preparePhoneCall(context, phoneNumber)
+    }
+
+
+    fun onMapButtonClick() {
+        toggleShowAccidentLocationOnMap()
+    }
+
+
+    fun onAccidentLocationMapDismiss() {
+        toggleShowAccidentLocationOnMap()
     }
 
 

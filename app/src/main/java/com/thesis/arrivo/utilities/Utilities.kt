@@ -3,6 +3,7 @@ package com.thesis.arrivo.utilities
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
@@ -140,3 +141,19 @@ fun getCurrentDateMillis() = Instant.now().toEpochMilli()
 
 fun convertLongToLocalDate(longVal: Long): LocalDate =
     LocalDate.ofEpochDay(longVal / 86400000L)
+
+
+fun preparePhoneCall(context: Context, phoneNumber: String) {
+    if (phoneNumber.isNotEmpty()) {
+        val intent = Intent(Intent.ACTION_DIAL).apply {
+            data = Uri.parse("tel:$phoneNumber")
+        }
+        context.startActivity(intent)
+    } else {
+        showToast(
+            context,
+            context.getString(R.string.call_incorrect_phone_number),
+            Toast.LENGTH_SHORT
+        )
+    }
+}

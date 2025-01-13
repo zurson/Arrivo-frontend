@@ -79,6 +79,9 @@
     <!-- DATE PICKER -->
     <string name="date_picker_label">Date</string>
 
+    <!-- PHONE CALL -->
+    <string name="call_incorrect_phone_number">Phone number is incorrect!</string>
+
     <!-- EMPTY LIST -->
     <string name="empty_list_text">No content to show</string>
 
@@ -104,7 +107,11 @@
     <string name="accidents_details_dialog_category">Category</string>
     <string name="accidents_details_dialog_vehicle">Vehicle</string>
     <string name="accidents_details_dialog_description">Description</string>
+    <string name="accidents_details_dialog_map_button_text">Map</string>
+    <string name="accidents_details_dialog_call_button_text">Call</string>
 
     <string name="accidents_mark_as_resolved_success_text">Report marked as resolved successfully!</string>
+    <string name="accidents_location_dialog_title">Accident Location</string>
+    <string name="accident_location_dialog_dismiss_button_text">OK</string>
 
 </resources>
