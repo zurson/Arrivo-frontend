@@ -218,10 +218,12 @@ class MainScaffoldViewModel(
 
     private var loadingScreenEnabled by mutableStateOf(false)
 
+    @Synchronized
     override fun showLoadingScreen() {
         loadingScreenEnabled = true
     }
 
+    @Synchronized
     override fun hideLoadingScreen() {
         loadingScreenEnabled = false
     }
