@@ -97,7 +97,7 @@ class TaskManagerViewModel(
     var productToDelete by mutableStateOf<Product?>(null)
 
     var selectedProductAmount by mutableStateOf("")
-    var selectedProductName by mutableStateOf("")
+    private var selectedProductName by mutableStateOf("")
     var isProductSpinnerError by mutableStateOf(false)
     var isProductAmountError by mutableStateOf(false)
 
@@ -141,7 +141,7 @@ class TaskManagerViewModel(
     }
 
 
-    fun toggleShowProductDeleteConfirmationDialog() {
+    private fun toggleShowProductDeleteConfirmationDialog() {
         _showDeleteConfirmationDialog.value = !_showDeleteConfirmationDialog.value
     }
 
@@ -218,7 +218,7 @@ class TaskManagerViewModel(
     var query by mutableStateOf("")
     var finalAddress by mutableStateOf("")
 
-    var isLocationSelected: Boolean = false
+    private var isLocationSelected: Boolean = false
     var locationSearchBarError by mutableStateOf(false)
 
     private val _selectedLocation = mutableStateOf(DEFAULT_LOCATION)
@@ -235,12 +235,12 @@ class TaskManagerViewModel(
         }
 
 
-    fun setSelectedLocation(location: LatLng?) {
+    private fun setSelectedLocation(location: LatLng?) {
         _selectedLocation.value = location ?: DEFAULT_LOCATION
     }
 
 
-    fun getCameraPosition() = CameraPosition.fromLatLngZoom(selectedLocation, DEFAULT_MAP_ZOOM)
+    private fun getCameraPosition() = CameraPosition.fromLatLngZoom(selectedLocation, DEFAULT_MAP_ZOOM)
 
 
     fun toggleLocationSearchDialog() {
@@ -248,7 +248,7 @@ class TaskManagerViewModel(
     }
 
 
-    fun clearPredictions() {
+    private fun clearPredictions() {
         _predictions.clear()
     }
 

@@ -89,7 +89,7 @@ class MainScaffoldViewModel(
      **/
 
     private val _selectedView = mutableStateOf(getNavbarElements()[0])
-    val selectedView: NavigationItem
+    private val selectedView: NavigationItem
         get() = _selectedView.value
 
     private fun selectView(item: NavigationItem) {

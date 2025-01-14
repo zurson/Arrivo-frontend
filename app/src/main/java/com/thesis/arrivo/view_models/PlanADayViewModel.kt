@@ -20,8 +20,8 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class PlanADayViewModel(
-    private val context: Context,
-    private val loadingScreenManager: LoadingScreenManager,
+    context: Context,
+    loadingScreenManager: LoadingScreenManager,
     private val navigationManager: NavigationManager
 ) : ViewModel() {
 

@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class TasksListViewModel(
-    private val context: Context,
+    context: Context,
     private val mainScaffoldViewModel: MainScaffoldViewModel,
     loadingScreenManager: LoadingScreenManager,
     private val navigationManager: NavigationManager,
@@ -138,7 +138,7 @@ class TasksListViewModel(
     }
 
 
-    fun toggleShowTaskDetailsDialog() {
+    private fun toggleShowTaskDetailsDialog() {
         showTaskDetailsDialog = !showTaskDetailsDialog
     }
 
