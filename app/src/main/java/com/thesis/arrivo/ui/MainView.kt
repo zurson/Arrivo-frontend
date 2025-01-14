@@ -130,7 +130,8 @@ private fun SetupMainScaffold(
                         CreateEditEmployeeView(
                             mainScaffoldViewModel = mainScaffoldViewModel,
                             editMode = false,
-                            navigationManager = navigationManager
+                            navigationManager = navigationManager,
+                            loadingScreenManager = mainScaffoldViewModel
                         )
                     }
 
@@ -138,7 +139,8 @@ private fun SetupMainScaffold(
                         CreateEditEmployeeView(
                             mainScaffoldViewModel = mainScaffoldViewModel,
                             editMode = true,
-                            navigationManager = navigationManager
+                            navigationManager = navigationManager,
+                            loadingScreenManager = mainScaffoldViewModel
                         )
                     }
 

@@ -32,6 +32,7 @@ import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.FormType
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.view_models.AuthViewModel
 import com.thesis.arrivo.view_models.EmployeeViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
@@ -39,11 +40,12 @@ import com.thesis.arrivo.view_models.MainScaffoldViewModel
 @Composable
 fun CreateEditEmployeeView(
     mainScaffoldViewModel: MainScaffoldViewModel,
+    loadingScreenManager: LoadingScreenManager,
     navigationManager: NavigationManager,
     editMode: Boolean = false
 ) {
     val context = LocalContext.current
-    val employeeViewModel = EmployeeViewModel(mainScaffoldViewModel, navigationManager)
+    val employeeViewModel = EmployeeViewModel(loadingScreenManager, navigationManager)
     val authViewModel = AuthViewModel(mainScaffoldViewModel)
 
     if (editMode) authViewModel.prepareToEdit()
@@ -256,7 +258,8 @@ private fun Preview() {
         CreateEditEmployeeView(
             mainScaffoldViewModel = vm,
             editMode = true,
-            navigationManager = NavigationManager(rememberNavController())
+            navigationManager = NavigationManager(rememberNavController()),
+            loadingScreenManager = vm
         )
     }
 }
