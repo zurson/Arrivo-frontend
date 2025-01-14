@@ -44,6 +44,7 @@ import com.thesis.arrivo.components.date_picker.DatePickerField
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.dpToSp
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.TasksListViewModel
 
@@ -87,6 +88,7 @@ fun TasksListView(mainScaffoldViewModel: MainScaffoldViewModel) {
 
         TasksList(
             tasksListViewModel = tasksListViewModel,
+            loadingScreenStatusChecker = mainScaffoldViewModel,
             modifier = Modifier.constrainAs(tasksListRef) {
                 top.linkTo(tasksListTopGuideline)
                 bottom.linkTo(tasksListBottomGuideline)
@@ -129,14 +131,15 @@ private fun ShowTaskDetailsDialog(tasksListViewModel: TasksListViewModel) {
 @Composable
 private fun TasksList(
     modifier: Modifier = Modifier,
-    tasksListViewModel: TasksListViewModel
+    tasksListViewModel: TasksListViewModel,
+    loadingScreenStatusChecker: LoadingScreenStatusChecker
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
     ) {
         if (tasksListViewModel.tasksToShow.isEmpty()) {
-            EmptyList()
+            EmptyList(loadingScreenStatusChecker)
             return
         }
 

@@ -49,6 +49,7 @@ import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.dpToSp
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.RoadAccidentsViewModel
 
@@ -93,6 +94,7 @@ fun AccidentsView(mainScaffoldViewModel: MainScaffoldViewModel) {
 
         RoadAccidentsList(
             roadAccidentsViewModel = roadAccidentsViewModel,
+            loadingScreenStatusChecker = mainScaffoldViewModel,
             modifier = Modifier.constrainAs(roadAccidentsListRef) {
                 top.linkTo(roadAccidentsListTopGuideline)
                 bottom.linkTo(parent.bottom)
@@ -193,14 +195,15 @@ private fun Filter(
 @Composable
 private fun RoadAccidentsList(
     modifier: Modifier = Modifier,
-    roadAccidentsViewModel: RoadAccidentsViewModel
+    roadAccidentsViewModel: RoadAccidentsViewModel,
+    loadingScreenStatusChecker: LoadingScreenStatusChecker
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
     ) {
         if (roadAccidentsViewModel.accidentsToShow.isEmpty()) {
-            EmptyList()
+            EmptyList(loadingScreenStatusChecker)
             return
         }
 

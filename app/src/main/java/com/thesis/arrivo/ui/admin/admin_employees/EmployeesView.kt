@@ -48,6 +48,7 @@ import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.utilities.showErrorDialog
 import com.thesis.arrivo.view_models.EmployeeViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
@@ -95,6 +96,7 @@ fun EmployeesView(mainScaffoldViewModel: MainScaffoldViewModel) {
         EmployeesList(
             employees = employees,
             employeeViewModel = employeeViewModel,
+            loadingScreenStatusChecker = mainScaffoldViewModel,
             modifier = Modifier.constrainAs(headerImageRef) {
                 top.linkTo(employeesListTopGuideline)
                 bottom.linkTo(employeesListBottomGuideline)
@@ -145,7 +147,8 @@ private fun ShowEmployeeDetails(
 private fun EmployeesList(
     modifier: Modifier = Modifier,
     employeeViewModel: EmployeeViewModel,
-    employees: List<Employee>
+    employees: List<Employee>,
+    loadingScreenStatusChecker: LoadingScreenStatusChecker
 ) {
     Box(
         modifier = modifier
@@ -155,7 +158,7 @@ private fun EmployeesList(
         contentAlignment = Alignment.Center
     ) {
         if (employees.isEmpty()) {
-            EmptyList()
+            EmptyList(loadingScreenStatusChecker)
             return
         }
 
