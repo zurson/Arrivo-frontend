@@ -23,7 +23,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -43,48 +42,35 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.employee.Employee
+import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.components.other_components.AppButton
 import com.thesis.arrivo.components.other_components.EmptyList
-import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
-import com.thesis.arrivo.utilities.showErrorDialog
 import com.thesis.arrivo.view_models.EmployeeViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 
 @Composable
-fun EmployeesView(
+fun EmployeesListView(
     mainScaffoldViewModel: MainScaffoldViewModel,
     loadingScreenManager: LoadingScreenManager,
     navigationManager: NavigationManager
 ) {
     val context = LocalContext.current
 
-    val employeeViewModel =
-        remember {
-            EmployeeViewModel(
-                loadingScreenManager = loadingScreenManager,
-                navigationManager = navigationManager
-            )
-        }
-    val employees by employeeViewModel.employees.collectAsState()
-
-    LaunchedEffect(Unit) {
-        employeeViewModel.fetchEmployeesList(
-            context = context,
-            onFailure = { error ->
-                showErrorDialog(
-                    context,
-                    context.getString(R.string.error_title),
-                    error
-                )
-            }
+    val employeeViewModel = remember {
+        EmployeeViewModel(
+            loadingScreenManager = loadingScreenManager,
+            navigationManager = navigationManager,
+            context = context
         )
     }
+
+    val employees by employeeViewModel.employees.collectAsState()
 
     ConstraintLayout(
         modifier = Modifier
@@ -103,8 +89,8 @@ fun EmployeesView(
 
         /* EMPLOYEES LIST */
         val (headerImageRef) = createRefs()
-        val employeesListTopGuideline = createGuidelineFromTop(0.1f)
-        val employeesListBottomGuideline = createGuidelineFromTop(0.86f)
+        val employeesListTopGuideline = createGuidelineFromTop(0.05f)
+        val employeesListBottomGuideline = createGuidelineFromTop(0.85f)
 
         EmployeesList(
             employees = employees,
@@ -122,7 +108,7 @@ fun EmployeesView(
 
         /* BUTTONS */
         val (buttonsRef) = createRefs()
-        val buttonsTopGuideline = createGuidelineFromTop(0.87f)
+        val buttonsTopGuideline = createGuidelineFromTop(0.86f)
 
         ButtonsSection(
             employeeViewModel = employeeViewModel,
@@ -261,7 +247,7 @@ private fun ButtonsSection(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_horizontal_space)),
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxSize()
     ) {
         AppButton(
             onClick = { employeeViewModel.onCreateEmployeeAccountButtonClick() },
@@ -290,7 +276,7 @@ private fun Preview() {
     )
 
     Theme.ArrivoTheme {
-        EmployeesView(
+        EmployeesListView(
             mainScaffoldViewModel = vm,
             loadingScreenManager = vm,
             navigationManager = NavigationManager(rememberNavController())

@@ -27,10 +27,10 @@ import com.thesis.arrivo.communication.employee.EmployeeStatus
 import com.thesis.arrivo.components.other_components.AppButton
 import com.thesis.arrivo.components.other_components.AppSpinner
 import com.thesis.arrivo.components.other_components.AppTextField
-import com.thesis.arrivo.utilities.PhoneVisualTransformation
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.FormType
 import com.thesis.arrivo.utilities.NavigationManager
+import com.thesis.arrivo.utilities.PhoneVisualTransformation
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.view_models.AuthViewModel
@@ -45,7 +45,7 @@ fun CreateEditEmployeeView(
     editMode: Boolean = false
 ) {
     val context = LocalContext.current
-    val employeeViewModel = EmployeeViewModel(loadingScreenManager, navigationManager)
+    val employeeViewModel = EmployeeViewModel(context, loadingScreenManager, navigationManager)
     val authViewModel = AuthViewModel(mainScaffoldViewModel)
 
     if (editMode) authViewModel.prepareToEdit()
@@ -61,7 +61,7 @@ fun CreateEditEmployeeView(
 
         /* FORMS LIST */
         val (formsListRef) = createRefs()
-        val formsListTopGuideline = createGuidelineFromTop(0.1f)
+        val formsListTopGuideline = createGuidelineFromTop(0.05f)
         val formsListBottomGuideline = createGuidelineFromTop(
             if (!editMode) 0.75f else 0.85f
         )
@@ -204,7 +204,7 @@ private fun ConfirmButton(
                 mainScaffoldViewModel = mainScaffoldViewModel,
                 authViewModel = authViewModel,
                 onSuccess = { employeeViewModel.onSuccess(context, editMode) },
-                onFailure = { error -> employeeViewModel.onFailure(context, error) },
+                onFailure = { error -> employeeViewModel.onFailure(error) },
                 editMode = editMode
             )
         },

@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class EmployeeViewModel(
+    private val context: Context,
     private val loadingScreenManager: LoadingScreenManager,
     private val navigationManager: NavigationManager
 ) : ViewModel() {
@@ -39,19 +40,24 @@ class EmployeeViewModel(
     var clickedEmployee = _clickedEmployee.value
 
 
+    init {
+        fetchEmployeesList()
+    }
+
+
     fun toggleShowEmployeeDetails() {
         _showEmployeeDetails.value = !_showEmployeeDetails.value
     }
 
 
-    fun fetchEmployeesList(context: Context, onFailure: (ErrorResponse) -> Unit) {
+    private fun fetchEmployeesList() {
         viewModelScope.launch {
             try {
                 loadingScreenManager.showLoadingScreen()
                 val employeeList = repository.getAllEmployees()
                 _employees.value = employeeList
             } catch (e: Exception) {
-                onFailure(mapError(e, context))
+                onFailure(e)
             } finally {
                 loadingScreenManager.hideLoadingScreen()
             }
@@ -141,11 +147,20 @@ class EmployeeViewModel(
     }
 
 
-    fun onFailure(context: Context, error: ErrorResponse) {
+    fun onFailure(exception: Exception) {
         showErrorDialog(
             context = context,
             title = context.getString(R.string.error_title),
-            errorResponse = error
+            errorResponse = mapError(exception, context)
+        )
+    }
+
+
+    fun onFailure(errorResponse: ErrorResponse) {
+        showErrorDialog(
+            context = context,
+            title = context.getString(R.string.error_title),
+            errorResponse = errorResponse
         )
     }
 
@@ -173,6 +188,6 @@ class EmployeeViewModel(
 
 
     fun onPlanADayButtonClick() {
-
+        navigationManager.navigateTo(NavigationItem.PlanADayAdmin)
     }
 }
