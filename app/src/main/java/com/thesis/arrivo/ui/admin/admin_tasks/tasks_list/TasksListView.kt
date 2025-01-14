@@ -35,11 +35,11 @@ import androidx.constraintlayout.compose.Dimension
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TaskStatus
-import com.thesis.arrivo.components.AppButton
-import com.thesis.arrivo.components.ArrowRightIcon
-import com.thesis.arrivo.components.Circle
-import com.thesis.arrivo.components.EmptyList
-import com.thesis.arrivo.components.bounceClick
+import com.thesis.arrivo.components.other_components.AppButton
+import com.thesis.arrivo.components.other_components.ArrowRightIcon
+import com.thesis.arrivo.components.other_components.Circle
+import com.thesis.arrivo.components.other_components.EmptyList
+import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.components.date_picker.DatePickerField
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings

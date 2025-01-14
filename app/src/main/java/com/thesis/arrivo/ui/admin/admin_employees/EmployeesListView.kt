@@ -43,9 +43,9 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.employee.Employee
-import com.thesis.arrivo.components.AppButton
-import com.thesis.arrivo.components.EmptyList
-import com.thesis.arrivo.components.bounceClick
+import com.thesis.arrivo.components.other_components.AppButton
+import com.thesis.arrivo.components.other_components.EmptyList
+import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings

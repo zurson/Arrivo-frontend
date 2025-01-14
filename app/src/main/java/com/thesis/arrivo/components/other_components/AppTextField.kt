@@ -1,8 +1,7 @@
-package com.thesis.arrivo.components
+package com.thesis.arrivo.components.other_components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
@@ -19,8 +18,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.unit.dp
 import com.thesis.arrivo.R
+import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.utilities.dpToSp
 
 @Composable

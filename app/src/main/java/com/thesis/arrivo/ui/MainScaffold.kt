@@ -1,4 +1,4 @@
-package com.thesis.arrivo.components
+package com.thesis.arrivo.ui
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize

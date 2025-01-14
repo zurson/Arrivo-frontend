@@ -1,4 +1,4 @@
-package com.thesis.arrivo.components
+package com.thesis.arrivo.components.other_components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.thesis.arrivo.R
+import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.Settings.Companion.APP_BUTTON_DEFAULT_MAX_LINES
 import com.thesis.arrivo.utilities.dpToSp

@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.thesis.arrivo.R
-import com.thesis.arrivo.components.bounceClick
+import com.thesis.arrivo.components.animations.bounceClick
 
 @Composable
 fun CustomOutlinedButton(

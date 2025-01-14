@@ -1,4 +1,4 @@
-package com.thesis.arrivo.components
+package com.thesis.arrivo.components.other_components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement

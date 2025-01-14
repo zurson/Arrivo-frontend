@@ -31,7 +31,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.thesis.arrivo.R
-import com.thesis.arrivo.components.bounceClick
+import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.dpToSp
 

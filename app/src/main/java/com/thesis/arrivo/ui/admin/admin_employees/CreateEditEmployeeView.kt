@@ -24,10 +24,10 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.employee.EmployeeStatus
-import com.thesis.arrivo.components.AppButton
-import com.thesis.arrivo.components.AppSpinner
-import com.thesis.arrivo.components.AppTextField
-import com.thesis.arrivo.components.PhoneVisualTransformation
+import com.thesis.arrivo.components.other_components.AppButton
+import com.thesis.arrivo.components.other_components.AppSpinner
+import com.thesis.arrivo.components.other_components.AppTextField
+import com.thesis.arrivo.utilities.PhoneVisualTransformation
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.FormType
 import com.thesis.arrivo.utilities.NavigationManager

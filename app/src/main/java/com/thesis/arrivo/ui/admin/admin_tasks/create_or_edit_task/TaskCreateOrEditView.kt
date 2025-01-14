@@ -36,10 +36,10 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.thesis.arrivo.R
-import com.thesis.arrivo.components.AppButton
-import com.thesis.arrivo.components.AppTextField
-import com.thesis.arrivo.components.ConfirmationDialog
-import com.thesis.arrivo.components.bounceClick
+import com.thesis.arrivo.components.other_components.AppButton
+import com.thesis.arrivo.components.other_components.AppTextField
+import com.thesis.arrivo.components.other_components.ConfirmationDialog
+import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp

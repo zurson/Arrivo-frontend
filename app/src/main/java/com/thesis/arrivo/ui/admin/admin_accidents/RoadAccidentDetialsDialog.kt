@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.road_accidents.RoadAccident
-import com.thesis.arrivo.components.AppButton
+import com.thesis.arrivo.components.other_components.AppButton
 import com.thesis.arrivo.components.info_alert_dialog.AlertDialogSingleButton
 import com.thesis.arrivo.components.info_alert_dialog.DialogRecord
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog

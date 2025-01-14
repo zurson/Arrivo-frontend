@@ -30,8 +30,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
-import com.thesis.arrivo.components.AppTextField
-import com.thesis.arrivo.components.PasswordTextField
+import com.thesis.arrivo.components.other_components.AppTextField
+import com.thesis.arrivo.components.other_components.PasswordTextField
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.dpToSp

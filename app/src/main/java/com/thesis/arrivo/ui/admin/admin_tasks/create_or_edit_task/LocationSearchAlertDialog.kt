@@ -25,9 +25,9 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.thesis.arrivo.R
-import com.thesis.arrivo.components.AppButton
-import com.thesis.arrivo.components.AppTextField
-import com.thesis.arrivo.components.GoogleMapView
+import com.thesis.arrivo.components.other_components.AppButton
+import com.thesis.arrivo.components.other_components.AppTextField
+import com.thesis.arrivo.components.other_components.GoogleMapView
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
 import com.thesis.arrivo.utilities.Settings.Companion.DEFAULT_MAP_ZOOM
 import com.thesis.arrivo.utilities.dpToSp
