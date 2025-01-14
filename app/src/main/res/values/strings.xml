@@ -78,6 +78,8 @@
 
     <!-- DATE PICKER -->
     <string name="date_picker_label">Date</string>
+    <string name="date_pick_cancel_button_text">Cancel</string>
+    <string name="date_pick_accept_button_text">OK</string>
 
     <!-- PHONE CALL -->
     <string name="call_incorrect_phone_number">Phone number is incorrect!</string>

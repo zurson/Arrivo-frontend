@@ -83,9 +83,13 @@ class RoadAccidentsViewModel(
         _accidentsToShow.clear()
 
         val filteredAccidents = _allAccidents.filter { accident ->
-            val isDateMatching = accident.date.toEpochDay() == selectedLocalDate.toEpochDay()
             val isStatusMatching =
                 activeFilters.isEmpty() || activeFilters.contains(accident.status)
+            val isDateMatching = if (accident.status == RoadAccidentStatus.ACTIVE) {
+                true
+            } else {
+                accident.date.toEpochDay() == selectedLocalDate.toEpochDay()
+            }
             isDateMatching && isStatusMatching
         }
 
