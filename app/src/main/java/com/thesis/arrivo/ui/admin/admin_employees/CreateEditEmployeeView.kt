@@ -200,11 +200,8 @@ private fun ConfirmButton(
     AppButton(
         onClick = {
             employeeViewModel.onCreateOrEditButtonClick(
-                context = context,
                 mainScaffoldViewModel = mainScaffoldViewModel,
                 authViewModel = authViewModel,
-                onSuccess = { employeeViewModel.onSuccess(context, editMode) },
-                onFailure = { error -> employeeViewModel.onFailure(error) },
                 editMode = editMode
             )
         },

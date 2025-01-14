@@ -66,11 +66,8 @@ class EmployeeViewModel(
 
 
     fun onCreateOrEditButtonClick(
-        context: Context,
         mainScaffoldViewModel: MainScaffoldViewModel,
         authViewModel: AuthViewModel,
-        onSuccess: () -> Unit,
-        onFailure: (ErrorResponse) -> Unit,
         editMode: Boolean
     ) {
         val request = if (editMode) {
@@ -84,19 +81,12 @@ class EmployeeViewModel(
             )
         }
 
-        handleEmployeeAccountOperation(
-            context = context,
-            operation = request,
-            onSuccess = onSuccess,
-            onFailure = onFailure
-        )
+        handleEmployeeAccountOperation(operation = request, editMode = editMode)
     }
 
     private fun handleEmployeeAccountOperation(
-        context: Context,
         operation: EmployeeAccountOperation,
-        onSuccess: () -> Unit,
-        onFailure: (ErrorResponse) -> Unit
+        editMode: Boolean
     ) {
         viewModelScope.launch {
             try {
@@ -110,9 +100,9 @@ class EmployeeViewModel(
                         repository.updateEmployeeAccount(operation.id, operation.data)
                     }
                 }
-                onSuccess()
+                onSuccess(editMode)
             } catch (e: Exception) {
-                onFailure(mapError(e, context))
+                onFailure(e)
             } finally {
                 loadingScreenManager.hideLoadingScreen()
             }
@@ -126,7 +116,7 @@ class EmployeeViewModel(
     }
 
 
-    private fun showSuccessToast(context: Context, editMode: Boolean) {
+    private fun showSuccessToast(editMode: Boolean) {
         val messageResId = if (editMode) {
             R.string.employee_edit_success_message
         } else {
@@ -141,8 +131,8 @@ class EmployeeViewModel(
     }
 
 
-    fun onSuccess(context: Context, editMode: Boolean) {
-        showSuccessToast(context, editMode)
+    fun onSuccess(editMode: Boolean) {
+        showSuccessToast(editMode)
         navigationManager.navigateTo(NavigationItem.EmployeesAdmin, true)
     }
 
