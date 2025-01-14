@@ -13,13 +13,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.libraries.places.api.net.PlacesClient
-import com.thesis.arrivo.components.other_components.LoadingScreen
 import com.thesis.arrivo.components.navigation.NavigationItem
+import com.thesis.arrivo.components.other_components.LoadingScreen
 import com.thesis.arrivo.ui.admin.admin_accidents.AccidentsView
 import com.thesis.arrivo.ui.admin.admin_employees.CreateEditEmployeeView
-import com.thesis.arrivo.ui.admin.admin_employees.EmployeesView
+import com.thesis.arrivo.ui.admin.admin_employees.EmployeesListView
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskCreateOrEditView
 import com.thesis.arrivo.ui.admin.admin_tasks.tasks_list.TasksListView
+import com.thesis.arrivo.ui.admin.plan_a_day.PlanADayView
 import com.thesis.arrivo.ui.authentication.LoginView
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.ui.user.user_account_view.AccountView
@@ -79,14 +80,11 @@ private fun SetupMainScaffold(
                     modifier = Modifier.padding(contentPadding)
                 ) {
                     /** User **/
-                    /** User **/
                     composable(NavigationItem.TasksUser.route) { DeliveryView() }
                     composable(NavigationItem.MapUser.route) { MapView() }
                     composable(NavigationItem.AccidentsUser.route) { RoadAccidentView() }
                     composable(NavigationItem.ReportsUser.route) { YourAccidentsView() }
                     composable(NavigationItem.AccountUser.route) { AccountView() }
-
-                    /** Admin **/
 
                     /** Admin **/
                     composable(NavigationItem.AccidentsAdmin.route) {
@@ -121,7 +119,7 @@ private fun SetupMainScaffold(
                     }
 
                     composable(NavigationItem.EmployeesAdmin.route) {
-                        EmployeesView(
+                        EmployeesListView(
                             mainScaffoldViewModel = mainScaffoldViewModel,
                             loadingScreenManager = mainScaffoldViewModel,
                             navigationManager = navigationManager
@@ -146,7 +144,13 @@ private fun SetupMainScaffold(
                         )
                     }
 
-                    /** Authentication **/
+                    composable(NavigationItem.PlanADayAdmin.route) {
+                        PlanADayView(
+                            loadingScreenManager = mainScaffoldViewModel,
+                            navigationManager = navigationManager
+                        )
+                    }
+
 
                     /** Authentication **/
                     composable(NavigationItem.Login.route) {

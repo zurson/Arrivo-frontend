@@ -40,6 +40,8 @@
 
     <!-- Plan Employee Day -->
     <string name="plan_a_day_redirect_button_text">Plan a Day</string>
+    <string name="plan_a_day_employee_selector_error_message">Select employee</string>
+    <string name="plan_a_day_employee_selector_label">Employee</string>
 
     <!-- Employees List -->
     <string name="employees_list_edit_button_text">Edit</string>
