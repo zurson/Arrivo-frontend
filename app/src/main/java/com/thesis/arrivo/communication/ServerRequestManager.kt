@@ -14,11 +14,13 @@ class ServerRequestManager(
     suspend fun sendRequest(
         actionToPerform: suspend () -> Unit,
         onFailure: (Exception) -> Unit = { },
+        onSuccess: () -> Unit = { },
         showOnFailureDefaultInfoBox: Boolean = true
     ) {
         try {
             loadingScreenManager.showLoadingScreen()
             actionToPerform()
+            onSuccess()
         } catch (e: Exception) {
             if (showOnFailureDefaultInfoBox) onFailureToast(e)
             onFailure(e)
