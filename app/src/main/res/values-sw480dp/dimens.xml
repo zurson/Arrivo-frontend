@@ -70,6 +70,10 @@
     <dimen name="empty_list_text_size">40sp</dimen>
     <dimen name="empty_list_icon_size">200dp</dimen>
 
+    <!-- APP CHECKBOX -->
+    <dimen name="app_checkbox_border_width">4dp</dimen>
+    <dimen name="app_checkbox_corner_clip">5dp</dimen>
+
     <!-- NEW TASK -->
     <dimen name="new_task_products_section_title_text_size">48dp</dimen>>
     <dimen name="new_task_no_products_message_text_size">40sp</dimen>
@@ -119,5 +123,14 @@
     <dimen name="accidents_container_arrow_right_icon_size">50dp</dimen>
 
     <dimen name="accidents_dialog_map_height">450dp</dimen>
+
+    <!-- PLAN A DAY -->
+    <dimen name="plan_a_day_available_tasks_sector_title_text_size">30sp</dimen>
+    <dimen name="plan_a_day_available_tasks_container_padding">16dp</dimen>
+    <dimen name="plan_a_day_available_tasks_container_content_vertical_space">16dp</dimen>
+    <dimen name="plan_a_day_tasks_container_title_text_size">30sp</dimen>
+    <dimen name="plan_a_day_tasks_container_address_text_size">24sp</dimen>
+    <dimen name="plan_a_day_tasks_container_checkbox_end_padding">16dp</dimen>
+    <dimen name="plan_a_day_tasks_container_checkbox_size">64dp</dimen>
 
 </resources>

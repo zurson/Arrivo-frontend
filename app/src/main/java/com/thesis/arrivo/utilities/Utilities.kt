@@ -108,6 +108,18 @@ fun showErrorDialog(context: Context, title: String, errorResponse: ErrorRespons
 }
 
 
+fun showDefaultErrorDialog(context: Context, title: String, message: String) {
+    AlertDialog.Builder(context)
+        .setTitle(title)
+        .setMessage(message)
+        .setPositiveButton("OK") { dialog, _ ->
+            dialog.dismiss()
+        }
+        .create()
+        .show()
+}
+
+
 fun capitalize(value: String): String {
     return value.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 }

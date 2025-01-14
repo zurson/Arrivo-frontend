@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,12 +36,12 @@ import androidx.constraintlayout.compose.Dimension
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TaskStatus
+import com.thesis.arrivo.components.animations.bounceClick
+import com.thesis.arrivo.components.date_picker.DatePickerField
 import com.thesis.arrivo.components.other_components.AppButton
 import com.thesis.arrivo.components.other_components.ArrowRightIcon
 import com.thesis.arrivo.components.other_components.Circle
 import com.thesis.arrivo.components.other_components.EmptyList
-import com.thesis.arrivo.components.animations.bounceClick
-import com.thesis.arrivo.components.date_picker.DatePickerField
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.capitalize
@@ -135,7 +136,9 @@ private fun ShowTaskDetailsDialog(tasksListViewModel: TasksListViewModel) {
         TaskDetailsDialog(
             task = tasksListViewModel.selectedTask,
             onDismiss = { tasksListViewModel.onTaskDismiss() },
-            onEditButtonClick = { tasksListViewModel.onTaskEditButtonClick() }
+            onButtonClick = { tasksListViewModel.onTaskEditButtonClick() },
+            icon = Icons.Filled.Edit,
+            buttonText = stringResource(R.string.tasks_list_details_dialog_button_text)
         )
     }
 }

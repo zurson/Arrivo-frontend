@@ -23,11 +23,12 @@ import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 fun EmptyList(
     loadingScreenStatusChecker: LoadingScreenStatusChecker,
     @StringRes stringResourceId: Int = R.string.empty_list_text,
+    modifier: Modifier = Modifier
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(),
     ) {
         if (loadingScreenStatusChecker.isLoadingScreenEnabled())

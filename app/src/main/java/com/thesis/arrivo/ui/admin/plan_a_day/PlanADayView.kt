@@ -1,24 +1,52 @@
 package com.thesis.arrivo.ui.admin.plan_a_day
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
+import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.components.date_picker.DatePickerField
+import com.thesis.arrivo.components.other_components.AppButton
+import com.thesis.arrivo.components.other_components.AppCheckbox
 import com.thesis.arrivo.components.other_components.AppSpinner
+import com.thesis.arrivo.components.other_components.EmptyList
+import com.thesis.arrivo.ui.admin.admin_tasks.tasks_list.TaskDetailsDialog
+import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
+import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
+import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.PlanADayViewModel
 
 @Composable
@@ -37,6 +65,8 @@ fun PlanADayView(loadingScreenManager: LoadingScreenManager, navigationManager: 
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
+        ShowTaskDetailsDialog(planADayViewModel)
+
         /* CONFIGURATION */
         val startGuideline = createGuidelineFromStart(Settings.START_END_PERCENTAGE)
         val endGuideline = createGuidelineFromEnd(Settings.START_END_PERCENTAGE)
@@ -44,7 +74,7 @@ fun PlanADayView(loadingScreenManager: LoadingScreenManager, navigationManager: 
         /* DATE AND FILTERS */
         val (dateAndFiltersRef) = createRefs()
         val dateAndFiltersTopGuideline = createGuidelineFromTop(0.05f)
-        val dateAndFiltersBottomGuideline = createGuidelineFromTop(0.25f)
+        val dateAndFiltersBottomGuideline = createGuidelineFromTop(0.3f)
 
         EmployeeSelectorAndDatePicker(
             planADayViewModel = planADayViewModel,
@@ -55,23 +85,42 @@ fun PlanADayView(loadingScreenManager: LoadingScreenManager, navigationManager: 
                 end.linkTo(endGuideline)
                 width = Dimension.fillToConstraints
                 height = Dimension.fillToConstraints
-            })
+            }
+        )
 
         /* ROAD ACCIDENTS LIST */
-        val (roadAccidentsListRef) = createRefs()
-        val roadAccidentsListTopGuideline = createGuidelineFromTop(0.265f)
+        val (availableTasksListRef) = createRefs()
+        val availableTasksListTopGuideline = createGuidelineFromTop(0.31f)
+        val availableTasksListBottomGuideline = createGuidelineFromTop(0.87f)
 
-//        RoadAccidentsList(
-//            roadAccidentsViewModel = roadAccidentsViewModel,
-//            loadingScreenStatusChecker = loadingScreenManager,
-//            modifier = Modifier.constrainAs(roadAccidentsListRef) {
-//                top.linkTo(roadAccidentsListTopGuideline)
-//                bottom.linkTo(parent.bottom)
-//                start.linkTo(startGuideline)
-//                end.linkTo(endGuideline)
-//                width = Dimension.fillToConstraints
-//                height = Dimension.fillToConstraints
-//            })
+        AvailableTasksList(
+            planADayViewModel = planADayViewModel,
+            loadingScreenStatusChecker = loadingScreenManager,
+            modifier = Modifier.constrainAs(availableTasksListRef) {
+                top.linkTo(availableTasksListTopGuideline)
+                bottom.linkTo(availableTasksListBottomGuideline)
+                start.linkTo(startGuideline)
+                end.linkTo(endGuideline)
+                width = Dimension.fillToConstraints
+                height = Dimension.fillToConstraints
+            })
+
+        /* BUTTON - NEXT */
+        val (buttonRef) = createRefs()
+        val buttonTopGuideline = createGuidelineFromTop(0.88f)
+
+        ButtonSection(
+            planADayViewModel = planADayViewModel,
+            modifier = Modifier
+                .constrainAs(buttonRef) {
+                    top.linkTo(buttonTopGuideline)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(startGuideline)
+                    end.linkTo(endGuideline)
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
+                }
+        )
     }
 }
 
@@ -100,6 +149,152 @@ private fun EmployeeSelectorAndDatePicker(
         DatePickerField(
             selectedDate = planADayViewModel.getSelectedDate(),
             onDateSelected = { planADayViewModel.onDateSelected(it) },
+        )
+    }
+}
+
+
+@Composable
+fun AvailableTasksList(
+    modifier: Modifier = Modifier,
+    planADayViewModel: PlanADayViewModel,
+    loadingScreenStatusChecker: LoadingScreenStatusChecker
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
+        modifier = modifier
+            .fillMaxSize()
+    ) {
+        Text(
+            text = stringResource(R.string.plan_a_day_available_tasks_section_title),
+            fontSize = dpToSp(R.dimen.plan_a_day_available_tasks_sector_title_text_size),
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        if (planADayViewModel.availableTasks.isEmpty()) {
+            EmptyList(
+                loadingScreenStatusChecker = loadingScreenStatusChecker,
+                modifier = Modifier.weight(1f)
+            )
+            return
+        }
+
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
+            modifier = Modifier
+                .weight(1f)
+                .animateContentSize()
+        ) {
+            items(planADayViewModel.availableTasks, key = { it.id }) { task ->
+                AvailableTaskContainer(
+                    task = task,
+                    planADayViewModel = planADayViewModel,
+                    modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null)
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+fun AvailableTaskContainer(
+    task: Task,
+    planADayViewModel: PlanADayViewModel,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_horizontal_space)),
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+            .padding(dimensionResource(R.dimen.plan_a_day_available_tasks_container_padding))
+            .clickable { planADayViewModel.onTaskSelected(task) }
+    ) {
+        Column(
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.plan_a_day_available_tasks_container_content_vertical_space)),
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = task.title,
+                fontSize = dpToSp(R.dimen.plan_a_day_tasks_container_title_text_size),
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+
+            Text(
+                text = task.addressText,
+                fontSize = dpToSp(R.dimen.plan_a_day_tasks_container_address_text_size),
+                color = MaterialTheme.colorScheme.primary,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+
+        AppCheckbox(
+            checked = planADayViewModel.isTaskChecked(task),
+            onCheckedChange = { planADayViewModel.onTaskCheckedChange(task) },
+            size = dimensionResource(R.dimen.plan_a_day_tasks_container_checkbox_size),
+            modifier = Modifier.padding(end = dimensionResource(R.dimen.plan_a_day_tasks_container_checkbox_end_padding))
+        )
+    }
+}
+
+
+@Composable
+private fun ButtonSection(
+    modifier: Modifier = Modifier,
+    planADayViewModel: PlanADayViewModel
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .fillMaxSize(),
+    ) {
+        AppButton(
+            onClick = { planADayViewModel.onButtonNextClick() },
+            text = stringResource(R.string.plan_a_day_button_next_text),
+            icon = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+        )
+    }
+}
+
+
+@Composable
+private fun ShowTaskDetailsDialog(planADayViewModel: PlanADayViewModel) {
+    if (!planADayViewModel.showTaskDetailsDialog)
+        return
+
+    TaskDetailsDialog(
+        task = planADayViewModel.selectedTask,
+        onDismiss = { planADayViewModel.onTaskDialogDismiss() },
+        onButtonClick = { planADayViewModel.onTaskDialogDismiss() },
+        buttonText = stringResource(R.string.plan_a_day_task_details_dialog_dismiss_button_text),
+    )
+}
+
+
+@Preview
+@Composable
+private fun Preview() {
+    val vm = MainScaffoldViewModel(
+        navigationManager = NavigationManager(rememberNavController()),
+        context = LocalContext.current,
+        adminMode = true
+    )
+
+    Theme.ArrivoTheme {
+        PlanADayView(
+            loadingScreenManager = vm,
+            navigationManager = NavigationManager(rememberNavController())
         )
     }
 }

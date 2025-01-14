@@ -4,10 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -23,7 +22,9 @@ fun TaskDetailsDialog(
     modifier: Modifier = Modifier,
     task: Task,
     onDismiss: () -> Unit,
-    onEditButtonClick: () -> Unit
+    onButtonClick: () -> Unit,
+    icon: ImageVector? = null,
+    buttonText: String
 ) {
     InfoAlertDialog(
         title = stringResource(R.string.tasks_list_details_dialog_window_title),
@@ -67,9 +68,9 @@ fun TaskDetailsDialog(
             }
 
             AlertDialogSingleButton(
-                text = stringResource(R.string.tasks_list_details_dialog_button_text),
-                onEditButtonClick = { onEditButtonClick() },
-                icon = Icons.Filled.Edit,
+                text = buttonText,
+                onEditButtonClick = { onButtonClick() },
+                icon = icon,
                 modifier = Modifier
                     .padding(top = dimensionResource(R.dimen.alert_dialog_button_top_padding))
                     .padding(horizontal = dimensionResource(R.dimen.alert_dialog_button_horizontal_padding))

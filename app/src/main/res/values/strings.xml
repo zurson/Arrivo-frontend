@@ -42,6 +42,11 @@
     <string name="plan_a_day_redirect_button_text">Plan a Day</string>
     <string name="plan_a_day_employee_selector_error_message">Select employee</string>
     <string name="plan_a_day_employee_selector_label">Employee</string>
+    <string name="plan_a_day_button_next_text">Next</string>
+    <string name="plan_a_day_task_details_dialog_dismiss_button_text">OK</string>
+    <string name="plan_a_day_available_tasks_section_title">Available Tasks</string>
+
+    <string name="plan_a_day_no_task_selected_error_message">You have to select a task!</string>
 
     <!-- Employees List -->
     <string name="employees_list_edit_button_text">Edit</string>
