@@ -34,6 +34,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.task.Task
+import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.components.date_picker.DatePickerField
 import com.thesis.arrivo.components.other_components.AppButton
 import com.thesis.arrivo.components.other_components.AppCheckbox
@@ -210,6 +211,7 @@ fun AvailableTaskContainer(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_horizontal_space)),
         modifier = modifier
+            .bounceClick()
             .fillMaxWidth()
             .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
