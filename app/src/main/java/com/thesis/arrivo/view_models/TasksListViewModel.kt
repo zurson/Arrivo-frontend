@@ -9,7 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.thesis.arrivo.R
+import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TaskStatus
 import com.thesis.arrivo.communication.task.TasksRepository
@@ -21,17 +21,16 @@ import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
-import com.thesis.arrivo.utilities.mapError
-import com.thesis.arrivo.utilities.showErrorDialog
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class TasksListViewModel(
     private val context: Context,
     private val mainScaffoldViewModel: MainScaffoldViewModel,
-    private val loadingScreenManager: LoadingScreenManager,
+    loadingScreenManager: LoadingScreenManager,
     private val navigationManager: NavigationManager,
 ) : ViewModel() {
+    private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
 
     companion object {
         private var _selectedDate = mutableLongStateOf(getCurrentDateMillis())
@@ -161,16 +160,13 @@ class TasksListViewModel(
 
     private fun fetchTasks() {
         viewModelScope.launch {
-            try {
-                loadingScreenManager.showLoadingScreen()
-                _allTasks.clear()
-                _allTasks.addAll(tasksRepository.getAllTasks())
-                filterTasks()
-            } catch (e: Exception) {
-                onFailure(e)
-            } finally {
-                loadingScreenManager.hideLoadingScreen()
-            }
+            serverRequestManager.sendRequest(
+                actionToPerform = {
+                    _allTasks.clear()
+                    _allTasks.addAll(tasksRepository.getAllTasks())
+                },
+                onSuccess = { filterTasks() }
+            )
         }
     }
 
@@ -190,15 +186,6 @@ class TasksListViewModel(
             _tasksToShow.clear()
             _tasksToShow.addAll(filteredTasks)
         }
-    }
-
-
-    private fun onFailure(exception: Exception) {
-        showErrorDialog(
-            context = context,
-            title = context.getString(R.string.error_title),
-            errorResponse = mapError(exception, context)
-        )
     }
 
 

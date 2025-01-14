@@ -8,7 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.thesis.arrivo.R
+import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.employee.EmployeeRepository
 import com.thesis.arrivo.utilities.NavigationManager
@@ -16,8 +16,6 @@ import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
-import com.thesis.arrivo.utilities.mapError
-import com.thesis.arrivo.utilities.showErrorDialog
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -33,6 +31,7 @@ class PlanADayViewModel(
             get() = _selectedDate.longValue
     }
 
+    private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
 
     /**
      * Date Picker
@@ -65,27 +64,16 @@ class PlanADayViewModel(
 
     private val employeesRepository = EmployeeRepository()
 
+
     private fun fetchEmployeesList() {
         viewModelScope.launch {
-            try {
-                loadingScreenManager.showLoadingScreen()
-                _employeesList.clear()
-                _employeesList.addAll(employeesRepository.getAllEmployees())
-            } catch (e: Exception) {
-                onFailure(e)
-            } finally {
-                loadingScreenManager.hideLoadingScreen()
-            }
+            serverRequestManager.sendRequest(
+                actionToPerform = {
+                    _employeesList.clear()
+                    _employeesList.addAll(employeesRepository.getAllEmployees())
+                },
+            )
         }
-    }
-
-
-    private fun onFailure(exception: Exception) {
-        showErrorDialog(
-            context = context,
-            title = context.getString(R.string.error_title),
-            errorResponse = mapError(exception, context)
-        )
     }
 
 

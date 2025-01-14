@@ -1,6 +1,5 @@
 package com.thesis.arrivo.ui.admin.admin_employees
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +10,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -45,8 +45,9 @@ fun CreateEditEmployeeView(
     editMode: Boolean = false
 ) {
     val context = LocalContext.current
-    val employeeViewModel = EmployeeViewModel(context, loadingScreenManager, navigationManager)
-    val authViewModel = AuthViewModel(mainScaffoldViewModel)
+    val employeeViewModel =
+        remember { EmployeeViewModel(context, loadingScreenManager, navigationManager) }
+    val authViewModel = remember { AuthViewModel(mainScaffoldViewModel) }
 
     if (editMode) authViewModel.prepareToEdit()
 
@@ -86,7 +87,6 @@ fun CreateEditEmployeeView(
         val buttonBottomGuideline = createGuidelineFromTop(0.95f)
 
         ConfirmButton(
-            context = context,
             editMode = editMode,
             employeeViewModel = employeeViewModel,
             mainScaffoldViewModel = mainScaffoldViewModel,
@@ -186,7 +186,6 @@ private fun Forms(
 
 @Composable
 private fun ConfirmButton(
-    context: Context,
     editMode: Boolean,
     modifier: Modifier = Modifier,
     employeeViewModel: EmployeeViewModel,

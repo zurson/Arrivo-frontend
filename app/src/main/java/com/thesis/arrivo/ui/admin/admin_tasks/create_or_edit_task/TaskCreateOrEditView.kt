@@ -1,6 +1,5 @@
 package com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,10 +35,10 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.thesis.arrivo.R
+import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.components.other_components.AppButton
 import com.thesis.arrivo.components.other_components.AppTextField
 import com.thesis.arrivo.components.other_components.ConfirmationDialog
-import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
@@ -60,6 +59,7 @@ fun TaskCreateOrEditView(
     val taskManagerViewModel =
         remember {
             TaskManagerViewModel(
+                context = context,
                 placesClient = placesClient,
                 mainScaffoldViewModel = mainScaffoldViewModel,
                 loadingScreenManager = loadingScreenManager,
@@ -108,7 +108,6 @@ fun TaskCreateOrEditView(
 
         ConfirmButton(taskManagerViewModel = taskManagerViewModel,
             editMode = editMode,
-            context = context,
             modifier = Modifier.constrainAs(buttonRef) {
                 top.linkTo(buttonTopGuideline)
                 bottom.linkTo(buttonBottomGuideline)
@@ -299,7 +298,6 @@ private fun ProductContainer(
 private fun ConfirmButton(
     taskManagerViewModel: TaskManagerViewModel,
     modifier: Modifier = Modifier,
-    context: Context,
     editMode: Boolean
 ) {
     val buttonTextId =
@@ -309,7 +307,7 @@ private fun ConfirmButton(
             R.string.task_create_or_edit_task_create_button_text
 
     AppButton(
-        onClick = { taskManagerViewModel.onButtonClick(context, editMode) },
+        onClick = { taskManagerViewModel.onButtonClick(editMode) },
         text = stringResource(buttonTextId),
         icon = Icons.Filled.Add,
         modifier = modifier

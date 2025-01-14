@@ -17,7 +17,7 @@ import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRe
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.maps.android.compose.CameraPositionState
 import com.thesis.arrivo.R
-import com.thesis.arrivo.communication.ErrorResponse
+import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.available_products.AvailableProduct
 import com.thesis.arrivo.communication.available_products.AvailableProductsRepository
 import com.thesis.arrivo.communication.task.TaskCreateRequest
@@ -30,17 +30,17 @@ import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings.Companion.DEFAULT_MAP_ZOOM
 import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
-import com.thesis.arrivo.utilities.mapError
-import com.thesis.arrivo.utilities.showErrorDialog
 import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.launch
 
 class TaskManagerViewModel(
+    private val context: Context,
     private val placesClient: PlacesClient,
     private val mainScaffoldViewModel: MainScaffoldViewModel,
-    private val loadingScreenManager: LoadingScreenManager,
+    loadingScreenManager: LoadingScreenManager,
     private val navigationManager: NavigationManager,
 ) : ViewModel() {
+    private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
 
     private val tasksRepository: TasksRepository by lazy { TasksRepository() }
     private val availableProductsRepository: AvailableProductsRepository by lazy { AvailableProductsRepository() }
@@ -63,15 +63,15 @@ class TaskManagerViewModel(
 
 
     private fun fetchAvailableProducts() {
-        if (availableProducts.isNotEmpty()) return
+        if (availableProducts.isNotEmpty())
+            return
 
-        println("Fetching available products...")
         viewModelScope.launch {
-            try {
-                _availableProducts = availableProductsRepository.getAllAvailableProducts()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            serverRequestManager.sendRequest(
+                actionToPerform = {
+                    _availableProducts = availableProductsRepository.getAllAvailableProducts()
+                }
+            )
         }
     }
 
@@ -338,14 +338,14 @@ class TaskManagerViewModel(
     var taskTitleError by mutableStateOf(false)
     var deliveryAddressError by mutableStateOf(false)
 
-    fun onButtonClick(context: Context, editMode: Boolean) {
+    fun onButtonClick(editMode: Boolean) {
         if (!validateConditions())
             return
 
         if (editMode)
-            sendTaskUpdateRequest(context, editMode)
+            sendTaskUpdateRequest(editMode)
         else
-            sendTaskCreateRequest(context, editMode)
+            sendTaskCreateRequest(editMode)
     }
 
 
@@ -364,35 +364,29 @@ class TaskManagerViewModel(
     }
 
 
-    private fun sendTaskCreateRequest(context: Context, editMode: Boolean) {
+    private fun sendTaskCreateRequest(editMode: Boolean) {
         viewModelScope.launch {
-            try {
-                loadingScreenManager.showLoadingScreen()
-                tasksRepository.createTask(createTaskCreateRequest())
-                onSuccess(context, editMode)
-            } catch (e: Exception) {
-                onFailure(context, mapError(e, context))
-            } finally {
-                loadingScreenManager.hideLoadingScreen()
-            }
+            serverRequestManager.sendRequest(
+                actionToPerform = {
+                    tasksRepository.createTask(createTaskCreateRequest())
+                },
+                onSuccess = { onSuccess(editMode) }
+            )
         }
     }
 
 
-    private fun sendTaskUpdateRequest(context: Context, editMode: Boolean) {
+    private fun sendTaskUpdateRequest(editMode: Boolean) {
         viewModelScope.launch {
-            try {
-                loadingScreenManager.showLoadingScreen()
-                tasksRepository.updateTask(
-                    id = mainScaffoldViewModel.taskToEdit.task.id,
-                    taskUpdateRequest = createTaskUpdateRequest()
-                )
-                onSuccess(context, editMode)
-            } catch (e: Exception) {
-                onFailure(context, mapError(e, context))
-            } finally {
-                loadingScreenManager.hideLoadingScreen()
-            }
+            serverRequestManager.sendRequest(
+                actionToPerform = {
+                    tasksRepository.updateTask(
+                        id = mainScaffoldViewModel.taskToEdit.task.id,
+                        taskUpdateRequest = createTaskUpdateRequest()
+                    )
+                },
+                onSuccess = { onSuccess(editMode) }
+            )
         }
     }
 
@@ -428,7 +422,7 @@ class TaskManagerViewModel(
     }
 
 
-    private fun onSuccess(context: Context, editMode: Boolean) {
+    private fun onSuccess(editMode: Boolean) {
         val messageId =
             if (editMode)
                 R.string.task_create_or_edit_edit_success_message
@@ -444,15 +438,6 @@ class TaskManagerViewModel(
         navigationManager.navigateTo(
             navigationItem = NavigationItem.TasksListAdmin,
             clearHistory = true
-        )
-    }
-
-
-    private fun onFailure(context: Context, error: ErrorResponse) {
-        showErrorDialog(
-            context = context,
-            title = context.getString(R.string.error_title),
-            errorResponse = error
         )
     }
 

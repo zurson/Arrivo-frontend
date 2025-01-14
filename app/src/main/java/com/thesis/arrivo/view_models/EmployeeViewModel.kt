@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thesis.arrivo.R
-import com.thesis.arrivo.communication.ErrorResponse
+import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.employee.EmployeeCreateAccountRequest
 import com.thesis.arrivo.communication.employee.EmployeeRepository
@@ -14,8 +14,6 @@ import com.thesis.arrivo.communication.employee.EmployeeUpdateRequest
 import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
-import com.thesis.arrivo.utilities.mapError
-import com.thesis.arrivo.utilities.showErrorDialog
 import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,9 +22,10 @@ import kotlinx.coroutines.launch
 
 class EmployeeViewModel(
     private val context: Context,
-    private val loadingScreenManager: LoadingScreenManager,
+    loadingScreenManager: LoadingScreenManager,
     private val navigationManager: NavigationManager
 ) : ViewModel() {
+    private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
 
     private val repository: EmployeeRepository by lazy { EmployeeRepository() }
 
@@ -52,15 +51,11 @@ class EmployeeViewModel(
 
     private fun fetchEmployeesList() {
         viewModelScope.launch {
-            try {
-                loadingScreenManager.showLoadingScreen()
-                val employeeList = repository.getAllEmployees()
-                _employees.value = employeeList
-            } catch (e: Exception) {
-                onFailure(e)
-            } finally {
-                loadingScreenManager.hideLoadingScreen()
-            }
+            serverRequestManager.sendRequest(
+                actionToPerform = {
+                    _employees.value = repository.getAllEmployees()
+                }
+            )
         }
     }
 
@@ -89,23 +84,20 @@ class EmployeeViewModel(
         editMode: Boolean
     ) {
         viewModelScope.launch {
-            try {
-                loadingScreenManager.showLoadingScreen()
-                when (operation) {
-                    is EmployeeAccountOperation.Create -> {
-                        repository.createEmployeeAccount(operation.data)
-                    }
+            serverRequestManager.sendRequest(
+                actionToPerform = {
+                    when (operation) {
+                        is EmployeeAccountOperation.Create -> {
+                            repository.createEmployeeAccount(operation.data)
+                        }
 
-                    is EmployeeAccountOperation.Update -> {
-                        repository.updateEmployeeAccount(operation.id, operation.data)
+                        is EmployeeAccountOperation.Update -> {
+                            repository.updateEmployeeAccount(operation.id, operation.data)
+                        }
                     }
-                }
-                onSuccess(editMode)
-            } catch (e: Exception) {
-                onFailure(e)
-            } finally {
-                loadingScreenManager.hideLoadingScreen()
-            }
+                },
+                onSuccess = { onSuccess(editMode) }
+            )
         }
     }
 
@@ -131,27 +123,9 @@ class EmployeeViewModel(
     }
 
 
-    fun onSuccess(editMode: Boolean) {
+    private fun onSuccess(editMode: Boolean) {
         showSuccessToast(editMode)
         navigationManager.navigateTo(NavigationItem.EmployeesAdmin, true)
-    }
-
-
-    fun onFailure(exception: Exception) {
-        showErrorDialog(
-            context = context,
-            title = context.getString(R.string.error_title),
-            errorResponse = mapError(exception, context)
-        )
-    }
-
-
-    fun onFailure(errorResponse: ErrorResponse) {
-        showErrorDialog(
-            context = context,
-            title = context.getString(R.string.error_title),
-            errorResponse = errorResponse
-        )
     }
 
 
