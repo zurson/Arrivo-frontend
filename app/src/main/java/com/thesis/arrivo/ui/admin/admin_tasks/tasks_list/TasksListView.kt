@@ -41,18 +41,31 @@ import com.thesis.arrivo.components.Circle
 import com.thesis.arrivo.components.EmptyList
 import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.components.date_picker.DatePickerField
+import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.dpToSp
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.TasksListViewModel
 
 @Composable
-fun TasksListView(mainScaffoldViewModel: MainScaffoldViewModel) {
+fun TasksListView(
+    mainScaffoldViewModel: MainScaffoldViewModel,
+    loadingScreenManager: LoadingScreenManager,
+    navigationManager: NavigationManager
+) {
     val context = LocalContext.current
     val tasksListViewModel =
-        remember { TasksListViewModel(context, mainScaffoldViewModel, mainScaffoldViewModel) }
+        remember {
+            TasksListViewModel(
+                context = context,
+                mainScaffoldViewModel = mainScaffoldViewModel,
+                loadingScreenManager = loadingScreenManager,
+                navigationManager = navigationManager
+            )
+        }
 
     ConstraintLayout(
         modifier = Modifier

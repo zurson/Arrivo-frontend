@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowRight
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -46,18 +47,30 @@ import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.EmptyList
 import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.ui.theme.Theme
+import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.utilities.showErrorDialog
 import com.thesis.arrivo.view_models.EmployeeViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 
 @Composable
-fun EmployeesView(mainScaffoldViewModel: MainScaffoldViewModel) {
+fun EmployeesView(
+    mainScaffoldViewModel: MainScaffoldViewModel,
+    loadingScreenManager: LoadingScreenManager,
+    navigationManager: NavigationManager
+) {
     val context = LocalContext.current
 
-    val employeeViewModel = remember { EmployeeViewModel(mainScaffoldViewModel) }
+    val employeeViewModel =
+        remember {
+            EmployeeViewModel(
+                loadingScreenManager = loadingScreenManager,
+                navigationManager = navigationManager
+            )
+        }
     val employees by employeeViewModel.employees.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -107,19 +120,17 @@ fun EmployeesView(mainScaffoldViewModel: MainScaffoldViewModel) {
             })
 
 
-        /* CREATE EMPLOYEE BUTTON */
-        val (buttonRef) = createRefs()
-        val buttonTopGuideline = createGuidelineFromTop(0.89f)
-        val buttonBottomGuideline = createGuidelineFromTop(0.96f)
-        val buttonStartGuideline = createGuidelineFromStart(0.3f)
+        /* BUTTONS */
+        val (buttonsRef) = createRefs()
+        val buttonsTopGuideline = createGuidelineFromTop(0.87f)
 
-        ConfirmButton(
-            mainScaffoldViewModel = mainScaffoldViewModel,
+        ButtonsSection(
+            employeeViewModel = employeeViewModel,
             modifier = Modifier
-                .constrainAs(buttonRef) {
-                    top.linkTo(buttonTopGuideline)
-                    bottom.linkTo(buttonBottomGuideline)
-                    start.linkTo(buttonStartGuideline)
+                .constrainAs(buttonsRef) {
+                    top.linkTo(buttonsTopGuideline)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
                     end.linkTo(endGuideline)
                     width = Dimension.fillToConstraints
                     height = Dimension.fillToConstraints
@@ -242,23 +253,45 @@ private fun EmployeeContainer(
 
 
 @Composable
-private fun ConfirmButton(
+private fun ButtonsSection(
     modifier: Modifier = Modifier,
-    mainScaffoldViewModel: MainScaffoldViewModel
+    employeeViewModel: EmployeeViewModel
 ) {
-    AppButton(
-        onClick = { mainScaffoldViewModel.onCreateEmployeeAccountRedirectButtonClick() },
-        modifier = modifier,
-        text = stringResource(R.string.create_account_redirect_button_text),
-        icon = Icons.Filled.Add
-    )
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_horizontal_space)),
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
+        AppButton(
+            onClick = { employeeViewModel.onPlanADayButtonClick() },
+            text = stringResource(R.string.plan_a_day_redirect_button_text),
+            icon = Icons.Filled.CalendarMonth
+        )
+
+        AppButton(
+            onClick = { employeeViewModel.onCreateEmployeeAccountButtonClick() },
+            text = stringResource(R.string.create_account_redirect_button_text),
+            icon = Icons.Filled.Add
+        )
+    }
 }
 
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Preview() {
+    val vm = MainScaffoldViewModel(
+        navigationManager = NavigationManager(rememberNavController()),
+        context = LocalContext.current,
+        adminMode = true
+    )
+
     Theme.ArrivoTheme {
-        EmployeesView(MainScaffoldViewModel(LocalContext.current, true, rememberNavController()))
+        EmployeesView(
+            mainScaffoldViewModel = vm,
+            loadingScreenManager = vm,
+            navigationManager = NavigationManager(rememberNavController())
+        )
     }
 }

@@ -38,6 +38,9 @@
     <string name="create_account_create_button_text">Create Account</string>
     <string name="create_account_edit_button_text">Save</string>
 
+    <!-- Plan Employee Day -->
+    <string name="plan_a_day_redirect_button_text">Plan a Day</string>
+
     <!-- Employees List -->
     <string name="employees_list_edit_button_text">Edit</string>
 

@@ -46,17 +46,24 @@ import com.thesis.arrivo.components.bounceClick
 import com.thesis.arrivo.components.date_picker.DatePickerField
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
 import com.thesis.arrivo.ui.theme.Theme
+import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.dpToSp
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.RoadAccidentsViewModel
 
 @Composable
-fun AccidentsView(mainScaffoldViewModel: MainScaffoldViewModel) {
+fun AccidentsView(loadingScreenManager: LoadingScreenManager) {
     val context = LocalContext.current
-    val roadAccidentsViewModel = remember { RoadAccidentsViewModel(context, mainScaffoldViewModel) }
+    val roadAccidentsViewModel = remember {
+        RoadAccidentsViewModel(
+            context = context,
+            loadingScreenManager = loadingScreenManager
+        )
+    }
 
     ConstraintLayout(
         modifier = Modifier
@@ -94,7 +101,7 @@ fun AccidentsView(mainScaffoldViewModel: MainScaffoldViewModel) {
 
         RoadAccidentsList(
             roadAccidentsViewModel = roadAccidentsViewModel,
-            loadingScreenStatusChecker = mainScaffoldViewModel,
+            loadingScreenStatusChecker = loadingScreenManager,
             modifier = Modifier.constrainAs(roadAccidentsListRef) {
                 top.linkTo(roadAccidentsListTopGuideline)
                 bottom.linkTo(parent.bottom)
@@ -363,13 +370,15 @@ private fun AccidentLocationOnMap(roadAccidentsViewModel: RoadAccidentsViewModel
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Preview() {
+    val vm = MainScaffoldViewModel(
+        navigationManager = NavigationManager(rememberNavController()),
+        context = LocalContext.current,
+        adminMode = true
+    )
+
     Theme.ArrivoTheme {
         AccidentsView(
-            mainScaffoldViewModel = MainScaffoldViewModel(
-                navController = rememberNavController(),
-                context = LocalContext.current,
-                adminMode = true
-            )
+            loadingScreenManager = vm
         )
     }
 }

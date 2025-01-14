@@ -28,6 +28,7 @@ import com.thesis.arrivo.ui.user.user_delivery_view.DeliveryView
 import com.thesis.arrivo.ui.user.user_map_view.MapView
 import com.thesis.arrivo.ui.user.user_road_accident_view.RoadAccidentView
 import com.thesis.arrivo.ui.user.user_your_accidents_view.YourAccidentsView
+import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 
 
@@ -35,17 +36,19 @@ import com.thesis.arrivo.view_models.MainScaffoldViewModel
 fun MainView(placesClient: PlacesClient) {
     val context = LocalContext.current
     val navHostController = rememberNavController()
+    val navigationManager = NavigationManager(navHostController)
 
     val mainScaffoldViewModel = MainScaffoldViewModel(
         context = context,
         adminMode = true,
-        navController = navHostController
+        navigationManager = navigationManager
     )
 
     SetupMainScaffold(
         placesClient = placesClient,
         navHostController = navHostController,
-        mainScaffoldViewModel = mainScaffoldViewModel
+        mainScaffoldViewModel = mainScaffoldViewModel,
+        navigationManager = navigationManager
     )
 }
 
@@ -54,7 +57,8 @@ fun MainView(placesClient: PlacesClient) {
 private fun SetupMainScaffold(
     placesClient: PlacesClient,
     navHostController: NavHostController,
-    mainScaffoldViewModel: MainScaffoldViewModel
+    mainScaffoldViewModel: MainScaffoldViewModel,
+    navigationManager: NavigationManager
 ) {
     var destLoaded by remember { mutableStateOf(false) }
     var startDestination: NavigationItem = NavigationItem.Login
@@ -84,19 +88,23 @@ private fun SetupMainScaffold(
 
                     /** Admin **/
                     composable(NavigationItem.AccidentsAdmin.route) {
-                        AccidentsView(
-                            mainScaffoldViewModel
-                        )
+                        AccidentsView(loadingScreenManager = mainScaffoldViewModel)
                     }
                     composable(NavigationItem.TasksListAdmin.route) {
-                        TasksListView(mainScaffoldViewModel)
+                        TasksListView(
+                            mainScaffoldViewModel = mainScaffoldViewModel,
+                            loadingScreenManager = mainScaffoldViewModel,
+                            navigationManager = navigationManager
+                        )
                     }
 
                     composable(NavigationItem.TaskCreateAdmin.route) {
                         TaskCreateOrEditView(
                             placesClient = placesClient,
                             mainScaffoldViewModel = mainScaffoldViewModel,
-                            editMode = false
+                            editMode = false,
+                            navigationManager = navigationManager,
+                            loadingScreenManager = mainScaffoldViewModel
                         )
                     }
 
@@ -104,20 +112,34 @@ private fun SetupMainScaffold(
                         TaskCreateOrEditView(
                             placesClient = placesClient,
                             mainScaffoldViewModel = mainScaffoldViewModel,
-                            editMode = true
+                            editMode = true,
+                            navigationManager = navigationManager,
+                            loadingScreenManager = mainScaffoldViewModel
                         )
                     }
 
                     composable(NavigationItem.EmployeesAdmin.route) {
-                        EmployeesView(mainScaffoldViewModel)
+                        EmployeesView(
+                            mainScaffoldViewModel = mainScaffoldViewModel,
+                            loadingScreenManager = mainScaffoldViewModel,
+                            navigationManager = navigationManager
+                        )
                     }
 
                     composable(NavigationItem.CreateEmployeeAdmin.route) {
-                        CreateEditEmployeeView(mainScaffoldViewModel, editMode = false)
+                        CreateEditEmployeeView(
+                            mainScaffoldViewModel = mainScaffoldViewModel,
+                            editMode = false,
+                            navigationManager = navigationManager
+                        )
                     }
 
                     composable(NavigationItem.EditEmployeeAdmin.route) {
-                        CreateEditEmployeeView(mainScaffoldViewModel, editMode = true)
+                        CreateEditEmployeeView(
+                            mainScaffoldViewModel = mainScaffoldViewModel,
+                            editMode = true,
+                            navigationManager = navigationManager
+                        )
                     }
 
                     /** Authentication **/

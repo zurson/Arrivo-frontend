@@ -40,8 +40,10 @@ import com.thesis.arrivo.components.AppButton
 import com.thesis.arrivo.components.AppTextField
 import com.thesis.arrivo.components.ConfirmationDialog
 import com.thesis.arrivo.components.bounceClick
+import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.TaskManagerViewModel
 
@@ -50,15 +52,18 @@ import com.thesis.arrivo.view_models.TaskManagerViewModel
 fun TaskCreateOrEditView(
     placesClient: PlacesClient,
     mainScaffoldViewModel: MainScaffoldViewModel,
+    navigationManager: NavigationManager,
+    loadingScreenManager: LoadingScreenManager,
     editMode: Boolean
 ) {
     val context = LocalContext.current
     val taskManagerViewModel =
         remember {
             TaskManagerViewModel(
-                placesClient,
-                mainScaffoldViewModel,
-                mainScaffoldViewModel
+                placesClient = placesClient,
+                mainScaffoldViewModel = mainScaffoldViewModel,
+                loadingScreenManager = loadingScreenManager,
+                navigationManager = navigationManager,
             )
         }
 

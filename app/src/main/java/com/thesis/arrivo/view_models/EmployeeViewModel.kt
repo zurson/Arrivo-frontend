@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.ErrorResponse
 import com.thesis.arrivo.communication.employee.Employee
@@ -13,9 +12,9 @@ import com.thesis.arrivo.communication.employee.EmployeeCreateAccountRequest
 import com.thesis.arrivo.communication.employee.EmployeeRepository
 import com.thesis.arrivo.communication.employee.EmployeeUpdateRequest
 import com.thesis.arrivo.components.NavigationItem
+import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.mapError
-import com.thesis.arrivo.utilities.navigateTo
 import com.thesis.arrivo.utilities.showErrorDialog
 import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +22,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class EmployeeViewModel(private val loadingScreenManager: LoadingScreenManager) : ViewModel() {
+class EmployeeViewModel(
+    private val loadingScreenManager: LoadingScreenManager,
+    private val navigationManager: NavigationManager
+) : ViewModel() {
 
     private val repository: EmployeeRepository by lazy { EmployeeRepository() }
 
@@ -133,9 +135,9 @@ class EmployeeViewModel(private val loadingScreenManager: LoadingScreenManager) 
     }
 
 
-    fun onSuccess(context: Context, navController: NavHostController, editMode: Boolean) {
+    fun onSuccess(context: Context, editMode: Boolean) {
         showSuccessToast(context, editMode)
-        navigateTo(navController, NavigationItem.EmployeesAdmin, true)
+        navigationManager.navigateTo(NavigationItem.EmployeesAdmin, true)
     }
 
 
@@ -154,10 +156,7 @@ class EmployeeViewModel(private val loadingScreenManager: LoadingScreenManager) 
         setEmployeeToEdit(mainScaffoldViewModel = mainScaffoldViewModel)
         toggleShowEmployeeDetails()
 
-        navigateTo(
-            navController = mainScaffoldViewModel.navController,
-            navigationItem = NavigationItem.EditEmployeeAdmin
-        )
+        navigationManager.navigateTo(navigationItem = NavigationItem.EditEmployeeAdmin)
     }
 
 
@@ -167,4 +166,13 @@ class EmployeeViewModel(private val loadingScreenManager: LoadingScreenManager) 
         mainScaffoldViewModel.employeeToEdit = clickedEmployee
     }
 
+
+    fun onCreateEmployeeAccountButtonClick() {
+        navigationManager.navigateTo(navigationItem = NavigationItem.CreateEmployeeAdmin)
+    }
+
+
+    fun onPlanADayButtonClick() {
+
+    }
 }

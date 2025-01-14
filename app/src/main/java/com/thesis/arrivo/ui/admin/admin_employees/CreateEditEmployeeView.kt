@@ -21,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.employee.EmployeeStatus
@@ -31,6 +30,7 @@ import com.thesis.arrivo.components.AppTextField
 import com.thesis.arrivo.components.PhoneVisualTransformation
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.FormType
+import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.view_models.AuthViewModel
 import com.thesis.arrivo.view_models.EmployeeViewModel
@@ -39,10 +39,11 @@ import com.thesis.arrivo.view_models.MainScaffoldViewModel
 @Composable
 fun CreateEditEmployeeView(
     mainScaffoldViewModel: MainScaffoldViewModel,
+    navigationManager: NavigationManager,
     editMode: Boolean = false
 ) {
     val context = LocalContext.current
-    val employeeViewModel = EmployeeViewModel(mainScaffoldViewModel)
+    val employeeViewModel = EmployeeViewModel(mainScaffoldViewModel, navigationManager)
     val authViewModel = AuthViewModel(mainScaffoldViewModel)
 
     if (editMode) authViewModel.prepareToEdit()
@@ -85,7 +86,6 @@ fun CreateEditEmployeeView(
         ConfirmButton(
             context = context,
             editMode = editMode,
-            navController = mainScaffoldViewModel.navController,
             employeeViewModel = employeeViewModel,
             mainScaffoldViewModel = mainScaffoldViewModel,
             authViewModel = authViewModel,
@@ -190,7 +190,6 @@ private fun ConfirmButton(
     employeeViewModel: EmployeeViewModel,
     mainScaffoldViewModel: MainScaffoldViewModel,
     authViewModel: AuthViewModel,
-    navController: NavHostController
 ) {
     val buttonText =
         if (!editMode) stringResource(R.string.create_account_create_button_text)
@@ -202,7 +201,7 @@ private fun ConfirmButton(
                 context = context,
                 mainScaffoldViewModel = mainScaffoldViewModel,
                 authViewModel = authViewModel,
-                onSuccess = { employeeViewModel.onSuccess(context, navController, editMode) },
+                onSuccess = { employeeViewModel.onSuccess(context, editMode) },
                 onFailure = { error -> employeeViewModel.onFailure(context, error) },
                 editMode = editMode
             )
@@ -247,14 +246,17 @@ fun BasicTextField(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Preview() {
+    val vm = MainScaffoldViewModel(
+        navigationManager = NavigationManager(rememberNavController()),
+        context = LocalContext.current,
+        adminMode = true
+    )
+
     Theme.ArrivoTheme {
         CreateEditEmployeeView(
-            MainScaffoldViewModel(
-                LocalContext.current,
-                true,
-                rememberNavController(),
-            ),
-            editMode = true
+            mainScaffoldViewModel = vm,
+            editMode = true,
+            navigationManager = NavigationManager(rememberNavController())
         )
     }
 }

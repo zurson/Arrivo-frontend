@@ -16,12 +16,12 @@ import com.thesis.arrivo.communication.task.TasksRepository
 import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskToEdit
 import com.thesis.arrivo.utilities.Location
+import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.mapError
-import com.thesis.arrivo.utilities.navigateTo
 import com.thesis.arrivo.utilities.showErrorDialog
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -29,7 +29,8 @@ import java.time.LocalDate
 class TasksListViewModel(
     private val context: Context,
     private val mainScaffoldViewModel: MainScaffoldViewModel,
-    private val loadingScreenManager: LoadingScreenManager
+    private val loadingScreenManager: LoadingScreenManager,
+    private val navigationManager: NavigationManager,
 ) : ViewModel() {
 
     companion object {
@@ -96,10 +97,7 @@ class TasksListViewModel(
 
 
     fun onAddTaskButtonClick() {
-        navigateTo(
-            navController = mainScaffoldViewModel.navController,
-            navigationItem = NavigationItem.TaskCreateAdmin
-        )
+        navigationManager.navigateTo(navigationItem = NavigationItem.TaskCreateAdmin)
     }
 
 
@@ -123,10 +121,7 @@ class TasksListViewModel(
 
     fun onTaskEditButtonClick() {
         toggleShowTaskDetailsDialog()
-        navigateTo(
-            navController = mainScaffoldViewModel.navController,
-            navigationItem = NavigationItem.TaskEditAdmin,
-        )
+        navigationManager.navigateTo(navigationItem = NavigationItem.TaskEditAdmin)
     }
 
 

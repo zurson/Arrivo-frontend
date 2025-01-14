@@ -15,10 +15,10 @@ import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskToEdit
 import com.thesis.arrivo.utilities.Location
+import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings.Companion.AUTH_ACCOUNT_STATUS_CHECK_INTERVAL_MS
 import com.thesis.arrivo.utilities.changeActivity
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
-import com.thesis.arrivo.utilities.navigateTo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -27,9 +27,9 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class MainScaffoldViewModel(
-    val context: Context,
-    var adminMode: Boolean,
-    val navController: NavHostController
+    private val context: Context,
+    private var adminMode: Boolean,
+    private val navigationManager: NavigationManager
 ) : ViewModel(), LoadingScreenManager {
 
     /**
@@ -108,11 +108,7 @@ class MainScaffoldViewModel(
         if (clickedItem.route == selectedView.route)
             return
 
-        navController.navigate(clickedItem.route) {
-            popUpTo(selectedView.route) { inclusive = true }
-            launchSingleTop = true
-        }
-
+        navigationManager.navigateTo(clickedItem, true)
         selectView(clickedItem)
     }
 
@@ -184,7 +180,7 @@ class MainScaffoldViewModel(
 
 
     fun onAuthenticationSuccess() {
-        getStartDestination { dest -> navigateTo(navController, dest, true) }
+        getStartDestination { dest -> navigationManager.navigateTo(dest, true) }
         setNavbarVisibility(true)
     }
 
@@ -217,19 +213,6 @@ class MainScaffoldViewModel(
 
 
     /**
-     * Other
-     **/
-
-
-    fun onCreateEmployeeAccountRedirectButtonClick() {
-        navigateTo(
-            navController = navController,
-            navigationItem = NavigationItem.CreateEmployeeAdmin
-        )
-    }
-
-
-    /**
      * Loading Screen Manager
      **/
 
@@ -245,5 +228,10 @@ class MainScaffoldViewModel(
     }
 
     override fun isLoadingScreenEnabled(): Boolean = loadingScreenEnabled
+
+
+    /**
+     * Other
+     **/
 
 }

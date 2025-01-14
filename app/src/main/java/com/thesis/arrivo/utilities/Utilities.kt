@@ -13,11 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.TextUnit
-import androidx.navigation.NavHostController
 import com.google.gson.Gson
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.ErrorResponse
-import com.thesis.arrivo.components.NavigationItem
 import retrofit2.HttpException
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -49,21 +47,6 @@ fun changeActivity(context: Context, destActivity: KClass<*>, finish: Boolean = 
 @Composable
 fun dpToSp(@DimenRes id: Int): TextUnit {
     return with(LocalDensity.current) { dimensionResource(id).toSp() }
-}
-
-
-fun navigateTo(
-    navController: NavHostController,
-    navigationItem: NavigationItem,
-    clearHistory: Boolean = false
-) {
-    runOnMainThread {
-        navController.navigate(navigationItem.route) {
-            if (clearHistory) {
-                popUpTo(0) { inclusive = true }
-            }
-        }
-    }
 }
 
 

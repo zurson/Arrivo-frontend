@@ -26,11 +26,11 @@ import com.thesis.arrivo.communication.task.TasksRepository
 import com.thesis.arrivo.components.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.Product
 import com.thesis.arrivo.utilities.Location
+import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings.Companion.DEFAULT_MAP_ZOOM
 import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.mapError
-import com.thesis.arrivo.utilities.navigateTo
 import com.thesis.arrivo.utilities.showErrorDialog
 import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.launch
@@ -38,7 +38,8 @@ import kotlinx.coroutines.launch
 class TaskManagerViewModel(
     private val placesClient: PlacesClient,
     private val mainScaffoldViewModel: MainScaffoldViewModel,
-    private val loadingScreenManager: LoadingScreenManager
+    private val loadingScreenManager: LoadingScreenManager,
+    private val navigationManager: NavigationManager,
 ) : ViewModel() {
 
     private val tasksRepository: TasksRepository by lazy { TasksRepository() }
@@ -440,7 +441,10 @@ class TaskManagerViewModel(
             toastLength = Toast.LENGTH_LONG,
         )
 
-        navigateTo(mainScaffoldViewModel.navController, NavigationItem.TasksListAdmin, true)
+        navigationManager.navigateTo(
+            navigationItem = NavigationItem.TasksListAdmin,
+            clearHistory = true
+        )
     }
 
 
