@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 class Settings {
 
     companion object {
+        const val APP_BUTTON_DEFAULT_MAX_LINES = 2
         const val START_END_PERCENTAGE: Float = 0.05f
 
         const val FIRST_NAME_MAX_LEN = 20
