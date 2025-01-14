@@ -130,7 +130,7 @@ fun EmployeesView(
                 .constrainAs(buttonsRef) {
                     top.linkTo(buttonsTopGuideline)
                     bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
+                    start.linkTo(startGuideline)
                     end.linkTo(endGuideline)
                     width = Dimension.fillToConstraints
                     height = Dimension.fillToConstraints
@@ -264,15 +264,17 @@ private fun ButtonsSection(
             .fillMaxWidth()
     ) {
         AppButton(
-            onClick = { employeeViewModel.onPlanADayButtonClick() },
-            text = stringResource(R.string.plan_a_day_redirect_button_text),
-            icon = Icons.Filled.CalendarMonth
+            onClick = { employeeViewModel.onCreateEmployeeAccountButtonClick() },
+            text = stringResource(R.string.create_account_redirect_button_text),
+            icon = Icons.Filled.Add,
+            modifier = Modifier.weight(1f),
         )
 
         AppButton(
-            onClick = { employeeViewModel.onCreateEmployeeAccountButtonClick() },
-            text = stringResource(R.string.create_account_redirect_button_text),
-            icon = Icons.Filled.Add
+            onClick = { employeeViewModel.onPlanADayButtonClick() },
+            text = stringResource(R.string.plan_a_day_redirect_button_text),
+            icon = Icons.Filled.CalendarMonth,
+            modifier = Modifier.weight(1f)
         )
     }
 }
