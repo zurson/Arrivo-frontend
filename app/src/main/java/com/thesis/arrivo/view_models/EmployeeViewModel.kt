@@ -11,7 +11,7 @@ import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.employee.EmployeeCreateAccountRequest
 import com.thesis.arrivo.communication.employee.EmployeeRepository
 import com.thesis.arrivo.communication.employee.EmployeeUpdateRequest
-import com.thesis.arrivo.components.NavigationItem
+import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.mapError

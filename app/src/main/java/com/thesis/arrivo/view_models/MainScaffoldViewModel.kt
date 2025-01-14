@@ -7,12 +7,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.thesis.arrivo.activities.MainActivity
 import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.task.Task
-import com.thesis.arrivo.components.NavigationItem
+import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskToEdit
 import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.NavigationManager

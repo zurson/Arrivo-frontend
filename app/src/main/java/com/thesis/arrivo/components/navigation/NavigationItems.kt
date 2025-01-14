@@ -1,4 +1,4 @@
-package com.thesis.arrivo.components
+package com.thesis.arrivo.components.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons

@@ -1,7 +1,7 @@
 package com.thesis.arrivo.utilities
 
 import androidx.navigation.NavHostController
-import com.thesis.arrivo.components.NavigationItem
+import com.thesis.arrivo.components.navigation.NavigationItem
 
 class NavigationManager(private val navController: NavHostController) {
 

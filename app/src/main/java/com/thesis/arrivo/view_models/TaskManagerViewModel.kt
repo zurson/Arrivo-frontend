@@ -23,7 +23,7 @@ import com.thesis.arrivo.communication.available_products.AvailableProductsRepos
 import com.thesis.arrivo.communication.task.TaskCreateRequest
 import com.thesis.arrivo.communication.task.TaskUpdateRequest
 import com.thesis.arrivo.communication.task.TasksRepository
-import com.thesis.arrivo.components.NavigationItem
+import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.Product
 import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.NavigationManager

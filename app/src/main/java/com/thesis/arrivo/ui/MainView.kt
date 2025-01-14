@@ -15,7 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.thesis.arrivo.components.LoadingScreen
 import com.thesis.arrivo.components.MainScaffold
-import com.thesis.arrivo.components.NavigationItem
+import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_accidents.AccidentsView
 import com.thesis.arrivo.ui.admin.admin_employees.CreateEditEmployeeView
 import com.thesis.arrivo.ui.admin.admin_employees.EmployeesView
