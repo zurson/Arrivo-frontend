@@ -14,6 +14,7 @@ import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.employee.EmployeeRepository
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TasksRepository
+import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.convertLongToLocalDate
@@ -27,7 +28,8 @@ import java.time.LocalDate
 class PADTasksViewModel(
     private val context: Context,
     private val navigationManager: NavigationManager,
-    private val loadingScreenManager: LoadingScreenManager
+    private val loadingScreenManager: LoadingScreenManager,
+    private val padSharedViewModel: PADSharedViewModel,
 ) : ViewModel(), LoadingScreenStatusChecker {
 
     companion object {
@@ -44,6 +46,9 @@ class PADTasksViewModel(
 
 
     private var selectedLocalDate: LocalDate = convertLongToLocalDate(selectedDate)
+    private val _isDatePickerError = mutableStateOf(false)
+    val isDatePickerError: Boolean
+        get() = _isDatePickerError.value
 
 
     fun getSelectedDate(): Long = selectedDate
@@ -52,6 +57,7 @@ class PADTasksViewModel(
     fun onDateSelected(dateMillis: Long?) {
         _selectedDate.longValue = dateMillis ?: getCurrentDateMillis()
         selectedLocalDate = convertLongToLocalDate(selectedDate)
+        _isDatePickerError.value = false
     }
 
 
@@ -186,12 +192,19 @@ class PADTasksViewModel(
         if (!validateConditions())
             return
 
+        padSharedViewModel.selectedTasks = checkedTasks
+        navigationManager.navigateTo(NavigationItem.PlanADayOrderAdmin)
     }
 
 
     private fun validateConditions(): Boolean {
         if (!isEmployeeSelected) {
             employeeSpinnerError = true
+            return false
+        }
+
+        if (selectedLocalDate.isBefore(LocalDate.now())) {
+            _isDatePickerError.value = true
             return false
         }
 
