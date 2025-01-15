@@ -14,4 +14,8 @@ class NavigationManager(private val navController: NavHostController) {
             }
         }
     }
+
+    fun navigateBack() {
+        navController.popBackStack()
+    }
 }
