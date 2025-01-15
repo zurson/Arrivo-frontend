@@ -46,12 +46,12 @@ import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.PADSharedViewModel
 import com.thesis.arrivo.view_models.PADTasksViewModel
 import com.thesis.arrivo.view_models.factory.PADTasksViewModelFactory
 
 @Composable
 fun PlanADayTasksView(padTasksViewModel: PADTasksViewModel) {
-
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -69,7 +69,7 @@ fun PlanADayTasksView(padTasksViewModel: PADTasksViewModel) {
         val dateAndFiltersBottomGuideline = createGuidelineFromTop(0.3f)
 
         EmployeeSelectorAndDatePicker(
-            PADTasksViewModel = padTasksViewModel,
+            padTasksViewModel = padTasksViewModel,
             modifier = Modifier.constrainAs(dateAndFiltersRef) {
                 top.linkTo(dateAndFiltersTopGuideline)
                 bottom.linkTo(dateAndFiltersBottomGuideline)
@@ -119,7 +119,7 @@ fun PlanADayTasksView(padTasksViewModel: PADTasksViewModel) {
 @Composable
 private fun EmployeeSelectorAndDatePicker(
     modifier: Modifier = Modifier,
-    PADTasksViewModel: PADTasksViewModel
+    padTasksViewModel: PADTasksViewModel
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -128,18 +128,20 @@ private fun EmployeeSelectorAndDatePicker(
             .fillMaxSize()
     ) {
         AppSpinner(
-            items = PADTasksViewModel.employeesList,
+            items = padTasksViewModel.employeesList,
             label = stringResource(R.string.plan_a_day_employee_selector_label),
-            selectedItem = PADTasksViewModel.selectedEmployee,
-            onItemSelected = { PADTasksViewModel.onEmployeeSelected(it) },
-            itemToString = { item -> PADTasksViewModel.employeeToString(item) },
-            isError = PADTasksViewModel.employeeSpinnerError,
+            selectedItem = padTasksViewModel.selectedEmployee,
+            onItemSelected = { padTasksViewModel.onEmployeeSelected(it) },
+            itemToString = { item -> padTasksViewModel.employeeToString(item) },
+            isError = padTasksViewModel.employeeSpinnerError,
             errorMessage = stringResource(R.string.plan_a_day_employee_selector_error_message)
         )
 
         DatePickerField(
-            selectedDate = PADTasksViewModel.getSelectedDate(),
-            onDateSelected = { PADTasksViewModel.onDateSelected(it) },
+            selectedDate = padTasksViewModel.getSelectedDate(),
+            onDateSelected = { padTasksViewModel.onDateSelected(it) },
+            isError = padTasksViewModel.isDatePickerError,
+            errorMessage = stringResource(R.string.plan_a_day_tasks_date_picker_error_message)
         )
     }
 }
@@ -286,7 +288,8 @@ private fun Preview() {
         factory = PADTasksViewModelFactory(
             context = LocalContext.current,
             loadingScreenManager = mainVm,
-            navigationManager = NavigationManager(rememberNavController())
+            navigationManager = NavigationManager(rememberNavController()),
+            padSharedViewModel = PADSharedViewModel()
         )
     )
 
