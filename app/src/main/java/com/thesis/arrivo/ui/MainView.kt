@@ -22,6 +22,7 @@ import com.thesis.arrivo.ui.admin.admin_employees.CreateEditEmployeeView
 import com.thesis.arrivo.ui.admin.admin_employees.EmployeesListView
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskCreateOrEditView
 import com.thesis.arrivo.ui.admin.admin_tasks.tasks_list.TasksListView
+import com.thesis.arrivo.ui.admin.plan_a_day.PlanADayOrderView
 import com.thesis.arrivo.ui.admin.plan_a_day.PlanADayTasksView
 import com.thesis.arrivo.ui.authentication.LoginView
 import com.thesis.arrivo.ui.theme.Theme
@@ -32,8 +33,10 @@ import com.thesis.arrivo.ui.user.user_road_accident_view.RoadAccidentView
 import com.thesis.arrivo.ui.user.user_your_accidents_view.YourAccidentsView
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.PADOrderViewModel
 import com.thesis.arrivo.view_models.PADTasksViewModel
 import com.thesis.arrivo.view_models.factory.MainScaffoldViewModelFactory
+import com.thesis.arrivo.view_models.factory.PADOrderViewModelFactory
 import com.thesis.arrivo.view_models.factory.PADTasksViewModelFactory
 
 
@@ -156,8 +159,8 @@ private fun SetupMainScaffold(
                     )
                 }
 
-                composable(NavigationItem.PlanADayAdmin.route) {
-                    val PADTasksViewModel: PADTasksViewModel = viewModel(
+                composable(NavigationItem.PlanADayTasksAdmin.route) {
+                    val viewModel: PADTasksViewModel = viewModel(
                         factory = PADTasksViewModelFactory(
                             context = LocalContext.current,
                             loadingScreenManager = mainScaffoldViewModel,
@@ -165,9 +168,20 @@ private fun SetupMainScaffold(
                         )
                     )
 
-                    PlanADayTasksView(PADTasksViewModel = PADTasksViewModel)
+                    PlanADayTasksView(padTasksViewModel = viewModel)
                 }
 
+                composable(NavigationItem.PlanADayOrderAdmin.route) {
+                    val viewModel: PADOrderViewModel = viewModel(
+                        factory = PADOrderViewModelFactory(
+                            context = LocalContext.current,
+                            loadingScreenManager = mainScaffoldViewModel,
+                            navigationManager = navigationManager
+                        )
+                    )
+
+                    PlanADayOrderView(padOrderViewModel = viewModel)
+                }
 
                 /** Authentication **/
                 composable(NavigationItem.Login.route) {
