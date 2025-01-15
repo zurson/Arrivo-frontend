@@ -35,14 +35,18 @@ import com.thesis.arrivo.components.other_components.PasswordTextField
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.dpToSp
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.view_models.AuthViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 
 
 @Composable
-fun LoginView(mainScaffoldViewModel: MainScaffoldViewModel) {
+fun LoginView(
+    mainScaffoldViewModel: MainScaffoldViewModel,
+    loadingScreenManager: LoadingScreenManager
+) {
     val context = LocalContext.current
-    val authViewModel = AuthViewModel(mainScaffoldViewModel)
+    val authViewModel = AuthViewModel(mainScaffoldViewModel, loadingScreenManager)
 
     mainScaffoldViewModel.manageNavbarOnLogin()
 
@@ -233,13 +237,16 @@ fun LoginDescription(modifier: Modifier = Modifier) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Show() {
+    val vm = MainScaffoldViewModel(
+        LocalContext.current,
+        false,
+        NavigationManager(rememberNavController())
+    )
+
     Theme.ArrivoTheme {
         LoginView(
-            MainScaffoldViewModel(
-                LocalContext.current, false, NavigationManager(
-                    rememberNavController()
-                )
-            )
+            mainScaffoldViewModel = vm,
+            loadingScreenManager = vm
         )
     }
 }

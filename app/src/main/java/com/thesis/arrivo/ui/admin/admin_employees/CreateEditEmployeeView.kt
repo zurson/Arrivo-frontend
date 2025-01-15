@@ -47,7 +47,7 @@ fun CreateEditEmployeeView(
     val context = LocalContext.current
     val employeeViewModel =
         remember { EmployeeViewModel(context, loadingScreenManager, navigationManager) }
-    val authViewModel = remember { AuthViewModel(mainScaffoldViewModel) }
+    val authViewModel = remember { AuthViewModel(mainScaffoldViewModel, loadingScreenManager) }
 
     if (editMode) authViewModel.prepareToEdit()
 
