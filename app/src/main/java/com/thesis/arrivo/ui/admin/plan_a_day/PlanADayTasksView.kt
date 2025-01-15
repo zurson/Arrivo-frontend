@@ -50,14 +50,14 @@ import com.thesis.arrivo.view_models.PADTasksViewModel
 import com.thesis.arrivo.view_models.factory.PADTasksViewModelFactory
 
 @Composable
-fun PlanADayTasksView(PADTasksViewModel: PADTasksViewModel) {
+fun PlanADayTasksView(padTasksViewModel: PADTasksViewModel) {
 
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        ShowTaskDetailsDialog(PADTasksViewModel)
+        ShowTaskDetailsDialog(padTasksViewModel)
 
         /* CONFIGURATION */
         val startGuideline = createGuidelineFromStart(Settings.START_END_PERCENTAGE)
@@ -69,7 +69,7 @@ fun PlanADayTasksView(PADTasksViewModel: PADTasksViewModel) {
         val dateAndFiltersBottomGuideline = createGuidelineFromTop(0.3f)
 
         EmployeeSelectorAndDatePicker(
-            PADTasksViewModel = PADTasksViewModel,
+            PADTasksViewModel = padTasksViewModel,
             modifier = Modifier.constrainAs(dateAndFiltersRef) {
                 top.linkTo(dateAndFiltersTopGuideline)
                 bottom.linkTo(dateAndFiltersBottomGuideline)
@@ -86,7 +86,7 @@ fun PlanADayTasksView(PADTasksViewModel: PADTasksViewModel) {
         val availableTasksListBottomGuideline = createGuidelineFromTop(0.87f)
 
         AvailableTasksList(
-            PADTasksViewModel = PADTasksViewModel,
+            PADTasksViewModel = padTasksViewModel,
             modifier = Modifier.constrainAs(availableTasksListRef) {
                 top.linkTo(availableTasksListTopGuideline)
                 bottom.linkTo(availableTasksListBottomGuideline)
@@ -101,7 +101,7 @@ fun PlanADayTasksView(PADTasksViewModel: PADTasksViewModel) {
         val buttonTopGuideline = createGuidelineFromTop(0.88f)
 
         ButtonSection(
-            PADTasksViewModel = PADTasksViewModel,
+            PADTasksViewModel = padTasksViewModel,
             modifier = Modifier
                 .constrainAs(buttonRef) {
                     top.linkTo(buttonTopGuideline)

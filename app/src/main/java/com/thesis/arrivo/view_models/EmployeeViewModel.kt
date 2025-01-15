@@ -152,6 +152,6 @@ class EmployeeViewModel(
 
 
     fun onPlanADayButtonClick() {
-        navigationManager.navigateTo(NavigationItem.PlanADayAdmin)
+        navigationManager.navigateTo(NavigationItem.PlanADayTasksAdmin)
     }
 }

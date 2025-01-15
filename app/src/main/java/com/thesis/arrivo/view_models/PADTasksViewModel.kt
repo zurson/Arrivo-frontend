@@ -30,11 +30,6 @@ class PADTasksViewModel(
     private val loadingScreenManager: LoadingScreenManager
 ) : ViewModel(), LoadingScreenStatusChecker {
 
-    override fun onCleared() {
-        super.onCleared()
-        println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")
-    }
-
     companion object {
         private var _selectedDate = mutableLongStateOf(getCurrentDateMillis())
         private val selectedDate: Long

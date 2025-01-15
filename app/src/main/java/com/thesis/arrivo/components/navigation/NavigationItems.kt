@@ -86,8 +86,12 @@ sealed class NavigationItem(
         route = "edit_employee_admin"
     )
 
-    data object PlanADayAdmin : NavigationItem(
-        route = "plan_a_day_admin"
+    data object PlanADayTasksAdmin : NavigationItem(
+        route = "plan_a_day_tasks_admin"
+    )
+
+    data object PlanADayOrderAdmin : NavigationItem(
+        route = "plan_a_day_order_admin"
     )
 
     /** Login **/
