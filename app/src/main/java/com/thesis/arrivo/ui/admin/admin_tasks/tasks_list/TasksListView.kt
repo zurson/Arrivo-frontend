@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -39,6 +38,7 @@ import com.thesis.arrivo.communication.task.TaskStatus
 import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.components.date_picker.DatePickerField
 import com.thesis.arrivo.components.other_components.AppButton
+import com.thesis.arrivo.components.other_components.AppHorizontalDivider
 import com.thesis.arrivo.components.other_components.ArrowRightIcon
 import com.thesis.arrivo.components.other_components.Circle
 import com.thesis.arrivo.components.other_components.EmptyList
@@ -331,12 +331,7 @@ private fun BottomSector(
         modifier = modifier
             .fillMaxSize()
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(dimensionResource(R.dimen.tasks_list_bottom_sector_divider_height))
-                .background(MaterialTheme.colorScheme.onBackground)
-        )
+        AppHorizontalDivider(height = dimensionResource(R.dimen.tasks_list_bottom_sector_divider_height))
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
