@@ -25,7 +25,9 @@ import com.thesis.arrivo.utilities.getCurrentDateMillis
 fun DatePickerField(
     modifier: Modifier = Modifier,
     selectedDate: Long,
-    onDateSelected: (Long) -> Unit
+    onDateSelected: (Long) -> Unit,
+    isError: Boolean = false,
+    errorMessage: String = ""
 ) {
     var showModal by remember { mutableStateOf(false) }
 
@@ -38,6 +40,8 @@ fun DatePickerField(
             label = stringResource(R.string.date_picker_label),
             readOnly = true,
             trailingIcon = Icons.Default.DateRange,
+            isError = isError,
+            errorMessage = errorMessage,
             modifier = Modifier
                 .fillMaxWidth()
                 .pointerInput(selectedDate) {
