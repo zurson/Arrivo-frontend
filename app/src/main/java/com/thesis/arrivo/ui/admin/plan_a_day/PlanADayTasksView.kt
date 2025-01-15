@@ -46,18 +46,18 @@ import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
-import com.thesis.arrivo.view_models.PlanADayViewModel
-import com.thesis.arrivo.view_models.factory.PlanADayViewModelFactory
+import com.thesis.arrivo.view_models.PADTasksViewModel
+import com.thesis.arrivo.view_models.factory.PADTasksViewModelFactory
 
 @Composable
-fun PlanADayView(planADayViewModel: PlanADayViewModel) {
+fun PlanADayTasksView(PADTasksViewModel: PADTasksViewModel) {
 
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        ShowTaskDetailsDialog(planADayViewModel)
+        ShowTaskDetailsDialog(PADTasksViewModel)
 
         /* CONFIGURATION */
         val startGuideline = createGuidelineFromStart(Settings.START_END_PERCENTAGE)
@@ -69,7 +69,7 @@ fun PlanADayView(planADayViewModel: PlanADayViewModel) {
         val dateAndFiltersBottomGuideline = createGuidelineFromTop(0.3f)
 
         EmployeeSelectorAndDatePicker(
-            planADayViewModel = planADayViewModel,
+            PADTasksViewModel = PADTasksViewModel,
             modifier = Modifier.constrainAs(dateAndFiltersRef) {
                 top.linkTo(dateAndFiltersTopGuideline)
                 bottom.linkTo(dateAndFiltersBottomGuideline)
@@ -86,7 +86,7 @@ fun PlanADayView(planADayViewModel: PlanADayViewModel) {
         val availableTasksListBottomGuideline = createGuidelineFromTop(0.87f)
 
         AvailableTasksList(
-            planADayViewModel = planADayViewModel,
+            PADTasksViewModel = PADTasksViewModel,
             modifier = Modifier.constrainAs(availableTasksListRef) {
                 top.linkTo(availableTasksListTopGuideline)
                 bottom.linkTo(availableTasksListBottomGuideline)
@@ -101,7 +101,7 @@ fun PlanADayView(planADayViewModel: PlanADayViewModel) {
         val buttonTopGuideline = createGuidelineFromTop(0.88f)
 
         ButtonSection(
-            planADayViewModel = planADayViewModel,
+            PADTasksViewModel = PADTasksViewModel,
             modifier = Modifier
                 .constrainAs(buttonRef) {
                     top.linkTo(buttonTopGuideline)
@@ -119,7 +119,7 @@ fun PlanADayView(planADayViewModel: PlanADayViewModel) {
 @Composable
 private fun EmployeeSelectorAndDatePicker(
     modifier: Modifier = Modifier,
-    planADayViewModel: PlanADayViewModel
+    PADTasksViewModel: PADTasksViewModel
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -128,18 +128,18 @@ private fun EmployeeSelectorAndDatePicker(
             .fillMaxSize()
     ) {
         AppSpinner(
-            items = planADayViewModel.employeesList,
+            items = PADTasksViewModel.employeesList,
             label = stringResource(R.string.plan_a_day_employee_selector_label),
-            selectedItem = planADayViewModel.selectedEmployee,
-            onItemSelected = { planADayViewModel.onEmployeeSelected(it) },
-            itemToString = { item -> planADayViewModel.employeeToString(item) },
-            isError = planADayViewModel.employeeSpinnerError,
+            selectedItem = PADTasksViewModel.selectedEmployee,
+            onItemSelected = { PADTasksViewModel.onEmployeeSelected(it) },
+            itemToString = { item -> PADTasksViewModel.employeeToString(item) },
+            isError = PADTasksViewModel.employeeSpinnerError,
             errorMessage = stringResource(R.string.plan_a_day_employee_selector_error_message)
         )
 
         DatePickerField(
-            selectedDate = planADayViewModel.getSelectedDate(),
-            onDateSelected = { planADayViewModel.onDateSelected(it) },
+            selectedDate = PADTasksViewModel.getSelectedDate(),
+            onDateSelected = { PADTasksViewModel.onDateSelected(it) },
         )
     }
 }
@@ -148,7 +148,7 @@ private fun EmployeeSelectorAndDatePicker(
 @Composable
 fun AvailableTasksList(
     modifier: Modifier = Modifier,
-    planADayViewModel: PlanADayViewModel,
+    PADTasksViewModel: PADTasksViewModel,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
@@ -164,9 +164,9 @@ fun AvailableTasksList(
             modifier = Modifier.fillMaxWidth()
         )
 
-        if (planADayViewModel.availableTasks.isEmpty()) {
+        if (PADTasksViewModel.availableTasks.isEmpty()) {
             EmptyList(
-                loadingScreenStatusChecker = planADayViewModel,
+                loadingScreenStatusChecker = PADTasksViewModel,
                 modifier = Modifier.weight(1f)
             )
             return
@@ -178,10 +178,10 @@ fun AvailableTasksList(
                 .weight(1f)
                 .animateContentSize()
         ) {
-            items(planADayViewModel.availableTasks, key = { it.id }) { task ->
+            items(PADTasksViewModel.availableTasks, key = { it.id }) { task ->
                 AvailableTaskContainer(
                     task = task,
-                    planADayViewModel = planADayViewModel,
+                    PADTasksViewModel = PADTasksViewModel,
                     modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null)
                 )
             }
@@ -193,7 +193,7 @@ fun AvailableTasksList(
 @Composable
 fun AvailableTaskContainer(
     task: Task,
-    planADayViewModel: PlanADayViewModel,
+    PADTasksViewModel: PADTasksViewModel,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -205,7 +205,7 @@ fun AvailableTaskContainer(
             .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .padding(dimensionResource(R.dimen.plan_a_day_available_tasks_container_padding))
-            .clickable { planADayViewModel.onTaskSelected(task) }
+            .clickable { PADTasksViewModel.onTaskSelected(task) }
     ) {
         Column(
             horizontalAlignment = Alignment.Start,
@@ -231,8 +231,8 @@ fun AvailableTaskContainer(
         }
 
         AppCheckbox(
-            checked = planADayViewModel.isTaskChecked(task),
-            onCheckedChange = { planADayViewModel.onTaskCheckedChange(task) },
+            checked = PADTasksViewModel.isTaskChecked(task),
+            onCheckedChange = { PADTasksViewModel.onTaskCheckedChange(task) },
             size = dimensionResource(R.dimen.plan_a_day_tasks_container_checkbox_size),
             modifier = Modifier.padding(end = dimensionResource(R.dimen.plan_a_day_tasks_container_checkbox_end_padding))
         )
@@ -243,7 +243,7 @@ fun AvailableTaskContainer(
 @Composable
 private fun ButtonSection(
     modifier: Modifier = Modifier,
-    planADayViewModel: PlanADayViewModel
+    PADTasksViewModel: PADTasksViewModel
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -251,7 +251,7 @@ private fun ButtonSection(
             .fillMaxSize(),
     ) {
         AppButton(
-            onClick = { planADayViewModel.onButtonNextClick() },
+            onClick = { PADTasksViewModel.onButtonNextClick() },
             text = stringResource(R.string.plan_a_day_button_next_text),
             icon = Icons.AutoMirrored.Filled.KeyboardArrowRight,
         )
@@ -260,14 +260,14 @@ private fun ButtonSection(
 
 
 @Composable
-private fun ShowTaskDetailsDialog(planADayViewModel: PlanADayViewModel) {
-    if (!planADayViewModel.showTaskDetailsDialog)
+private fun ShowTaskDetailsDialog(PADTasksViewModel: PADTasksViewModel) {
+    if (!PADTasksViewModel.showTaskDetailsDialog)
         return
 
     TaskDetailsDialog(
-        task = planADayViewModel.selectedTask,
-        onDismiss = { planADayViewModel.onTaskDialogDismiss() },
-        onButtonClick = { planADayViewModel.onTaskDialogDismiss() },
+        task = PADTasksViewModel.selectedTask,
+        onDismiss = { PADTasksViewModel.onTaskDialogDismiss() },
+        onButtonClick = { PADTasksViewModel.onTaskDialogDismiss() },
         buttonText = stringResource(R.string.plan_a_day_task_details_dialog_dismiss_button_text),
     )
 }
@@ -282,8 +282,8 @@ private fun Preview() {
         adminMode = true
     )
 
-    val planADayViewModel: PlanADayViewModel = viewModel(
-        factory = PlanADayViewModelFactory(
+    val PADTasksViewModel: PADTasksViewModel = viewModel(
+        factory = PADTasksViewModelFactory(
             context = LocalContext.current,
             loadingScreenManager = mainVm,
             navigationManager = NavigationManager(rememberNavController())
@@ -291,6 +291,6 @@ private fun Preview() {
     )
 
     Theme.ArrivoTheme {
-        PlanADayView(planADayViewModel)
+        PlanADayTasksView(PADTasksViewModel)
     }
 }

@@ -24,7 +24,7 @@ import com.thesis.arrivo.utilities.showDefaultErrorDialog
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-class PlanADayViewModel(
+class PADTasksViewModel(
     private val context: Context,
     private val navigationManager: NavigationManager,
     private val loadingScreenManager: LoadingScreenManager

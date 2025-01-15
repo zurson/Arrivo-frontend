@@ -22,7 +22,7 @@ import com.thesis.arrivo.ui.admin.admin_employees.CreateEditEmployeeView
 import com.thesis.arrivo.ui.admin.admin_employees.EmployeesListView
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskCreateOrEditView
 import com.thesis.arrivo.ui.admin.admin_tasks.tasks_list.TasksListView
-import com.thesis.arrivo.ui.admin.plan_a_day.PlanADayView
+import com.thesis.arrivo.ui.admin.plan_a_day.PlanADayTasksView
 import com.thesis.arrivo.ui.authentication.LoginView
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.ui.user.user_account_view.AccountView
@@ -32,9 +32,9 @@ import com.thesis.arrivo.ui.user.user_road_accident_view.RoadAccidentView
 import com.thesis.arrivo.ui.user.user_your_accidents_view.YourAccidentsView
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
-import com.thesis.arrivo.view_models.PlanADayViewModel
+import com.thesis.arrivo.view_models.PADTasksViewModel
 import com.thesis.arrivo.view_models.factory.MainScaffoldViewModelFactory
-import com.thesis.arrivo.view_models.factory.PlanADayViewModelFactory
+import com.thesis.arrivo.view_models.factory.PADTasksViewModelFactory
 
 
 @Composable
@@ -157,15 +157,15 @@ private fun SetupMainScaffold(
                 }
 
                 composable(NavigationItem.PlanADayAdmin.route) {
-                    val planADayViewModel: PlanADayViewModel = viewModel(
-                        factory = PlanADayViewModelFactory(
+                    val PADTasksViewModel: PADTasksViewModel = viewModel(
+                        factory = PADTasksViewModelFactory(
                             context = LocalContext.current,
                             loadingScreenManager = mainScaffoldViewModel,
                             navigationManager = navigationManager
                         )
                     )
 
-                    PlanADayView(planADayViewModel = planADayViewModel)
+                    PlanADayTasksView(PADTasksViewModel = PADTasksViewModel)
                 }
 
 
