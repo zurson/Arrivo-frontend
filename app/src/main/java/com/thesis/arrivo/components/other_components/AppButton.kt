@@ -34,6 +34,7 @@ fun AppButton(
     text: String,
     icon: ImageVector? = null,
     maxLines: Int = APP_BUTTON_DEFAULT_MAX_LINES,
+    iconStart: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     Button(
@@ -48,6 +49,10 @@ fun AppButton(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
+            if (iconStart) {
+                icon?.let { DefaultAppButtonIcon(icon) }
+            }
+
             Text(
                 text = text,
                 maxLines = max(maxLines, APP_BUTTON_DEFAULT_MAX_LINES),
@@ -58,17 +63,23 @@ fun AppButton(
                 modifier = Modifier.weight(1f),
             )
 
-            icon?.let {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier
-                        .requiredSize(dimensionResource(R.dimen.app_button_icon_size)),
-                )
+            if (!iconStart) {
+                icon?.let { DefaultAppButtonIcon(icon) }
             }
         }
     }
+}
+
+
+@Composable
+private fun DefaultAppButtonIcon(icon: ImageVector) {
+    Icon(
+        imageVector = icon,
+        contentDescription = null,
+        tint = MaterialTheme.colorScheme.onPrimary,
+        modifier = Modifier
+            .requiredSize(dimensionResource(R.dimen.app_button_icon_size)),
+    )
 }
 
 
