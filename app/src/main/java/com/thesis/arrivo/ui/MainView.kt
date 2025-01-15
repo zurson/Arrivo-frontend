@@ -34,6 +34,7 @@ import com.thesis.arrivo.ui.user.user_your_accidents_view.YourAccidentsView
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.PADOrderViewModel
+import com.thesis.arrivo.view_models.PADSharedViewModel
 import com.thesis.arrivo.view_models.PADTasksViewModel
 import com.thesis.arrivo.view_models.factory.MainScaffoldViewModelFactory
 import com.thesis.arrivo.view_models.factory.PADOrderViewModelFactory
@@ -82,8 +83,13 @@ private fun SetupMainScaffold(
         mainScaffoldViewModel.showLoadingScreen()
         return
     }
-
     mainScaffoldViewModel.hideLoadingScreen()
+
+    /**
+     * SHARED VIEW MODELS
+     **/
+
+    val padSharedViewModel: PADSharedViewModel = viewModel()
 
     Theme.ArrivoTheme {
         MainScaffold(
@@ -164,7 +170,8 @@ private fun SetupMainScaffold(
                         factory = PADTasksViewModelFactory(
                             context = LocalContext.current,
                             loadingScreenManager = mainScaffoldViewModel,
-                            navigationManager = navigationManager
+                            navigationManager = navigationManager,
+                            padSharedViewModel = padSharedViewModel
                         )
                     )
 
@@ -176,7 +183,8 @@ private fun SetupMainScaffold(
                         factory = PADOrderViewModelFactory(
                             context = LocalContext.current,
                             loadingScreenManager = mainScaffoldViewModel,
-                            navigationManager = navigationManager
+                            navigationManager = navigationManager,
+                            padSharedViewModel = padSharedViewModel
                         )
                     )
 
