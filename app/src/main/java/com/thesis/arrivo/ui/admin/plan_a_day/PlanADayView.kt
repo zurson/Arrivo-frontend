@@ -18,7 +18,6 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.task.Task
@@ -45,21 +45,12 @@ import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
-import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
-import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.PlanADayViewModel
+import com.thesis.arrivo.view_models.factory.PlanADayViewModelFactory
 
 @Composable
-fun PlanADayView(loadingScreenManager: LoadingScreenManager, navigationManager: NavigationManager) {
-    val context = LocalContext.current
-    val planADayViewModel = remember {
-        PlanADayViewModel(
-            context = context,
-            loadingScreenManager = loadingScreenManager,
-            navigationManager = navigationManager
-        )
-    }
+fun PlanADayView(planADayViewModel: PlanADayViewModel) {
 
     ConstraintLayout(
         modifier = Modifier
@@ -96,7 +87,6 @@ fun PlanADayView(loadingScreenManager: LoadingScreenManager, navigationManager: 
 
         AvailableTasksList(
             planADayViewModel = planADayViewModel,
-            loadingScreenStatusChecker = loadingScreenManager,
             modifier = Modifier.constrainAs(availableTasksListRef) {
                 top.linkTo(availableTasksListTopGuideline)
                 bottom.linkTo(availableTasksListBottomGuideline)
@@ -159,7 +149,6 @@ private fun EmployeeSelectorAndDatePicker(
 fun AvailableTasksList(
     modifier: Modifier = Modifier,
     planADayViewModel: PlanADayViewModel,
-    loadingScreenStatusChecker: LoadingScreenStatusChecker
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
@@ -177,7 +166,7 @@ fun AvailableTasksList(
 
         if (planADayViewModel.availableTasks.isEmpty()) {
             EmptyList(
-                loadingScreenStatusChecker = loadingScreenStatusChecker,
+                loadingScreenStatusChecker = planADayViewModel,
                 modifier = Modifier.weight(1f)
             )
             return
@@ -287,16 +276,21 @@ private fun ShowTaskDetailsDialog(planADayViewModel: PlanADayViewModel) {
 @Preview
 @Composable
 private fun Preview() {
-    val vm = MainScaffoldViewModel(
+    val mainVm = MainScaffoldViewModel(
         navigationManager = NavigationManager(rememberNavController()),
         context = LocalContext.current,
         adminMode = true
     )
 
-    Theme.ArrivoTheme {
-        PlanADayView(
-            loadingScreenManager = vm,
+    val planADayViewModel: PlanADayViewModel = viewModel(
+        factory = PlanADayViewModelFactory(
+            context = LocalContext.current,
+            loadingScreenManager = mainVm,
             navigationManager = NavigationManager(rememberNavController())
         )
+    )
+
+    Theme.ArrivoTheme {
+        PlanADayView(planADayViewModel)
     }
 }

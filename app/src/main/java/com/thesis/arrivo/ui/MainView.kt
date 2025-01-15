@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,6 +32,9 @@ import com.thesis.arrivo.ui.user.user_road_accident_view.RoadAccidentView
 import com.thesis.arrivo.ui.user.user_your_accidents_view.YourAccidentsView
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.PlanADayViewModel
+import com.thesis.arrivo.view_models.factory.MainScaffoldViewModelFactory
+import com.thesis.arrivo.view_models.factory.PlanADayViewModelFactory
 
 
 @Composable
@@ -39,10 +43,12 @@ fun MainView(placesClient: PlacesClient) {
     val navHostController = rememberNavController()
     val navigationManager = NavigationManager(navHostController)
 
-    val mainScaffoldViewModel = MainScaffoldViewModel(
-        context = context,
-        adminMode = true,
-        navigationManager = navigationManager
+    val mainScaffoldViewModel: MainScaffoldViewModel = viewModel(
+        factory = MainScaffoldViewModelFactory(
+            context = context,
+            adminMode = true,
+            navigationManager = navigationManager
+        )
     )
 
     SetupMainScaffold(
@@ -151,10 +157,15 @@ private fun SetupMainScaffold(
                 }
 
                 composable(NavigationItem.PlanADayAdmin.route) {
-                    PlanADayView(
-                        loadingScreenManager = mainScaffoldViewModel,
-                        navigationManager = navigationManager
+                    val planADayViewModel: PlanADayViewModel = viewModel(
+                        factory = PlanADayViewModelFactory(
+                            context = LocalContext.current,
+                            loadingScreenManager = mainScaffoldViewModel,
+                            navigationManager = navigationManager
+                        )
                     )
+
+                    PlanADayView(planADayViewModel = planADayViewModel)
                 }
 
 

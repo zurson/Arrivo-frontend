@@ -19,6 +19,7 @@ import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.utilities.showDefaultErrorDialog
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -26,8 +27,13 @@ import java.time.LocalDate
 class PlanADayViewModel(
     private val context: Context,
     private val navigationManager: NavigationManager,
-    loadingScreenManager: LoadingScreenManager
-) : ViewModel() {
+    private val loadingScreenManager: LoadingScreenManager
+) : ViewModel(), LoadingScreenStatusChecker {
+
+    override fun onCleared() {
+        super.onCleared()
+        println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")
+    }
 
     companion object {
         private var _selectedDate = mutableLongStateOf(getCurrentDateMillis())
@@ -217,4 +223,6 @@ class PlanADayViewModel(
         fetchFreeTasks()
         fetchEmployeesList()
     }
+
+    override fun isLoadingScreenEnabled(): Boolean = loadingScreenManager.isLoadingScreenEnabled()
 }
