@@ -2,6 +2,7 @@ package com.thesis.arrivo.ui
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,108 +61,115 @@ private fun SetupMainScaffold(
     mainScaffoldViewModel: MainScaffoldViewModel,
     navigationManager: NavigationManager
 ) {
-    var destLoaded by remember { mutableStateOf(false) }
-    var startDestination: NavigationItem = NavigationItem.Login
+    var startDestination by remember { mutableStateOf<NavigationItem?>(null) }
 
-    mainScaffoldViewModel.getStartDestination { dest ->
-        startDestination = dest
-        destLoaded = true
+    LaunchedEffect(Unit) {
+        mainScaffoldViewModel.getStartDestination { dest ->
+            startDestination = dest
+        }
     }
+
+    if (startDestination == null) {
+        mainScaffoldViewModel.showLoadingScreen()
+        return
+    }
+
+    mainScaffoldViewModel.hideLoadingScreen()
 
     Theme.ArrivoTheme {
         MainScaffold(
             mainScaffoldViewModel = mainScaffoldViewModel
         ) { contentPadding ->
+            NavHost(
+                navController = navHostController,
+                startDestination = startDestination!!.route,
+                modifier = Modifier.padding(contentPadding)
+            ) {
+                /** User **/
+                composable(NavigationItem.TasksUser.route) { DeliveryView() }
+                composable(NavigationItem.MapUser.route) { MapView() }
+                composable(NavigationItem.AccidentsUser.route) { RoadAccidentView() }
+                composable(NavigationItem.ReportsUser.route) { YourAccidentsView() }
+                composable(NavigationItem.AccountUser.route) { AccountView() }
 
-            if (destLoaded) {
-                NavHost(
-                    navController = navHostController,
-                    startDestination = startDestination.route,
-                    modifier = Modifier.padding(contentPadding)
-                ) {
-                    /** User **/
-                    composable(NavigationItem.TasksUser.route) { DeliveryView() }
-                    composable(NavigationItem.MapUser.route) { MapView() }
-                    composable(NavigationItem.AccidentsUser.route) { RoadAccidentView() }
-                    composable(NavigationItem.ReportsUser.route) { YourAccidentsView() }
-                    composable(NavigationItem.AccountUser.route) { AccountView() }
-
-                    /** Admin **/
-                    composable(NavigationItem.AccidentsAdmin.route) {
-                        AccidentsView(loadingScreenManager = mainScaffoldViewModel)
-                    }
-                    composable(NavigationItem.TasksListAdmin.route) {
-                        TasksListView(
-                            mainScaffoldViewModel = mainScaffoldViewModel,
-                            loadingScreenManager = mainScaffoldViewModel,
-                            navigationManager = navigationManager
-                        )
-                    }
-
-                    composable(NavigationItem.TaskCreateAdmin.route) {
-                        TaskCreateOrEditView(
-                            placesClient = placesClient,
-                            mainScaffoldViewModel = mainScaffoldViewModel,
-                            editMode = false,
-                            navigationManager = navigationManager,
-                            loadingScreenManager = mainScaffoldViewModel
-                        )
-                    }
-
-                    composable(NavigationItem.TaskEditAdmin.route) {
-                        TaskCreateOrEditView(
-                            placesClient = placesClient,
-                            mainScaffoldViewModel = mainScaffoldViewModel,
-                            editMode = true,
-                            navigationManager = navigationManager,
-                            loadingScreenManager = mainScaffoldViewModel
-                        )
-                    }
-
-                    composable(NavigationItem.EmployeesAdmin.route) {
-                        EmployeesListView(
-                            mainScaffoldViewModel = mainScaffoldViewModel,
-                            loadingScreenManager = mainScaffoldViewModel,
-                            navigationManager = navigationManager
-                        )
-                    }
-
-                    composable(NavigationItem.CreateEmployeeAdmin.route) {
-                        CreateEditEmployeeView(
-                            mainScaffoldViewModel = mainScaffoldViewModel,
-                            editMode = false,
-                            navigationManager = navigationManager,
-                            loadingScreenManager = mainScaffoldViewModel
-                        )
-                    }
-
-                    composable(NavigationItem.EditEmployeeAdmin.route) {
-                        CreateEditEmployeeView(
-                            mainScaffoldViewModel = mainScaffoldViewModel,
-                            editMode = true,
-                            navigationManager = navigationManager,
-                            loadingScreenManager = mainScaffoldViewModel
-                        )
-                    }
-
-                    composable(NavigationItem.PlanADayAdmin.route) {
-                        PlanADayView(
-                            loadingScreenManager = mainScaffoldViewModel,
-                            navigationManager = navigationManager
-                        )
-                    }
-
-
-                    /** Authentication **/
-                    composable(NavigationItem.Login.route) {
-                        LoginView(mainScaffoldViewModel = mainScaffoldViewModel)
-                    }
+                /** Admin **/
+                composable(NavigationItem.AccidentsAdmin.route) {
+                    AccidentsView(loadingScreenManager = mainScaffoldViewModel)
+                }
+                composable(NavigationItem.TasksListAdmin.route) {
+                    TasksListView(
+                        mainScaffoldViewModel = mainScaffoldViewModel,
+                        loadingScreenManager = mainScaffoldViewModel,
+                        navigationManager = navigationManager
+                    )
                 }
 
+                composable(NavigationItem.TaskCreateAdmin.route) {
+                    TaskCreateOrEditView(
+                        placesClient = placesClient,
+                        mainScaffoldViewModel = mainScaffoldViewModel,
+                        editMode = false,
+                        navigationManager = navigationManager,
+                        loadingScreenManager = mainScaffoldViewModel
+                    )
+                }
+
+                composable(NavigationItem.TaskEditAdmin.route) {
+                    TaskCreateOrEditView(
+                        placesClient = placesClient,
+                        mainScaffoldViewModel = mainScaffoldViewModel,
+                        editMode = true,
+                        navigationManager = navigationManager,
+                        loadingScreenManager = mainScaffoldViewModel
+                    )
+                }
+
+                composable(NavigationItem.EmployeesAdmin.route) {
+                    EmployeesListView(
+                        mainScaffoldViewModel = mainScaffoldViewModel,
+                        loadingScreenManager = mainScaffoldViewModel,
+                        navigationManager = navigationManager
+                    )
+                }
+
+                composable(NavigationItem.CreateEmployeeAdmin.route) {
+                    CreateEditEmployeeView(
+                        mainScaffoldViewModel = mainScaffoldViewModel,
+                        editMode = false,
+                        navigationManager = navigationManager,
+                        loadingScreenManager = mainScaffoldViewModel
+                    )
+                }
+
+                composable(NavigationItem.EditEmployeeAdmin.route) {
+                    CreateEditEmployeeView(
+                        mainScaffoldViewModel = mainScaffoldViewModel,
+                        editMode = true,
+                        navigationManager = navigationManager,
+                        loadingScreenManager = mainScaffoldViewModel
+                    )
+                }
+
+                composable(NavigationItem.PlanADayAdmin.route) {
+                    PlanADayView(
+                        loadingScreenManager = mainScaffoldViewModel,
+                        navigationManager = navigationManager
+                    )
+                }
+
+
+                /** Authentication **/
+                composable(NavigationItem.Login.route) {
+                    LoginView(
+                        mainScaffoldViewModel = mainScaffoldViewModel,
+                        loadingScreenManager = mainScaffoldViewModel
+                    )
+                }
             }
 
-            LoadingScreen(mainScaffoldViewModel.isLoadingScreenEnabled())
-            mainScaffoldViewModel.startAuthListeners()
         }
+
+        LoadingScreen(mainScaffoldViewModel.isLoadingScreenEnabled())
+        mainScaffoldViewModel.startAuthListeners()
     }
 }
