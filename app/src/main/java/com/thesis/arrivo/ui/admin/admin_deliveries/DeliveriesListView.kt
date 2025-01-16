@@ -21,7 +21,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.delivery.DeliveryStatus
+import com.thesis.arrivo.components.date_picker.DatePickerField
 import com.thesis.arrivo.components.other_components.AppButton
+import com.thesis.arrivo.components.other_components.AppFilter
 import com.thesis.arrivo.components.other_components.AppHorizontalDivider
 import com.thesis.arrivo.components.other_components.AppLegendItem
 import com.thesis.arrivo.ui.theme.Theme
@@ -42,26 +44,25 @@ fun DeliveriesListView(deliveriesListViewModel: DeliveriesListViewModel) {
         val startGuideline = createGuidelineFromStart(Settings.START_END_PERCENTAGE)
         val endGuideline = createGuidelineFromEnd(Settings.START_END_PERCENTAGE)
 
-        /* MAIN SECTION */
-        val (mainSectionRef) = createRefs()
-        val mainSectionTopGuideline = createGuidelineFromTop(0.05f)
-        val mainSectionBottomGuideline = createGuidelineFromTop(0.80f)
+        /* DATE AND FILTERS */
+        val (dateAndFiltersRef) = createRefs()
+        val dateAndFiltersTopGuideline = createGuidelineFromTop(0.05f)
+        val dateAndFiltersBottomGuideline = createGuidelineFromTop(0.25f)
 
-//        MainSection(
-//            deliveryCreateViewModel = deliveryCreateViewModel,
-//            modifier = Modifier.constrainAs(mainSectionRef) {
-//                top.linkTo(mainSectionTopGuideline)
-//                bottom.linkTo(mainSectionBottomGuideline)
-//                start.linkTo(startGuideline)
-//                end.linkTo(endGuideline)
-//                width = Dimension.fillToConstraints
-//                height = Dimension.fillToConstraints
-//            }
-//        )
+        DatePickerAndFilters(
+            deliveriesListViewModel = deliveriesListViewModel,
+            modifier = Modifier.constrainAs(dateAndFiltersRef) {
+                top.linkTo(dateAndFiltersTopGuideline)
+                bottom.linkTo(dateAndFiltersBottomGuideline)
+                start.linkTo(startGuideline)
+                end.linkTo(endGuideline)
+                width = Dimension.fillToConstraints
+                height = Dimension.fillToConstraints
+            })
 
         /* BOTTOM SECTOR */
         val (bottomSectorListRef) = createRefs()
-        val bottomSectorTopGuideline = createGuidelineFromTop(0.82f)
+        val bottomSectorTopGuideline = createGuidelineFromTop(0.85f)
 
         BottomSector(
             deliveriesListViewModel = deliveriesListViewModel,
@@ -73,6 +74,51 @@ fun DeliveriesListView(deliveriesListViewModel: DeliveriesListViewModel) {
                 width = Dimension.fillToConstraints
                 height = Dimension.fillToConstraints
             })
+    }
+}
+
+
+@Composable
+private fun DatePickerAndFilters(
+    modifier: Modifier = Modifier,
+    deliveriesListViewModel: DeliveriesListViewModel
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly,
+        modifier = modifier
+            .fillMaxSize()
+    ) {
+        DatePickerField(
+            selectedDate = deliveriesListViewModel.getSelectedDate(),
+            onDateSelected = { deliveriesListViewModel.onDateSelected(it) },
+        )
+
+        FiltersList(deliveriesListViewModel = deliveriesListViewModel)
+    }
+}
+
+
+@Composable
+private fun FiltersList(
+    deliveriesListViewModel: DeliveriesListViewModel,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
+        DeliveryStatus.entries.toTypedArray().forEach { filter ->
+            AppFilter(
+                filter = filter,
+                modifier = Modifier.weight(1f),
+                isActive = deliveriesListViewModel.getActiveFilters().contains(filter),
+                filterToString = { DeliveriesListViewModel.getRenamedFilter(filter) },
+                onSelected = { deliveriesListViewModel.toggleFilterActive(it) }
+            )
+        }
     }
 }
 
