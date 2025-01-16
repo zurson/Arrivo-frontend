@@ -5,20 +5,30 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.thesis.arrivo.communication.ServerRequestManager
+import com.thesis.arrivo.communication.delivery.Delivery
+import com.thesis.arrivo.communication.delivery.DeliveryRepository
 import com.thesis.arrivo.communication.delivery.DeliveryStatus
 import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings.Companion.DELIVERY_ASSIGNED_COLOR
 import com.thesis.arrivo.utilities.Settings.Companion.DELIVERY_COMPLETED_COLOR
 import com.thesis.arrivo.utilities.Settings.Companion.DELIVERY_IN_PROGRESS_COLOR
+import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class DeliveriesListViewModel(
-    private val context: Context,
+    context: Context,
     private val navigationManager: NavigationManager,
     private val loadingScreenManager: LoadingScreenManager,
-) : ViewModel() {
+) : ViewModel(), LoadingScreenStatusChecker {
+
+    private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
 
     companion object {
         fun getRenamedFilter(filer: DeliveryStatus): String {
@@ -52,12 +62,15 @@ class DeliveriesListViewModel(
      * Date picker
      **/
 
+    private var selectedLocalDate: LocalDate = convertLongToLocalDate(selectedDate)
+
 
     fun getSelectedDate(): Long = selectedDate
 
 
     fun onDateSelected(dateMillis: Long?) {
         _selectedDate.longValue = dateMillis ?: getCurrentDateMillis()
+        selectedLocalDate = convertLongToLocalDate(selectedDate)
         filterDeliveries()
     }
 
@@ -90,9 +103,66 @@ class DeliveriesListViewModel(
      * Deliveries Filter
      **/
 
+    private val _deliveriesToShow = mutableStateListOf<Delivery>()
+    val deliveriesToShow: List<Delivery>
+        get() = _deliveriesToShow
 
-    fun filterDeliveries() {
+
+    private fun filterDeliveries() {
+        viewModelScope.launch {
+            val filtered = _deliveriesList.filter { item ->
+                val matchesStatus = item.status in activeFilters || activeFilters.isEmpty()
+                val matchesDate = item.assignedDate.toEpochDay() == selectedLocalDate.toEpochDay()
+                matchesStatus && matchesDate
+            }
+
+            _deliveriesToShow.clear()
+            _deliveriesToShow.addAll(filtered)
+        }
+    }
+
+
+    /**
+     * Deliveries List
+     **/
+
+    private val deliveryRepository = DeliveryRepository()
+
+    private val _deliveriesList = mutableStateListOf<Delivery>()
+
+
+    private fun fetchDeliveries() {
+        viewModelScope.launch {
+            serverRequestManager.sendRequest(
+                actionToPerform = {
+                    _deliveriesList.clear()
+                    _deliveriesList.addAll(deliveryRepository.getAllDeliveries())
+                },
+                onSuccess = { filterDeliveries() }
+            )
+        }
+    }
+
+
+    /**
+     * Delivery Click
+     **/
+
+
+    fun onDeliverySelected(delivery: Delivery) {
 
     }
 
+
+    /**
+     * Initializer
+     **/
+
+    init {
+        fetchDeliveries()
+    }
+
+    override fun isLoadingScreenEnabled(): Boolean {
+        return loadingScreenManager.isLoadingScreenEnabled()
+    }
 }

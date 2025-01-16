@@ -147,5 +147,10 @@
 
     <dimen name="delivery_list_bottom_sector_horizontal_space">64dp</dimen>
     <dimen name="delivery_list_bottom_sector_divider_height">5dp</dimen>
+    <dimen name="delivery_list_container_padding">8dp</dimen>
+    <dimen name="delivery_list_container_circle_icon_size">40dp</dimen>
+    <dimen name="delivery_list_container_arrow_icon_size">40dp</dimen>
+    <dimen name="delivery_list_container_employee_text_size">24sp</dimen>
+    <dimen name="delivery_list_container_date_text_size">16sp</dimen>
 
 </resources>

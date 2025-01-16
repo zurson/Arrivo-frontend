@@ -1,34 +1,53 @@
 package com.thesis.arrivo.ui.admin.admin_deliveries
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
+import com.thesis.arrivo.communication.delivery.Delivery
 import com.thesis.arrivo.communication.delivery.DeliveryStatus
+import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.components.date_picker.DatePickerField
 import com.thesis.arrivo.components.other_components.AppButton
 import com.thesis.arrivo.components.other_components.AppFilter
 import com.thesis.arrivo.components.other_components.AppHorizontalDivider
 import com.thesis.arrivo.components.other_components.AppLegendItem
+import com.thesis.arrivo.components.other_components.ArrowRightIcon
+import com.thesis.arrivo.components.other_components.Circle
+import com.thesis.arrivo.components.other_components.EmptyList
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
+import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.DeliveriesListViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.factory.DeliveriesListViewModelFactory
@@ -60,6 +79,22 @@ fun DeliveriesListView(deliveriesListViewModel: DeliveriesListViewModel) {
                 height = Dimension.fillToConstraints
             })
 
+        /* DELIVERIES LIST */
+        val (deliveriesListRef) = createRefs()
+        val deliveriesListTopGuideline = createGuidelineFromTop(0.265f)
+        val deliveriesListBottomGuideline = createGuidelineFromTop(0.84f)
+
+        DeliveriesList(
+            deliveriesListViewModel = deliveriesListViewModel,
+            modifier = Modifier.constrainAs(deliveriesListRef) {
+                top.linkTo(deliveriesListTopGuideline)
+                bottom.linkTo(deliveriesListBottomGuideline)
+                start.linkTo(startGuideline)
+                end.linkTo(endGuideline)
+                width = Dimension.fillToConstraints
+                height = Dimension.fillToConstraints
+            })
+
         /* BOTTOM SECTOR */
         val (bottomSectorListRef) = createRefs()
         val bottomSectorTopGuideline = createGuidelineFromTop(0.85f)
@@ -75,6 +110,108 @@ fun DeliveriesListView(deliveriesListViewModel: DeliveriesListViewModel) {
                 height = Dimension.fillToConstraints
             })
     }
+}
+
+
+@Composable
+private fun DeliveriesList(
+    modifier: Modifier = Modifier,
+    deliveriesListViewModel: DeliveriesListViewModel,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+    ) {
+        if (deliveriesListViewModel.deliveriesToShow.isEmpty()) {
+            EmptyList(deliveriesListViewModel)
+            return
+        }
+
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
+        ) {
+            items(deliveriesListViewModel.deliveriesToShow) { delivery ->
+                DeliveryContainer(
+                    delivery = delivery,
+                    deliveriesListViewModel = deliveriesListViewModel
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun DeliveryContainer(
+    delivery: Delivery,
+    deliveriesListViewModel: DeliveriesListViewModel
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
+        modifier = Modifier
+            .bounceClick()
+            .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+            .wrapContentHeight()
+            .fillMaxWidth()
+            .clickable { deliveriesListViewModel.onDeliverySelected(delivery) }
+            .padding(dimensionResource(R.dimen.delivery_list_container_padding))
+    ) {
+        Circle(
+            size = dimensionResource(R.dimen.delivery_list_container_circle_icon_size),
+            color = DeliveriesListViewModel.getFilterColor(delivery.status),
+        )
+
+        Column(
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.weight(1f)
+        ) {
+            DeliveryEmployeeData(
+                firstName = delivery.employee.firstName,
+                lastName = delivery.employee.lastName
+            )
+            DeliveryStartDate(date = delivery.assignedDate.toString())
+        }
+
+        ArrowRightIcon(size = dimensionResource(R.dimen.delivery_list_container_arrow_icon_size))
+    }
+}
+
+
+@Composable
+private fun DeliveryEmployeeData(
+    firstName: String?,
+    lastName: String?
+) {
+    val finalFirstName = firstName ?: stringResource(R.string.emp_name_error)
+    val finalLastName = lastName ?: stringResource(R.string.emp_name_error)
+
+    Text(
+        text = "$finalFirstName $finalLastName",
+        color = MaterialTheme.colorScheme.primary,
+        fontSize = dpToSp(R.dimen.delivery_list_container_employee_text_size),
+        maxLines = 2,
+        textAlign = TextAlign.Center,
+        overflow = TextOverflow.Ellipsis,
+    )
+}
+
+
+@Composable
+private fun DeliveryStartDate(
+    date: String
+) {
+    Text(
+        text = date,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onSurface,
+        fontSize = dpToSp(R.dimen.delivery_list_container_date_text_size),
+        maxLines = 1,
+        textAlign = TextAlign.Center,
+        overflow = TextOverflow.Ellipsis,
+    )
 }
 
 

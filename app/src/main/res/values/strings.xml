@@ -5,6 +5,7 @@
     <string name="unexpected_error">An unexpected error occurred. Try again later.</string>
     <string name="io_error">Network error. Please check your connection.</string>
     <string name="error_title">Error</string>
+    <string name="emp_name_error">Error</string>
 
     <!-- NavBar - User -->
     <string name="nav_delivery_details_label_user">Tasks</string>
@@ -110,7 +111,6 @@
     <string name="empty_list_text">No content to show</string>
 
     <!-- TASKS LIST -->
-    <string name="tasks_list_emp_name_error">Error</string>
     <string name="tasks_list_add_tasks_button_text">Add task</string>
 
     <string name="tasks_list_details_dialog_button_text">Edit</string>

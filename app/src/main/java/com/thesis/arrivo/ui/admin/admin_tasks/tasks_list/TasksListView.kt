@@ -314,8 +314,8 @@ private fun TaskEmployeeData(
     firstName: String?,
     lastName: String?
 ) {
-    val finalFirstName = firstName ?: stringResource(R.string.tasks_list_emp_name_error)
-    val finalLastName = lastName ?: stringResource(R.string.tasks_list_emp_name_error)
+    val finalFirstName = firstName ?: stringResource(R.string.emp_name_error)
+    val finalLastName = lastName ?: stringResource(R.string.emp_name_error)
 
     Text(
         text = "$finalFirstName $finalLastName",
@@ -361,7 +361,7 @@ private fun BottomSector(
 @Composable
 private fun Legend() {
     Column(
-        verticalArrangement = Arrangement.SpaceBetween,
+        verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.Start
     ) {
         TaskStatus.entries.forEach { taskStatus ->
