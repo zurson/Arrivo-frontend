@@ -31,7 +31,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.thesis.arrivo.R
@@ -40,6 +39,7 @@ import com.thesis.arrivo.communication.task.TaskStatus
 import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.components.date_picker.DatePickerField
 import com.thesis.arrivo.components.other_components.AppButton
+import com.thesis.arrivo.components.other_components.AppFilter
 import com.thesis.arrivo.components.other_components.AppHorizontalDivider
 import com.thesis.arrivo.components.other_components.AppLegendItem
 import com.thesis.arrivo.components.other_components.ArrowRightIcon
@@ -408,61 +408,14 @@ private fun FiltersList(
         modifier = modifier
             .fillMaxWidth()
     ) {
-        items(TaskStatus.entries.toTypedArray()) { taskStatus ->
-            Filter(
-                filter = taskStatus,
-                modifier = Modifier.width(dimensionResource(R.dimen.tasks_list_filer_container_width)),
-                tasksListViewModel = tasksListViewModel
+        items(TaskStatus.entries.toTypedArray()) { filter ->
+            AppFilter(
+                filter = filter,
+                modifier = Modifier.width(dimensionResource(R.dimen.app_filter_default_container_width)),
+                isActive = tasksListViewModel.getActiveFilters().contains(filter),
+                filterToString = { TasksListViewModel.getRenamedFilter(filter) },
+                onSelected = { tasksListViewModel.toggleFilterActive(it) }
             )
         }
     }
-}
-
-
-@Composable
-private fun Filter(
-    modifier: Modifier = Modifier,
-    filter: TaskStatus,
-    tasksListViewModel: TasksListViewModel
-) {
-    val active = tasksListViewModel.getActiveFilters().contains(filter)
-    val color =
-        if (active) Settings.FILTER_ACTIVE_COLOR else MaterialTheme.colorScheme.surfaceContainerHighest
-
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .bounceClick()
-            .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
-            .background(color)
-            .clickable { tasksListViewModel.toggleFilterActive(filter) }
-    ) {
-        Text(
-            text = TasksListViewModel.getRenamedFilter(filter),
-            color = MaterialTheme.colorScheme.onSurface,
-            fontSize = dpToSp(R.dimen.tasks_list_filter_text_size),
-            modifier = Modifier
-                .padding(dimensionResource(R.dimen.tasks_list_filter_padding))
-        )
-    }
-}
-
-
-@Preview
-@Composable
-private fun Preview() {
-//    Theme.ArrivoTheme {
-//        TasksListView(MainScaffoldViewModel())
-//        TaskContainer(
-//            task = Task(
-//                status = TaskStatus.UNASSIGNED,
-//                id = 1,
-//                title = "Test title",
-//                location = Location(longitude = 52.1231, latitude = 22.3212),
-//                addressText = "Opoczno Spacerowa 1",
-//                assignedDate = null,
-//                employee = null,
-//            )
-//        )
-//    }
 }

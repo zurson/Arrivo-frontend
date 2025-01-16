@@ -109,9 +109,9 @@
     <dimen name="legend_item_circle_size">30dp</dimen>
     <dimen name="legend_item_text_size">20sp</dimen>
 
-    <dimen name="tasks_list_filter_text_size">30sp</dimen>
-    <dimen name="tasks_list_filter_padding">8dp</dimen>
-    <dimen name="tasks_list_filer_container_width">230dp</dimen>
+    <dimen name="app_filter_text_size">30sp</dimen>
+    <dimen name="app_filter_padding">8dp</dimen>
+    <dimen name="app_filter_default_container_width">230dp</dimen>
 
     <!-- ROAD ACCIDENTS LIST -->
     <dimen name="accidents_filter_text_size">30sp</dimen>

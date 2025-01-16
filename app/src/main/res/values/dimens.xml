@@ -81,6 +81,11 @@
     <dimen name="legend_item_circle_size">18dp</dimen>
     <dimen name="legend_item_text_size">12sp</dimen>
 
+    <!-- APP FILTER -->
+    <dimen name="app_filter_text_size">16sp</dimen>
+    <dimen name="app_filter_padding">8dp</dimen>
+    <dimen name="app_filter_default_container_width">115dp</dimen>
+
     <!-- NEW TASK -->
     <dimen name="new_task_products_section_title_text_size">24dp</dimen>
     <dimen name="new_task_no_products_message_text_size">20sp</dimen>
@@ -110,10 +115,6 @@
     <dimen name="tasks_list_bottom_sector_vertical_space">24dp</dimen>
     <dimen name="tasks_list_bottom_sector_horizontal_space">64dp</dimen>
     <dimen name="tasks_list_bottom_sector_divider_height">5dp</dimen>
-
-    <dimen name="tasks_list_filter_text_size">16sp</dimen>
-    <dimen name="tasks_list_filter_padding">8dp</dimen>
-    <dimen name="tasks_list_filer_container_width">115dp</dimen>
 
     <!-- ROAD ACCIDENTS LIST -->
     <dimen name="accidents_filter_text_size">16sp</dimen>
