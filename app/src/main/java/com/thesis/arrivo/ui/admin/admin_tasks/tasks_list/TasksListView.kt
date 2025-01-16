@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -33,7 +32,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.thesis.arrivo.R
@@ -362,7 +360,8 @@ private fun BottomSector(
 @Composable
 private fun Legend() {
     Column(
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.tasks_list_legend_vertical_space))
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.Start
     ) {
         LegendItem(filter = TaskStatus.COMPLETED)
         LegendItem(filter = TaskStatus.UNASSIGNED)

@@ -107,7 +107,7 @@
 
     <dimen name="tasks_list_legend_horizontal_space">8dp</dimen>
     <dimen name="tasks_list_legend_vertical_space">4dp</dimen>
-    <dimen name="tasks_list_legend_circle_size">22dp</dimen>
+    <dimen name="tasks_list_legend_circle_size">18dp</dimen>
     <dimen name="tasks_list_legend_text_size">12sp</dimen>
 
     <dimen name="tasks_list_filter_text_size">16sp</dimen>
