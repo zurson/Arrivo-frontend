@@ -1,10 +1,15 @@
 package com.thesis.arrivo.communication.delivery
 
+import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.task.Task
+import java.time.LocalDate
 
 data class Delivery(
     val id: Long,
     val tasks: List<Task>,
-    var timeMinutes: Int,
-    var distanceKm: Int
+    val timeMinutes: Int,
+    val distanceKm: Int,
+    val assignedDate: LocalDate,
+    val status: DeliveryStatus,
+    val employee: Employee
 )

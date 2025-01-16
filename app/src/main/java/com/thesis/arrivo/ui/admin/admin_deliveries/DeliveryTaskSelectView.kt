@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.admin.delivery
+package com.thesis.arrivo.ui.admin.admin_deliveries
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
