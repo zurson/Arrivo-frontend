@@ -24,7 +24,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import java.util.concurrent.locks.ReentrantLock
 
 class MainScaffoldViewModel(
     private val context: Context,
@@ -217,19 +216,16 @@ class MainScaffoldViewModel(
      * Loading Screen Manager
      **/
 
-    private val lock = ReentrantLock()
     private var loadingScreenEnabled by mutableStateOf(false)
 
     @Synchronized
     override fun showLoadingScreen() {
-        lock.lock()
         loadingScreenEnabled = true
     }
 
     @Synchronized
     override fun hideLoadingScreen() {
         loadingScreenEnabled = false
-        lock.unlock()
     }
 
     override fun isLoadingScreenEnabled(): Boolean = loadingScreenEnabled
