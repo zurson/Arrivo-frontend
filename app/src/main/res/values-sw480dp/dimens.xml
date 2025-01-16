@@ -104,10 +104,10 @@
     <dimen name="tasks_list_bottom_sector_horizontal_space">128dp</dimen>
     <dimen name="tasks_list_bottom_sector_divider_height">10dp</dimen>
 
-    <dimen name="tasks_list_legend_horizontal_space">16dp</dimen>
-    <dimen name="tasks_list_legend_vertical_space">8dp</dimen>
-    <dimen name="tasks_list_legend_circle_size">30dp</dimen>
-    <dimen name="tasks_list_legend_text_size">20sp</dimen>
+    <dimen name="legend_item_horizontal_space">16dp</dimen>
+    <dimen name="legend_item_vertical_space">8dp</dimen>
+    <dimen name="legend_item_circle_size">30dp</dimen>
+    <dimen name="legend_item_text_size">20sp</dimen>
 
     <dimen name="tasks_list_filter_text_size">30sp</dimen>
     <dimen name="tasks_list_filter_padding">8dp</dimen>

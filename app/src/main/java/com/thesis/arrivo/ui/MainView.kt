@@ -18,12 +18,13 @@ import com.google.android.libraries.places.api.net.PlacesClient
 import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.components.other_components.LoadingScreen
 import com.thesis.arrivo.ui.admin.admin_accidents.AccidentsView
+import com.thesis.arrivo.ui.admin.admin_deliveries.DeliveriesListView
+import com.thesis.arrivo.ui.admin.admin_deliveries.DeliveryCreateView
+import com.thesis.arrivo.ui.admin.admin_deliveries.DeliveryTasksView
 import com.thesis.arrivo.ui.admin.admin_employees.CreateEditEmployeeView
 import com.thesis.arrivo.ui.admin.admin_employees.EmployeesListView
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskCreateOrEditView
 import com.thesis.arrivo.ui.admin.admin_tasks.tasks_list.TasksListView
-import com.thesis.arrivo.ui.admin.admin_deliveries.DeliveryCreateView
-import com.thesis.arrivo.ui.admin.admin_deliveries.DeliveryTasksView
 import com.thesis.arrivo.ui.authentication.LoginView
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.ui.user.user_account_view.AccountView
@@ -32,13 +33,15 @@ import com.thesis.arrivo.ui.user.user_map_view.MapView
 import com.thesis.arrivo.ui.user.user_road_accident_view.RoadAccidentView
 import com.thesis.arrivo.ui.user.user_your_accidents_view.YourAccidentsView
 import com.thesis.arrivo.utilities.NavigationManager
-import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.DeliveriesListViewModel
 import com.thesis.arrivo.view_models.DeliveryCreateViewModel
 import com.thesis.arrivo.view_models.DeliverySharedViewModel
 import com.thesis.arrivo.view_models.DeliveryTaskSelectViewModel
-import com.thesis.arrivo.view_models.factory.MainScaffoldViewModelFactory
+import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.factory.DeliveriesListViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveryCreateViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveryTaskSelectViewModelFactory
+import com.thesis.arrivo.view_models.factory.MainScaffoldViewModelFactory
 
 
 @Composable
@@ -193,16 +196,15 @@ private fun SetupMainScaffold(
                 }
 
                 composable(NavigationItem.DeliveriesListAdmin.route) {
-                    val viewModel: DeliveryTaskSelectViewModel = viewModel(
-                        factory = DeliveryTaskSelectViewModelFactory(
+                    val viewModel: DeliveriesListViewModel = viewModel(
+                        factory = DeliveriesListViewModelFactory(
                             context = LocalContext.current,
                             loadingScreenManager = mainScaffoldViewModel,
                             navigationManager = navigationManager,
-                            deliverySharedViewModel = deliverySharedViewModel
                         )
                     )
 
-                    DeliveryTasksView(deliveryTaskSelectViewModel = viewModel)
+                    DeliveriesListView(deliveriesListViewModel = viewModel)
                 }
 
                 /** Authentication **/

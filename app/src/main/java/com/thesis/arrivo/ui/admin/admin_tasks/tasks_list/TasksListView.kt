@@ -41,6 +41,7 @@ import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.components.date_picker.DatePickerField
 import com.thesis.arrivo.components.other_components.AppButton
 import com.thesis.arrivo.components.other_components.AppHorizontalDivider
+import com.thesis.arrivo.components.other_components.AppLegendItem
 import com.thesis.arrivo.components.other_components.ArrowRightIcon
 import com.thesis.arrivo.components.other_components.Circle
 import com.thesis.arrivo.components.other_components.EmptyList
@@ -363,32 +364,12 @@ private fun Legend() {
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.Start
     ) {
-        LegendItem(filter = TaskStatus.COMPLETED)
-        LegendItem(filter = TaskStatus.UNASSIGNED)
-        LegendItem(filter = TaskStatus.IN_PROGRESS)
-        LegendItem(filter = TaskStatus.ASSIGNED)
-    }
-}
-
-
-@Composable
-private fun LegendItem(
-    filter: TaskStatus,
-) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.tasks_list_legend_horizontal_space)),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Circle(
-            size = dimensionResource(R.dimen.tasks_list_legend_circle_size),
-            color = TasksListViewModel.getFilterColor(filter)
-        )
-
-        Text(
-            text = TasksListViewModel.getRenamedFilter(filter),
-            color = MaterialTheme.colorScheme.onBackground,
-            fontSize = dpToSp(R.dimen.tasks_list_legend_text_size)
-        )
+        TaskStatus.entries.forEach { taskStatus ->
+            AppLegendItem(
+                filterName = TasksListViewModel.getRenamedFilter(taskStatus),
+                circleColor = TasksListViewModel.getFilterColor(taskStatus)
+            )
+        }
     }
 }
 
