@@ -41,22 +41,23 @@ class TasksListViewModel(
         private val activeFilters: List<TaskStatus>
             get() = _activeFilters
 
-        private val RENAMED_FILTERS = mapOf(
-            TaskStatus.COMPLETED to "Finished",
-            TaskStatus.UNASSIGNED to "Free",
-            TaskStatus.IN_PROGRESS to "Assigned",
-        )
 
-        fun getRenamedFilter(filer: TaskStatus) = RENAMED_FILTERS.getOrDefault(
-            key = filer, defaultValue = filer.name
-        )
+        fun getRenamedFilter(filer: TaskStatus): String {
+            return when (filer) {
+                TaskStatus.UNASSIGNED -> "Free"
+                TaskStatus.COMPLETED -> "Finished"
+                TaskStatus.IN_PROGRESS -> "In Delivery"
+                TaskStatus.ASSIGNED -> "Assigned"
+            }
+        }
 
 
         fun getFilterColor(filer: TaskStatus): Color {
             return when (filer) {
                 TaskStatus.COMPLETED -> Settings.TASK_FINISHED_COLOR
                 TaskStatus.UNASSIGNED -> Settings.TASK_FREE_COLOR
-                TaskStatus.IN_PROGRESS -> Settings.TASK_ASSIGNED_COLOR
+                TaskStatus.ASSIGNED -> Settings.TASK_ASSIGNED_COLOR
+                TaskStatus.IN_PROGRESS -> Settings.TASK_IN_PROGRESS_COLOR
             }
         }
     }
@@ -177,7 +178,7 @@ class TasksListViewModel(
                 val matchesStatus = task.status in activeFilters || activeFilters.isEmpty()
 
                 val matchesDate = task.assignedDate?.let {
-                    task.assignedDate.toLocalDate().toEpochDay() == selectedLocalDate.toEpochDay()
+                    task.assignedDate.toEpochDay() == selectedLocalDate.toEpochDay()
                 } ?: true
 
                 matchesStatus && matchesDate

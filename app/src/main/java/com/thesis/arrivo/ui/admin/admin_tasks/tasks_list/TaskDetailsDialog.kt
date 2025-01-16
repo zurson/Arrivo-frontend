@@ -56,7 +56,7 @@ fun TaskDetailsDialog(
             task.assignedDate?.let {
                 DialogRecord(
                     label = stringResource(R.string.tasks_list_details_dialog_date),
-                    value = task.assignedDate.toLocalDate()
+                    value = task.assignedDate
                 )
             }
 

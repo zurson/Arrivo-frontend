@@ -8,8 +8,5 @@ data class TaskUpdateRequest(
     val title: String,
     val location: Location,
     val addressText: String,
-    val status: TaskStatus,
-    val assignedDate: LocalDateTime?,
-    val employeeId: Long?,
     val products: List<Product>
 )

@@ -111,6 +111,7 @@
 
     <dimen name="tasks_list_filter_text_size">30sp</dimen>
     <dimen name="tasks_list_filter_padding">8dp</dimen>
+    <dimen name="tasks_list_filer_container_width">230dp</dimen>
 
     <!-- ROAD ACCIDENTS LIST -->
     <dimen name="accidents_filter_text_size">30sp</dimen>

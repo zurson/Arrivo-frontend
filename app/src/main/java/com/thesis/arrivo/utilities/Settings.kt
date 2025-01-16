@@ -19,7 +19,8 @@ class Settings {
         const val AUTH_ACCOUNT_STATUS_CHECK_INTERVAL_MS: Long = 10_000
 
         val TASK_FREE_COLOR = Color(0xFF4CAF50)
-        val TASK_ASSIGNED_COLOR = Color(0xFFFFC107)
+        val TASK_IN_PROGRESS_COLOR = Color(0xFFFFC107)
+        val TASK_ASSIGNED_COLOR = Color(0xFF03A9F4)
         val TASK_FINISHED_COLOR = Color(0xFFCC3333)
 
         val FILTER_ACTIVE_COLOR = Color(0xFF4CAF50)

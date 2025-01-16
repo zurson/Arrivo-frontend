@@ -405,8 +405,6 @@ class TaskManagerViewModel(
 
 
     private fun createTaskUpdateRequest(): TaskUpdateRequest {
-        val taskToEdit = mainScaffoldViewModel.taskToEdit.task
-
         return TaskUpdateRequest(
             title = taskTitle,
             location = Location(
@@ -415,9 +413,6 @@ class TaskManagerViewModel(
             ),
             addressText = finalAddress,
             products = products,
-            status = taskToEdit.status,
-            assignedDate = taskToEdit.assignedDate,
-            employeeId = taskToEdit.employee?.id
         )
     }
 
