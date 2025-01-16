@@ -1,11 +1,10 @@
-package com.thesis.arrivo.components
+package com.thesis.arrivo.utilities
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
-import com.thesis.arrivo.utilities.Settings
 
 private const val mask = Settings.PHONE_NUMBER_MASK
 private const val maskLetter = Settings.PHONE_NUMBER_MASK_LETTER

@@ -8,14 +8,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,28 +33,43 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TaskStatus
-import com.thesis.arrivo.components.AppButton
-import com.thesis.arrivo.components.ArrowRightIcon
-import com.thesis.arrivo.components.Circle
-import com.thesis.arrivo.components.EmptyList
-import com.thesis.arrivo.components.bounceClick
+import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.components.date_picker.DatePickerField
+import com.thesis.arrivo.components.other_components.AppButton
+import com.thesis.arrivo.components.other_components.AppHorizontalDivider
+import com.thesis.arrivo.components.other_components.ArrowRightIcon
+import com.thesis.arrivo.components.other_components.Circle
+import com.thesis.arrivo.components.other_components.EmptyList
+import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
-import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.dpToSp
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.TasksListViewModel
 
 @Composable
-fun TasksListView(mainScaffoldViewModel: MainScaffoldViewModel) {
+fun TasksListView(
+    mainScaffoldViewModel: MainScaffoldViewModel,
+    loadingScreenManager: LoadingScreenManager,
+    navigationManager: NavigationManager
+) {
     val context = LocalContext.current
     val tasksListViewModel =
-        remember { TasksListViewModel(context, mainScaffoldViewModel, mainScaffoldViewModel) }
+        remember {
+            TasksListViewModel(
+                context = context,
+                mainScaffoldViewModel = mainScaffoldViewModel,
+                loadingScreenManager = loadingScreenManager,
+                navigationManager = navigationManager
+            )
+        }
 
     ConstraintLayout(
         modifier = Modifier
@@ -87,6 +105,7 @@ fun TasksListView(mainScaffoldViewModel: MainScaffoldViewModel) {
 
         TasksList(
             tasksListViewModel = tasksListViewModel,
+            loadingScreenStatusChecker = mainScaffoldViewModel,
             modifier = Modifier.constrainAs(tasksListRef) {
                 top.linkTo(tasksListTopGuideline)
                 bottom.linkTo(tasksListBottomGuideline)
@@ -120,7 +139,9 @@ private fun ShowTaskDetailsDialog(tasksListViewModel: TasksListViewModel) {
         TaskDetailsDialog(
             task = tasksListViewModel.selectedTask,
             onDismiss = { tasksListViewModel.onTaskDismiss() },
-            onEditButtonClick = { tasksListViewModel.onTaskEditButtonClick() }
+            onButtonClick = { tasksListViewModel.onTaskEditButtonClick() },
+            icon = Icons.Filled.Edit,
+            buttonText = stringResource(R.string.tasks_list_details_dialog_button_text)
         )
     }
 }
@@ -129,14 +150,15 @@ private fun ShowTaskDetailsDialog(tasksListViewModel: TasksListViewModel) {
 @Composable
 private fun TasksList(
     modifier: Modifier = Modifier,
-    tasksListViewModel: TasksListViewModel
+    tasksListViewModel: TasksListViewModel,
+    loadingScreenStatusChecker: LoadingScreenStatusChecker
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
     ) {
         if (tasksListViewModel.tasksToShow.isEmpty()) {
-            EmptyList()
+            EmptyList(loadingScreenStatusChecker)
             return
         }
 
@@ -167,7 +189,12 @@ private fun TaskContainer(
             tasksListViewModel = tasksListViewModel
         )
 
-        TaskStatus.IN_PROGRESS -> TaskAssignedContainer(
+        TaskStatus.IN_PROGRESS -> TaskAssignedOrInProgressContainer(
+            task = task,
+            tasksListViewModel = tasksListViewModel
+        )
+
+        TaskStatus.ASSIGNED -> TaskAssignedOrInProgressContainer(
             task = task,
             tasksListViewModel = tasksListViewModel
         )
@@ -212,7 +239,7 @@ private fun TaskCompletedOrFreeContainer(
 
 
 @Composable
-private fun TaskAssignedContainer(
+private fun TaskAssignedOrInProgressContainer(
     tasksListViewModel: TasksListViewModel,
     task: Task
 ) {
@@ -312,12 +339,7 @@ private fun BottomSector(
         modifier = modifier
             .fillMaxSize()
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(dimensionResource(R.dimen.tasks_list_bottom_sector_divider_height))
-                .background(MaterialTheme.colorScheme.onBackground)
-        )
+        AppHorizontalDivider(height = dimensionResource(R.dimen.tasks_list_bottom_sector_divider_height))
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -345,6 +367,7 @@ private fun Legend() {
         LegendItem(filter = TaskStatus.COMPLETED)
         LegendItem(filter = TaskStatus.UNASSIGNED)
         LegendItem(filter = TaskStatus.IN_PROGRESS)
+        LegendItem(filter = TaskStatus.ASSIGNED)
     }
 }
 
@@ -399,29 +422,19 @@ private fun FiltersList(
     tasksListViewModel: TasksListViewModel,
     modifier: Modifier = Modifier
 ) {
-    Row(
+    LazyRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         modifier = modifier
             .fillMaxWidth()
     ) {
-        Filter(
-            filter = TaskStatus.UNASSIGNED,
-            modifier = Modifier.weight(1f),
-            tasksListViewModel = tasksListViewModel
-        )
-
-        Filter(
-            filter = TaskStatus.IN_PROGRESS,
-            modifier = Modifier.weight(1f),
-            tasksListViewModel = tasksListViewModel
-        )
-
-        Filter(
-            filter = TaskStatus.COMPLETED,
-            modifier = Modifier.weight(1f),
-            tasksListViewModel = tasksListViewModel
-        )
+        items(TaskStatus.entries.toTypedArray()) { taskStatus ->
+            Filter(
+                filter = taskStatus,
+                modifier = Modifier.width(dimensionResource(R.dimen.tasks_list_filer_container_width)),
+                tasksListViewModel = tasksListViewModel
+            )
+        }
     }
 }
 
@@ -445,7 +458,7 @@ private fun Filter(
             .clickable { tasksListViewModel.toggleFilterActive(filter) }
     ) {
         Text(
-            text = capitalize(TasksListViewModel.getRenamedFilter(filter).lowercase()),
+            text = TasksListViewModel.getRenamedFilter(filter),
             color = MaterialTheme.colorScheme.onSurface,
             fontSize = dpToSp(R.dimen.tasks_list_filter_text_size),
             modifier = Modifier

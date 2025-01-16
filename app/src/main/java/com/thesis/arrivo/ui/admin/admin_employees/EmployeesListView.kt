@@ -16,13 +16,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowRight
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -42,35 +42,35 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.employee.Employee
-import com.thesis.arrivo.components.AppButton
-import com.thesis.arrivo.components.EmptyList
-import com.thesis.arrivo.components.bounceClick
+import com.thesis.arrivo.components.animations.bounceClick
+import com.thesis.arrivo.components.other_components.AppButton
+import com.thesis.arrivo.components.other_components.EmptyList
 import com.thesis.arrivo.ui.theme.Theme
+import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
-import com.thesis.arrivo.utilities.showErrorDialog
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.view_models.EmployeeViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 
 @Composable
-fun EmployeesView(mainScaffoldViewModel: MainScaffoldViewModel) {
+fun EmployeesListView(
+    mainScaffoldViewModel: MainScaffoldViewModel,
+    loadingScreenManager: LoadingScreenManager,
+    navigationManager: NavigationManager
+) {
     val context = LocalContext.current
 
-    val employeeViewModel = remember { EmployeeViewModel(mainScaffoldViewModel) }
-    val employees by employeeViewModel.employees.collectAsState()
-
-    LaunchedEffect(Unit) {
-        employeeViewModel.fetchEmployeesList(
-            context = context,
-            onFailure = { error ->
-                showErrorDialog(
-                    context,
-                    context.getString(R.string.error_title),
-                    error
-                )
-            }
+    val employeeViewModel = remember {
+        EmployeeViewModel(
+            loadingScreenManager = loadingScreenManager,
+            navigationManager = navigationManager,
+            context = context
         )
     }
+
+    val employees by employeeViewModel.employees.collectAsState()
 
     ConstraintLayout(
         modifier = Modifier
@@ -89,12 +89,13 @@ fun EmployeesView(mainScaffoldViewModel: MainScaffoldViewModel) {
 
         /* EMPLOYEES LIST */
         val (headerImageRef) = createRefs()
-        val employeesListTopGuideline = createGuidelineFromTop(0.1f)
-        val employeesListBottomGuideline = createGuidelineFromTop(0.86f)
+        val employeesListTopGuideline = createGuidelineFromTop(0.05f)
+        val employeesListBottomGuideline = createGuidelineFromTop(0.85f)
 
         EmployeesList(
             employees = employees,
             employeeViewModel = employeeViewModel,
+            loadingScreenStatusChecker = mainScaffoldViewModel,
             modifier = Modifier.constrainAs(headerImageRef) {
                 top.linkTo(employeesListTopGuideline)
                 bottom.linkTo(employeesListBottomGuideline)
@@ -105,19 +106,17 @@ fun EmployeesView(mainScaffoldViewModel: MainScaffoldViewModel) {
             })
 
 
-        /* CREATE EMPLOYEE BUTTON */
-        val (buttonRef) = createRefs()
-        val buttonTopGuideline = createGuidelineFromTop(0.89f)
-        val buttonBottomGuideline = createGuidelineFromTop(0.96f)
-        val buttonStartGuideline = createGuidelineFromStart(0.3f)
+        /* BUTTONS */
+        val (buttonsRef) = createRefs()
+        val buttonsTopGuideline = createGuidelineFromTop(0.86f)
 
-        ConfirmButton(
-            mainScaffoldViewModel = mainScaffoldViewModel,
+        ButtonsSection(
+            employeeViewModel = employeeViewModel,
             modifier = Modifier
-                .constrainAs(buttonRef) {
-                    top.linkTo(buttonTopGuideline)
-                    bottom.linkTo(buttonBottomGuideline)
-                    start.linkTo(buttonStartGuideline)
+                .constrainAs(buttonsRef) {
+                    top.linkTo(buttonsTopGuideline)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(startGuideline)
                     end.linkTo(endGuideline)
                     width = Dimension.fillToConstraints
                     height = Dimension.fillToConstraints
@@ -145,7 +144,8 @@ private fun ShowEmployeeDetails(
 private fun EmployeesList(
     modifier: Modifier = Modifier,
     employeeViewModel: EmployeeViewModel,
-    employees: List<Employee>
+    employees: List<Employee>,
+    loadingScreenStatusChecker: LoadingScreenStatusChecker
 ) {
     Box(
         modifier = modifier
@@ -155,7 +155,7 @@ private fun EmployeesList(
         contentAlignment = Alignment.Center
     ) {
         if (employees.isEmpty()) {
-            EmptyList()
+            EmptyList(loadingScreenStatusChecker)
             return
         }
 
@@ -239,23 +239,40 @@ private fun EmployeeContainer(
 
 
 @Composable
-private fun ConfirmButton(
+private fun ButtonsSection(
     modifier: Modifier = Modifier,
-    mainScaffoldViewModel: MainScaffoldViewModel
+    employeeViewModel: EmployeeViewModel
 ) {
-    AppButton(
-        onClick = { mainScaffoldViewModel.onCreateEmployeeAccountRedirectButtonClick() },
-        modifier = modifier,
-        text = stringResource(R.string.create_account_redirect_button_text),
-        icon = Icons.Filled.Add
-    )
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_horizontal_space)),
+        modifier = modifier
+            .fillMaxSize()
+    ) {
+        AppButton(
+            onClick = { employeeViewModel.onCreateEmployeeAccountButtonClick() },
+            text = stringResource(R.string.create_account_redirect_button_text),
+            icon = Icons.Filled.Add,
+            modifier = Modifier.weight(1f),
+        )
+    }
 }
 
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Preview() {
+    val vm = MainScaffoldViewModel(
+        navigationManager = NavigationManager(rememberNavController()),
+        context = LocalContext.current,
+        adminMode = true
+    )
+
     Theme.ArrivoTheme {
-        EmployeesView(MainScaffoldViewModel(LocalContext.current, true, rememberNavController()))
+        EmployeesListView(
+            mainScaffoldViewModel = vm,
+            loadingScreenManager = vm,
+            navigationManager = NavigationManager(rememberNavController())
+        )
     }
 }

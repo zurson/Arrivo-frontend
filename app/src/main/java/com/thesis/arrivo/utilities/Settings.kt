@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 class Settings {
 
     companion object {
+        const val APP_BUTTON_DEFAULT_MAX_LINES = 2
         const val START_END_PERCENTAGE: Float = 0.05f
 
         const val FIRST_NAME_MAX_LEN = 20
@@ -18,7 +19,8 @@ class Settings {
         const val AUTH_ACCOUNT_STATUS_CHECK_INTERVAL_MS: Long = 10_000
 
         val TASK_FREE_COLOR = Color(0xFF4CAF50)
-        val TASK_ASSIGNED_COLOR = Color(0xFFFFC107)
+        val TASK_IN_PROGRESS_COLOR = Color(0xFFFFC107)
+        val TASK_ASSIGNED_COLOR = Color(0xFF03A9F4)
         val TASK_FINISHED_COLOR = Color(0xFFCC3333)
 
         val FILTER_ACTIVE_COLOR = Color(0xFF4CAF50)
@@ -29,6 +31,9 @@ class Settings {
         val LOADING_SCREEN_BG = Color(0x80CECCC8)
 
         const val DEFAULT_MAP_ZOOM: Float = 17f
+
+        val DELIVERY_TIME_OK_COLOR = Color.Green
+        val DELIVERY_TIME_EXCEEDED_COLOR = Color.Red
     }
 
 }

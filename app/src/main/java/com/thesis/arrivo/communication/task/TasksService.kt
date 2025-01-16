@@ -20,4 +20,6 @@ interface TasksService {
         @Body taskUpdateRequest: TaskUpdateRequest
     )
 
+    @GET("tasks/free-tasks")
+    suspend fun getFreeTasks(): List<Task>
 }

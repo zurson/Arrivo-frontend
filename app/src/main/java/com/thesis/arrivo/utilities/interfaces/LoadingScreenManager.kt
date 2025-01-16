@@ -1,9 +1,8 @@
 package com.thesis.arrivo.utilities.interfaces
 
-interface LoadingScreenManager {
+interface LoadingScreenManager : LoadingScreenStatusChecker {
 
     fun showLoadingScreen()
     fun hideLoadingScreen()
-    fun isLoadingScreenEnabled(): Boolean
 
 }

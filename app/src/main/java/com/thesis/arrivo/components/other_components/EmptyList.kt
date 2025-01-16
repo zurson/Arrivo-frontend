@@ -1,4 +1,4 @@
-package com.thesis.arrivo.components
+package com.thesis.arrivo.components.other_components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
@@ -17,17 +17,23 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.thesis.arrivo.R
 import com.thesis.arrivo.utilities.dpToSp
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 
 @Composable
 fun EmptyList(
-    @StringRes stringResourceId: Int = R.string.empty_list_text
+    loadingScreenStatusChecker: LoadingScreenStatusChecker,
+    @StringRes stringResourceId: Int = R.string.empty_list_text,
+    modifier: Modifier = Modifier
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(),
     ) {
+        if (loadingScreenStatusChecker.isLoadingScreenEnabled())
+            return
+
         Icon(
             imageVector = Icons.Outlined.BrowserNotSupported,
             contentDescription = null,

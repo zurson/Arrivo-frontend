@@ -3,6 +3,7 @@ package com.thesis.arrivo.communication
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.thesis.arrivo.communication.available_products.AvailableProductsService
+import com.thesis.arrivo.communication.delivery.DeliveryService
 import com.thesis.arrivo.communication.employee.EmployeeService
 import com.thesis.arrivo.communication.gson.LocalDateAdapter
 import com.thesis.arrivo.communication.gson.LocalDateTimeAdapter
@@ -42,5 +43,9 @@ object RetrofitInstance {
 
     val roadAccidentsService: RoadAccidentsService by lazy {
         retrofit.create(RoadAccidentsService::class.java)
+    }
+
+    val deliveryService: DeliveryService by lazy {
+        retrofit.create(DeliveryService::class.java)
     }
 }

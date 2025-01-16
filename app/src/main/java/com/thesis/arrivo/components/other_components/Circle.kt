@@ -1,4 +1,4 @@
-package com.thesis.arrivo.components
+package com.thesis.arrivo.components.other_components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

@@ -7,29 +7,29 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.thesis.arrivo.activities.MainActivity
 import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.task.Task
-import com.thesis.arrivo.components.NavigationItem
+import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskToEdit
 import com.thesis.arrivo.utilities.Location
+import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings.Companion.AUTH_ACCOUNT_STATUS_CHECK_INTERVAL_MS
 import com.thesis.arrivo.utilities.changeActivity
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
-import com.thesis.arrivo.utilities.navigateTo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import java.util.concurrent.locks.ReentrantLock
 
 class MainScaffoldViewModel(
-    val context: Context,
-    var adminMode: Boolean,
-    val navController: NavHostController
+    private val context: Context,
+    private var adminMode: Boolean,
+    private val navigationManager: NavigationManager
 ) : ViewModel(), LoadingScreenManager {
 
     /**
@@ -47,7 +47,8 @@ class MainScaffoldViewModel(
     private val navbarElementsAdmin = listOf(
         NavigationItem.AccidentsAdmin,
         NavigationItem.TasksListAdmin,
-        NavigationItem.EmployeesAdmin,
+        NavigationItem.DeliveriesListAdmin,
+        NavigationItem.EmployeesListAdmin,
     )
 
     fun getNavbarElements(): List<NavigationItem> =
@@ -90,7 +91,7 @@ class MainScaffoldViewModel(
      **/
 
     private val _selectedView = mutableStateOf(getNavbarElements()[0])
-    val selectedView: NavigationItem
+    private val selectedView: NavigationItem
         get() = _selectedView.value
 
     private fun selectView(item: NavigationItem) {
@@ -108,11 +109,7 @@ class MainScaffoldViewModel(
         if (clickedItem.route == selectedView.route)
             return
 
-        navController.navigate(clickedItem.route) {
-            popUpTo(selectedView.route) { inclusive = true }
-            launchSingleTop = true
-        }
-
+        navigationManager.navigateTo(clickedItem, true)
         selectView(clickedItem)
     }
 
@@ -184,7 +181,7 @@ class MainScaffoldViewModel(
 
 
     fun onAuthenticationSuccess() {
-        getStartDestination { dest -> navigateTo(navController, dest, true) }
+        getStartDestination { dest -> navigationManager.navigateTo(dest, true) }
         setNavbarVisibility(true)
     }
 
@@ -217,33 +214,29 @@ class MainScaffoldViewModel(
 
 
     /**
-     * Other
-     **/
-
-
-    fun onCreateEmployeeAccountRedirectButtonClick() {
-        navigateTo(
-            navController = navController,
-            navigationItem = NavigationItem.CreateEmployeeAdmin
-        )
-    }
-
-
-    /**
      * Loading Screen Manager
      **/
 
-
+    private val lock = ReentrantLock()
     private var loadingScreenEnabled by mutableStateOf(false)
 
+    @Synchronized
     override fun showLoadingScreen() {
+        lock.lock()
         loadingScreenEnabled = true
     }
 
+    @Synchronized
     override fun hideLoadingScreen() {
         loadingScreenEnabled = false
+        lock.unlock()
     }
 
     override fun isLoadingScreenEnabled(): Boolean = loadingScreenEnabled
+
+
+    /**
+     * Other
+     **/
 
 }

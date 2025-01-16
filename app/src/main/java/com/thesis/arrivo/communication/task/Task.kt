@@ -3,6 +3,7 @@ package com.thesis.arrivo.communication.task
 import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.Product
 import com.thesis.arrivo.utilities.Location
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class Task(
@@ -11,7 +12,7 @@ data class Task(
     val location: Location,
     val addressText: String,
     val status: TaskStatus,
-    val assignedDate: LocalDateTime?,
+    val assignedDate: LocalDate?,
     val employee: Employee?,
     val products: List<Product> = listOf()
 ) {

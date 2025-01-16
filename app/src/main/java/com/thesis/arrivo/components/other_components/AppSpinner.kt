@@ -1,4 +1,4 @@
-package com.thesis.arrivo.components
+package com.thesis.arrivo.components.other_components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,7 +23,6 @@ import androidx.compose.ui.text.TextStyle
 import com.thesis.arrivo.R
 import com.thesis.arrivo.utilities.dpToSp
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppSpinner(
     items: List<String>,
@@ -34,27 +33,68 @@ fun AppSpinner(
     isError: Boolean = false,
     errorMessage: String = ""
 ) {
+    BaseAppSpinner(
+        items = items,
+        label = label,
+        selectedItem = selectedItem,
+        onItemSelected = onItemSelected,
+        itemToString = { it },
+        modifier = modifier,
+        isError = isError,
+        errorMessage = errorMessage
+    )
+}
+
+@Composable
+fun <T> AppSpinner(
+    items: List<T>,
+    label: String,
+    selectedItem: T,
+    onItemSelected: (T) -> Unit,
+    itemToString: (T) -> String,
+    modifier: Modifier = Modifier,
+    isError: Boolean = false,
+    errorMessage: String = ""
+) {
+    BaseAppSpinner(
+        items = items,
+        label = label,
+        selectedItem = selectedItem,
+        onItemSelected = onItemSelected,
+        itemToString = itemToString,
+        modifier = modifier,
+        isError = isError,
+        errorMessage = errorMessage
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun <T> BaseAppSpinner(
+    items: List<T>,
+    label: String,
+    selectedItem: T,
+    onItemSelected: (T) -> Unit,
+    itemToString: (T) -> String,
+    modifier: Modifier,
+    isError: Boolean,
+    errorMessage: String
+) {
     var expanded by remember { mutableStateOf(false) }
     var currentSelection by remember { mutableStateOf(selectedItem) }
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier
-            .fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { expanded = !expanded }
         ) {
             OutlinedTextField(
-                value = currentSelection,
+                value = itemToString(currentSelection),
                 singleLine = true,
-                label = {
-                    Text(
-                        text = label,
-                        fontSize = dpToSp(R.dimen.form_label_text_size)
-                    )
-                },
+                label = { Text(text = label, fontSize = dpToSp(R.dimen.form_label_text_size)) },
                 onValueChange = {},
                 readOnly = true,
                 modifier = Modifier
@@ -64,10 +104,7 @@ fun AppSpinner(
                 textStyle = TextStyle.Default.copy(fontSize = dpToSp(R.dimen.form_text_size)),
                 colors = TextFieldDefaults.colors(
                     unfocusedIndicatorColor = MaterialTheme.colorScheme.onBackground,
-                    unfocusedLeadingIconColor = MaterialTheme.colorScheme.onBackground,
                     focusedIndicatorColor = MaterialTheme.colorScheme.secondary,
-                    focusedLabelColor = MaterialTheme.colorScheme.secondary,
-                    focusedLeadingIconColor = MaterialTheme.colorScheme.secondary,
                     cursorColor = MaterialTheme.colorScheme.secondary,
                     focusedContainerColor = MaterialTheme.colorScheme.background,
                     unfocusedContainerColor = MaterialTheme.colorScheme.background,
@@ -95,10 +132,9 @@ fun AppSpinner(
                     DropdownMenuItem(
                         text = {
                             Text(
-                                text = item,
+                                text = itemToString(item),
                                 fontSize = dpToSp(R.dimen.app_spinner_item_text_size),
-                                modifier = Modifier
-                                    .padding(dimensionResource(R.dimen.app_spinner_item_padding))
+                                modifier = Modifier.padding(dimensionResource(R.dimen.app_spinner_item_padding))
                             )
                         },
                         onClick = {
@@ -112,3 +148,4 @@ fun AppSpinner(
         }
     }
 }
+

@@ -15,13 +15,15 @@ import androidx.lifecycle.ViewModel
 import com.thesis.arrivo.communication.employee.EmployeeCreateAccountRequest
 import com.thesis.arrivo.communication.employee.EmployeeStatus
 import com.thesis.arrivo.communication.employee.EmployeeUpdateRequest
-import com.thesis.arrivo.utilities.FormType
 import com.thesis.arrivo.ui.authentication.FirebaseAuthManager
+import com.thesis.arrivo.utilities.FormType
 import com.thesis.arrivo.utilities.Settings
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.showToast
 
 class AuthViewModel(
-    private val mainScaffoldViewModel: MainScaffoldViewModel
+    private val mainScaffoldViewModel: MainScaffoldViewModel,
+    private val loadingScreenManager: LoadingScreenManager
 ) : ViewModel() {
 
     var firstName by mutableStateOf("")
@@ -115,7 +117,9 @@ class AuthViewModel(
 
 
     private fun loginViaEmail(context: Context) {
+        loadingScreenManager.showLoadingScreen()
         FirebaseAuthManager().loginViaEmail(email, password) { authStatus ->
+            loadingScreenManager.hideLoadingScreen()
             if (authStatus.success) {
                 mainScaffoldViewModel.onAuthenticationSuccess()
             } else {
@@ -180,8 +184,8 @@ class AuthViewModel(
     }
 
     /**
-    * Employee Edit Mode
-    **/
+     * Employee Edit Mode
+     **/
 
     fun prepareToEdit() {
         val emp = mainScaffoldViewModel.employeeToEdit

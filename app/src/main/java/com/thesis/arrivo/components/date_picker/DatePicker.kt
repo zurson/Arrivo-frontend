@@ -17,7 +17,7 @@ import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import com.thesis.arrivo.R
-import com.thesis.arrivo.components.AppTextField
+import com.thesis.arrivo.components.other_components.AppTextField
 import com.thesis.arrivo.utilities.convertMillisToDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 
@@ -25,7 +25,9 @@ import com.thesis.arrivo.utilities.getCurrentDateMillis
 fun DatePickerField(
     modifier: Modifier = Modifier,
     selectedDate: Long,
-    onDateSelected: (Long) -> Unit
+    onDateSelected: (Long) -> Unit,
+    isError: Boolean = false,
+    errorMessage: String = ""
 ) {
     var showModal by remember { mutableStateOf(false) }
 
@@ -38,6 +40,8 @@ fun DatePickerField(
             label = stringResource(R.string.date_picker_label),
             readOnly = true,
             trailingIcon = Icons.Default.DateRange,
+            isError = isError,
+            errorMessage = errorMessage,
             modifier = Modifier
                 .fillMaxWidth()
                 .pointerInput(selectedDate) {

@@ -1,11 +1,11 @@
-package com.thesis.arrivo.components
+package com.thesis.arrivo.ui
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
+import com.thesis.arrivo.components.navigation.NavBar
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 
 @Composable

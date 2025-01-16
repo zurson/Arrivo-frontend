@@ -9,6 +9,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.thesis.arrivo.R
 import com.thesis.arrivo.utilities.dpToSp
@@ -29,7 +30,7 @@ fun DatePickerModal(
                 onDismiss()
             }) {
                 Text(
-                    text = "OK",
+                    text = stringResource(R.string.date_pick_accept_button_text),
                     fontSize = dpToSp(R.dimen.date_picker_text_size),
                     modifier = Modifier.padding(end = 8.dp)
                 )
@@ -38,7 +39,7 @@ fun DatePickerModal(
         dismissButton = {
             TextButton(onClick = onDismiss) {
                 Text(
-                    text = "Cancel",
+                    text = stringResource(R.string.date_pick_cancel_button_text),
                     fontSize = dpToSp(R.dimen.date_picker_text_size),
                     modifier = Modifier.padding(end = 8.dp)
                 )

@@ -13,11 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.TextUnit
-import androidx.navigation.NavHostController
 import com.google.gson.Gson
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.ErrorResponse
-import com.thesis.arrivo.components.NavigationItem
+import com.thesis.arrivo.utilities.exceptions.DataCorruptedException
+import com.thesis.arrivo.utilities.exceptions.OptimizationFailedException
 import retrofit2.HttpException
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -52,21 +52,6 @@ fun dpToSp(@DimenRes id: Int): TextUnit {
 }
 
 
-fun navigateTo(
-    navController: NavHostController,
-    navigationItem: NavigationItem,
-    clearHistory: Boolean = false
-) {
-    runOnMainThread {
-        navController.navigate(navigationItem.route) {
-            if (clearHistory) {
-                popUpTo(0) { inclusive = true }
-            }
-        }
-    }
-}
-
-
 fun showToast(context: Context, text: String?, toastLength: Int = Toast.LENGTH_SHORT) {
     text?.let {
         (context as? Activity)?.runOnUiThread {
@@ -78,20 +63,31 @@ fun showToast(context: Context, text: String?, toastLength: Int = Toast.LENGTH_S
 
 fun mapError(e: Exception, context: Context): ErrorResponse {
     e.printStackTrace()
-    return when (e) {
+
+    when (e) {
         is HttpException -> {
             val errorBody = e.response()?.errorBody()?.string()
             val errors = parseErrorResponse(context, errorBody)
-            ErrorResponse(e.code(), errors)
+            return ErrorResponse(e.code(), errors)
+        }
+
+        is OptimizationFailedException -> {
+            return ErrorResponse(-1, listOf(e.message!!))
+        }
+
+        is DataCorruptedException -> {
+            return ErrorResponse(-1, listOf(e.message!!))
         }
 
         is IOException ->
-            ErrorResponse(
+            return ErrorResponse(
                 -1,
                 listOf(context.getString(R.string.io_error))
             )
 
-        else -> ErrorResponse(-1, listOf(context.getString(R.string.unexpected_error)))
+        else -> {
+            return ErrorResponse(-1, listOf(context.getString(R.string.unexpected_error)))
+        }
     }
 
 }
@@ -117,6 +113,18 @@ fun showErrorDialog(context: Context, title: String, errorResponse: ErrorRespons
     AlertDialog.Builder(context)
         .setTitle(title)
         .setMessage("Code: ${errorResponse.code}\n\n$errorMessage")
+        .setPositiveButton("OK") { dialog, _ ->
+            dialog.dismiss()
+        }
+        .create()
+        .show()
+}
+
+
+fun showDefaultErrorDialog(context: Context, title: String, message: String) {
+    AlertDialog.Builder(context)
+        .setTitle(title)
+        .setMessage(message)
         .setPositiveButton("OK") { dialog, _ ->
             dialog.dismiss()
         }

@@ -1,6 +1,5 @@
 package com.thesis.arrivo.ui.admin.admin_employees
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +10,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -21,17 +21,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.employee.EmployeeStatus
-import com.thesis.arrivo.components.AppButton
-import com.thesis.arrivo.components.AppSpinner
-import com.thesis.arrivo.components.AppTextField
-import com.thesis.arrivo.components.PhoneVisualTransformation
+import com.thesis.arrivo.components.other_components.AppButton
+import com.thesis.arrivo.components.other_components.AppSpinner
+import com.thesis.arrivo.components.other_components.AppTextField
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.FormType
+import com.thesis.arrivo.utilities.NavigationManager
+import com.thesis.arrivo.utilities.PhoneVisualTransformation
 import com.thesis.arrivo.utilities.Settings
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.view_models.AuthViewModel
 import com.thesis.arrivo.view_models.EmployeeViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
@@ -39,11 +40,14 @@ import com.thesis.arrivo.view_models.MainScaffoldViewModel
 @Composable
 fun CreateEditEmployeeView(
     mainScaffoldViewModel: MainScaffoldViewModel,
+    loadingScreenManager: LoadingScreenManager,
+    navigationManager: NavigationManager,
     editMode: Boolean = false
 ) {
     val context = LocalContext.current
-    val employeeViewModel = EmployeeViewModel(mainScaffoldViewModel)
-    val authViewModel = AuthViewModel(mainScaffoldViewModel)
+    val employeeViewModel =
+        remember { EmployeeViewModel(context, loadingScreenManager, navigationManager) }
+    val authViewModel = remember { AuthViewModel(mainScaffoldViewModel, loadingScreenManager) }
 
     if (editMode) authViewModel.prepareToEdit()
 
@@ -58,7 +62,7 @@ fun CreateEditEmployeeView(
 
         /* FORMS LIST */
         val (formsListRef) = createRefs()
-        val formsListTopGuideline = createGuidelineFromTop(0.1f)
+        val formsListTopGuideline = createGuidelineFromTop(0.05f)
         val formsListBottomGuideline = createGuidelineFromTop(
             if (!editMode) 0.75f else 0.85f
         )
@@ -83,9 +87,7 @@ fun CreateEditEmployeeView(
         val buttonBottomGuideline = createGuidelineFromTop(0.95f)
 
         ConfirmButton(
-            context = context,
             editMode = editMode,
-            navController = mainScaffoldViewModel.navController,
             employeeViewModel = employeeViewModel,
             mainScaffoldViewModel = mainScaffoldViewModel,
             authViewModel = authViewModel,
@@ -184,13 +186,11 @@ private fun Forms(
 
 @Composable
 private fun ConfirmButton(
-    context: Context,
     editMode: Boolean,
     modifier: Modifier = Modifier,
     employeeViewModel: EmployeeViewModel,
     mainScaffoldViewModel: MainScaffoldViewModel,
     authViewModel: AuthViewModel,
-    navController: NavHostController
 ) {
     val buttonText =
         if (!editMode) stringResource(R.string.create_account_create_button_text)
@@ -199,11 +199,8 @@ private fun ConfirmButton(
     AppButton(
         onClick = {
             employeeViewModel.onCreateOrEditButtonClick(
-                context = context,
                 mainScaffoldViewModel = mainScaffoldViewModel,
                 authViewModel = authViewModel,
-                onSuccess = { employeeViewModel.onSuccess(context, navController, editMode) },
-                onFailure = { error -> employeeViewModel.onFailure(context, error) },
                 editMode = editMode
             )
         },
@@ -247,14 +244,18 @@ fun BasicTextField(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Preview() {
+    val vm = MainScaffoldViewModel(
+        navigationManager = NavigationManager(rememberNavController()),
+        context = LocalContext.current,
+        adminMode = true
+    )
+
     Theme.ArrivoTheme {
         CreateEditEmployeeView(
-            MainScaffoldViewModel(
-                LocalContext.current,
-                true,
-                rememberNavController(),
-            ),
-            editMode = true
+            mainScaffoldViewModel = vm,
+            editMode = true,
+            navigationManager = NavigationManager(rememberNavController()),
+            loadingScreenManager = vm
         )
     }
 }

@@ -9,28 +9,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.thesis.arrivo.R
+import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TaskStatus
 import com.thesis.arrivo.communication.task.TasksRepository
-import com.thesis.arrivo.components.NavigationItem
+import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskToEdit
 import com.thesis.arrivo.utilities.Location
+import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
-import com.thesis.arrivo.utilities.mapError
-import com.thesis.arrivo.utilities.navigateTo
-import com.thesis.arrivo.utilities.showErrorDialog
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class TasksListViewModel(
-    private val context: Context,
+    context: Context,
     private val mainScaffoldViewModel: MainScaffoldViewModel,
-    private val loadingScreenManager: LoadingScreenManager
+    loadingScreenManager: LoadingScreenManager,
+    private val navigationManager: NavigationManager,
 ) : ViewModel() {
+    private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
 
     companion object {
         private var _selectedDate = mutableLongStateOf(getCurrentDateMillis())
@@ -41,22 +41,23 @@ class TasksListViewModel(
         private val activeFilters: List<TaskStatus>
             get() = _activeFilters
 
-        private val RENAMED_FILTERS = mapOf(
-            TaskStatus.COMPLETED to "Finished",
-            TaskStatus.UNASSIGNED to "Free",
-            TaskStatus.IN_PROGRESS to "Assigned",
-        )
 
-        fun getRenamedFilter(filer: TaskStatus) = RENAMED_FILTERS.getOrDefault(
-            key = filer, defaultValue = filer.name
-        )
+        fun getRenamedFilter(filer: TaskStatus): String {
+            return when (filer) {
+                TaskStatus.UNASSIGNED -> "Free"
+                TaskStatus.COMPLETED -> "Finished"
+                TaskStatus.IN_PROGRESS -> "In Delivery"
+                TaskStatus.ASSIGNED -> "Assigned"
+            }
+        }
 
 
         fun getFilterColor(filer: TaskStatus): Color {
             return when (filer) {
                 TaskStatus.COMPLETED -> Settings.TASK_FINISHED_COLOR
                 TaskStatus.UNASSIGNED -> Settings.TASK_FREE_COLOR
-                TaskStatus.IN_PROGRESS -> Settings.TASK_ASSIGNED_COLOR
+                TaskStatus.ASSIGNED -> Settings.TASK_ASSIGNED_COLOR
+                TaskStatus.IN_PROGRESS -> Settings.TASK_IN_PROGRESS_COLOR
             }
         }
     }
@@ -96,10 +97,7 @@ class TasksListViewModel(
 
 
     fun onAddTaskButtonClick() {
-        navigateTo(
-            navController = mainScaffoldViewModel.navController,
-            navigationItem = NavigationItem.TaskCreateAdmin
-        )
+        navigationManager.navigateTo(navigationItem = NavigationItem.TaskCreateAdmin)
     }
 
 
@@ -123,10 +121,7 @@ class TasksListViewModel(
 
     fun onTaskEditButtonClick() {
         toggleShowTaskDetailsDialog()
-        navigateTo(
-            navController = mainScaffoldViewModel.navController,
-            navigationItem = NavigationItem.TaskEditAdmin,
-        )
+        navigationManager.navigateTo(navigationItem = NavigationItem.TaskEditAdmin)
     }
 
 
@@ -144,7 +139,7 @@ class TasksListViewModel(
     }
 
 
-    fun toggleShowTaskDetailsDialog() {
+    private fun toggleShowTaskDetailsDialog() {
         showTaskDetailsDialog = !showTaskDetailsDialog
     }
 
@@ -166,16 +161,13 @@ class TasksListViewModel(
 
     private fun fetchTasks() {
         viewModelScope.launch {
-            try {
-                loadingScreenManager.showLoadingScreen()
-                _allTasks.clear()
-                _allTasks.addAll(tasksRepository.getAllTasks())
-                filterTasks()
-            } catch (e: Exception) {
-                onFailure(e)
-            } finally {
-                loadingScreenManager.hideLoadingScreen()
-            }
+            serverRequestManager.sendRequest(
+                actionToPerform = {
+                    _allTasks.clear()
+                    _allTasks.addAll(tasksRepository.getAllTasks())
+                },
+                onSuccess = { filterTasks() }
+            )
         }
     }
 
@@ -186,7 +178,7 @@ class TasksListViewModel(
                 val matchesStatus = task.status in activeFilters || activeFilters.isEmpty()
 
                 val matchesDate = task.assignedDate?.let {
-                    task.assignedDate.toLocalDate().toEpochDay() == selectedLocalDate.toEpochDay()
+                    task.assignedDate.toEpochDay() == selectedLocalDate.toEpochDay()
                 } ?: true
 
                 matchesStatus && matchesDate
@@ -195,15 +187,6 @@ class TasksListViewModel(
             _tasksToShow.clear()
             _tasksToShow.addAll(filteredTasks)
         }
-    }
-
-
-    private fun onFailure(exception: Exception) {
-        showErrorDialog(
-            context = context,
-            title = context.getString(R.string.error_title),
-            errorResponse = mapError(exception, context)
-        )
     }
 
 

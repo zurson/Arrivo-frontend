@@ -5,25 +5,27 @@ import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.thesis.arrivo.R
-import com.thesis.arrivo.communication.ErrorResponse
+import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.employee.EmployeeCreateAccountRequest
 import com.thesis.arrivo.communication.employee.EmployeeRepository
 import com.thesis.arrivo.communication.employee.EmployeeUpdateRequest
-import com.thesis.arrivo.components.NavigationItem
+import com.thesis.arrivo.components.navigation.NavigationItem
+import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
-import com.thesis.arrivo.utilities.mapError
-import com.thesis.arrivo.utilities.navigateTo
-import com.thesis.arrivo.utilities.showErrorDialog
 import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class EmployeeViewModel(private val loadingScreenManager: LoadingScreenManager) : ViewModel() {
+class EmployeeViewModel(
+    private val context: Context,
+    loadingScreenManager: LoadingScreenManager,
+    private val navigationManager: NavigationManager
+) : ViewModel() {
+    private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
 
     private val repository: EmployeeRepository by lazy { EmployeeRepository() }
 
@@ -37,32 +39,30 @@ class EmployeeViewModel(private val loadingScreenManager: LoadingScreenManager) 
     var clickedEmployee = _clickedEmployee.value
 
 
+    init {
+        fetchEmployeesList()
+    }
+
+
     fun toggleShowEmployeeDetails() {
         _showEmployeeDetails.value = !_showEmployeeDetails.value
     }
 
 
-    fun fetchEmployeesList(context: Context, onFailure: (ErrorResponse) -> Unit) {
+    private fun fetchEmployeesList() {
         viewModelScope.launch {
-            try {
-                loadingScreenManager.showLoadingScreen()
-                val employeeList = repository.getAllEmployees()
-                _employees.value = employeeList
-            } catch (e: Exception) {
-                onFailure(mapError(e, context))
-            } finally {
-                loadingScreenManager.hideLoadingScreen()
-            }
+            serverRequestManager.sendRequest(
+                actionToPerform = {
+                    _employees.value = repository.getAllEmployees()
+                }
+            )
         }
     }
 
 
     fun onCreateOrEditButtonClick(
-        context: Context,
         mainScaffoldViewModel: MainScaffoldViewModel,
         authViewModel: AuthViewModel,
-        onSuccess: () -> Unit,
-        onFailure: (ErrorResponse) -> Unit,
         editMode: Boolean
     ) {
         val request = if (editMode) {
@@ -76,38 +76,28 @@ class EmployeeViewModel(private val loadingScreenManager: LoadingScreenManager) 
             )
         }
 
-        handleEmployeeAccountOperation(
-            context = context,
-            operation = request,
-            onSuccess = onSuccess,
-            onFailure = onFailure
-        )
+        handleEmployeeAccountOperation(operation = request, editMode = editMode)
     }
 
     private fun handleEmployeeAccountOperation(
-        context: Context,
         operation: EmployeeAccountOperation,
-        onSuccess: () -> Unit,
-        onFailure: (ErrorResponse) -> Unit
+        editMode: Boolean
     ) {
         viewModelScope.launch {
-            try {
-                loadingScreenManager.showLoadingScreen()
-                when (operation) {
-                    is EmployeeAccountOperation.Create -> {
-                        repository.createEmployeeAccount(operation.data)
-                    }
+            serverRequestManager.sendRequest(
+                actionToPerform = {
+                    when (operation) {
+                        is EmployeeAccountOperation.Create -> {
+                            repository.createEmployeeAccount(operation.data)
+                        }
 
-                    is EmployeeAccountOperation.Update -> {
-                        repository.updateEmployeeAccount(operation.id, operation.data)
+                        is EmployeeAccountOperation.Update -> {
+                            repository.updateEmployeeAccount(operation.id, operation.data)
+                        }
                     }
-                }
-                onSuccess()
-            } catch (e: Exception) {
-                onFailure(mapError(e, context))
-            } finally {
-                loadingScreenManager.hideLoadingScreen()
-            }
+                },
+                onSuccess = { onSuccess(editMode) }
+            )
         }
     }
 
@@ -118,7 +108,7 @@ class EmployeeViewModel(private val loadingScreenManager: LoadingScreenManager) 
     }
 
 
-    private fun showSuccessToast(context: Context, editMode: Boolean) {
+    private fun showSuccessToast(editMode: Boolean) {
         val messageResId = if (editMode) {
             R.string.employee_edit_success_message
         } else {
@@ -133,18 +123,9 @@ class EmployeeViewModel(private val loadingScreenManager: LoadingScreenManager) 
     }
 
 
-    fun onSuccess(context: Context, navController: NavHostController, editMode: Boolean) {
-        showSuccessToast(context, editMode)
-        navigateTo(navController, NavigationItem.EmployeesAdmin, true)
-    }
-
-
-    fun onFailure(context: Context, error: ErrorResponse) {
-        showErrorDialog(
-            context = context,
-            title = context.getString(R.string.error_title),
-            errorResponse = error
-        )
+    private fun onSuccess(editMode: Boolean) {
+        showSuccessToast(editMode)
+        navigationManager.navigateTo(NavigationItem.EmployeesListAdmin, true)
     }
 
 
@@ -154,10 +135,7 @@ class EmployeeViewModel(private val loadingScreenManager: LoadingScreenManager) 
         setEmployeeToEdit(mainScaffoldViewModel = mainScaffoldViewModel)
         toggleShowEmployeeDetails()
 
-        navigateTo(
-            navController = mainScaffoldViewModel.navController,
-            navigationItem = NavigationItem.EditEmployeeAdmin
-        )
+        navigationManager.navigateTo(navigationItem = NavigationItem.EditEmployeeAdmin)
     }
 
 
@@ -165,6 +143,11 @@ class EmployeeViewModel(private val loadingScreenManager: LoadingScreenManager) 
         mainScaffoldViewModel: MainScaffoldViewModel,
     ) {
         mainScaffoldViewModel.employeeToEdit = clickedEmployee
+    }
+
+
+    fun onCreateEmployeeAccountButtonClick() {
+        navigationManager.navigateTo(navigationItem = NavigationItem.CreateEmployeeAdmin)
     }
 
 }

@@ -71,6 +71,10 @@
     <dimen name="empty_list_text_size">20sp</dimen>
     <dimen name="empty_list_icon_size">128dp</dimen>
 
+    <!-- APP CHECKBOX -->
+    <dimen name="app_checkbox_border_width">2dp</dimen>
+    <dimen name="app_checkbox_corner_clip">5dp</dimen>
+
     <!-- NEW TASK -->
     <dimen name="new_task_products_section_title_text_size">24dp</dimen>
     <dimen name="new_task_no_products_message_text_size">20sp</dimen>
@@ -108,6 +112,7 @@
 
     <dimen name="tasks_list_filter_text_size">16sp</dimen>
     <dimen name="tasks_list_filter_padding">8dp</dimen>
+    <dimen name="tasks_list_filer_container_width">115dp</dimen>
 
     <!-- ROAD ACCIDENTS LIST -->
     <dimen name="accidents_filter_text_size">16sp</dimen>
@@ -120,5 +125,22 @@
     <dimen name="accidents_container_arrow_right_icon_size">40dp</dimen>
 
     <dimen name="accidents_dialog_map_height">300dp</dimen>
+
+    <!-- DELIVERY -->
+    <dimen name="delivery_available_tasks_sector_title_text_size">20sp</dimen>
+    <dimen name="delivery_available_tasks_container_padding">8dp</dimen>
+    <dimen name="delivery_available_tasks_container_content_vertical_space">8dp</dimen>
+    <dimen name="delivery_tasks_container_title_text_size">20sp</dimen>
+    <dimen name="delivery_tasks_container_address_text_size">16sp</dimen>
+    <dimen name="delivery_tasks_container_checkbox_end_padding">8dp</dimen>
+    <dimen name="delivery_tasks_container_checkbox_size">32dp</dimen>
+
+    <dimen name="delivery_order_list_title_text_size">20sp</dimen>
+    <dimen name="delivery_order_container_position_text_size">20sp</dimen>
+    <dimen name="delivery_order_container_position_end_padding">8dp</dimen>
+    <dimen name="delivery_order_horizontal_divider_height">5dp</dimen>
+    <dimen name="delivery_order_horizontal_divider_padding">8dp</dimen>
+    <dimen name="delivery_order_details_title_text_size">20sp</dimen>
+    <dimen name="delivery_order_details_text_size">16sp</dimen>
 
 </resources>

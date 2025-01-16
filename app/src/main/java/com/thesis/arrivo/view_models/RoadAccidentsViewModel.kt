@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thesis.arrivo.R
+import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.road_accidents.RoadAccident
 import com.thesis.arrivo.communication.road_accidents.RoadAccidentsRepository
 import com.thesis.arrivo.ui.admin.admin_accidents.RoadAccidentCategory
@@ -20,9 +21,7 @@ import com.thesis.arrivo.utilities.Settings.Companion.ROAD_ACCIDENTS_FINISHED_CO
 import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
-import com.thesis.arrivo.utilities.mapError
 import com.thesis.arrivo.utilities.preparePhoneCall
-import com.thesis.arrivo.utilities.showErrorDialog
 import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -30,8 +29,9 @@ import java.time.LocalDate
 
 class RoadAccidentsViewModel(
     private val context: Context,
-    private val loadingScreenManager: LoadingScreenManager
+    loadingScreenManager: LoadingScreenManager
 ) : ViewModel() {
+    private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
 
     companion object {
         private var _selectedDate = mutableLongStateOf(getCurrentDateMillis())
@@ -83,9 +83,13 @@ class RoadAccidentsViewModel(
         _accidentsToShow.clear()
 
         val filteredAccidents = _allAccidents.filter { accident ->
-            val isDateMatching = accident.date.toEpochDay() == selectedLocalDate.toEpochDay()
             val isStatusMatching =
                 activeFilters.isEmpty() || activeFilters.contains(accident.status)
+            val isDateMatching = if (accident.status == RoadAccidentStatus.ACTIVE) {
+                true
+            } else {
+                accident.date.toEpochDay() == selectedLocalDate.toEpochDay()
+            }
             isDateMatching && isStatusMatching
         }
 
@@ -107,26 +111,14 @@ class RoadAccidentsViewModel(
 
     private fun fetchRoadAccidents() {
         viewModelScope.launch {
-            try {
-                loadingScreenManager.showLoadingScreen()
-                _allAccidents.clear()
-                _allAccidents.addAll(roadAccidentsRepository.getAllRoadAccidents())
-                filterList()
-            } catch (e: Exception) {
-                onFailure(e)
-            } finally {
-                loadingScreenManager.hideLoadingScreen()
-            }
+            serverRequestManager.sendRequest(
+                actionToPerform = {
+                    _allAccidents.clear()
+                    _allAccidents.addAll(roadAccidentsRepository.getAllRoadAccidents())
+                },
+                onSuccess = { filterList() }
+            )
         }
-    }
-
-
-    private fun onFailure(exception: java.lang.Exception) {
-        showErrorDialog(
-            context = context,
-            title = context.getString(R.string.error_title),
-            errorResponse = mapError(exception, context)
-        )
     }
 
 
@@ -210,14 +202,12 @@ class RoadAccidentsViewModel(
 
     private fun markAccidentAsResolved() {
         viewModelScope.launch {
-            try {
-                loadingScreenManager.showLoadingScreen()
-                roadAccidentsRepository.markRoadAccidentAsResolved(selectedAccident.id)
-                onUpdateSuccess()
-            } catch (e: Exception) {
-                loadingScreenManager.hideLoadingScreen()
-                onFailure(e)
-            }
+            serverRequestManager.sendRequest(
+                actionToPerform = {
+                    roadAccidentsRepository.markRoadAccidentAsResolved(selectedAccident.id)
+                },
+                onSuccess = { onUpdateSuccess() }
+            )
         }
     }
 
