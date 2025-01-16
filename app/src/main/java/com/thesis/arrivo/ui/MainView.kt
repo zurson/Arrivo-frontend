@@ -22,8 +22,8 @@ import com.thesis.arrivo.ui.admin.admin_employees.CreateEditEmployeeView
 import com.thesis.arrivo.ui.admin.admin_employees.EmployeesListView
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskCreateOrEditView
 import com.thesis.arrivo.ui.admin.admin_tasks.tasks_list.TasksListView
-import com.thesis.arrivo.ui.admin.delivery.DeliveryCreateView
-import com.thesis.arrivo.ui.admin.delivery.DeliveryTasksView
+import com.thesis.arrivo.ui.admin.admin_deliveries.DeliveryCreateView
+import com.thesis.arrivo.ui.admin.admin_deliveries.DeliveryTasksView
 import com.thesis.arrivo.ui.authentication.LoginView
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.ui.user.user_account_view.AccountView
