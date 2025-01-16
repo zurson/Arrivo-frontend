@@ -3,6 +3,7 @@ package com.thesis.arrivo.components.navigation
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.DeliveryDining
 import androidx.compose.material.icons.outlined.DirectionsCar
 import androidx.compose.material.icons.outlined.FormatListNumberedRtl
 import androidx.compose.material.icons.outlined.LocationOn
@@ -64,10 +65,16 @@ sealed class NavigationItem(
         icon = Icons.Outlined.Task
     )
 
-    data object EmployeesAdmin : NavigationItem(
-        route = "employees_admin",
+    data object EmployeesListAdmin : NavigationItem(
+        route = "employees_list_admin",
         title = R.string.nav_employees_label_admin,
         icon = Icons.Outlined.Person
+    )
+
+    data object DeliveriesListAdmin : NavigationItem(
+        route = "deliveries_list_admin",
+        title = R.string.nav_deliveries_label_admin,
+        icon = Icons.Outlined.DeliveryDining
     )
 
     data object TaskCreateAdmin : NavigationItem(
@@ -86,11 +93,11 @@ sealed class NavigationItem(
         route = "edit_employee_admin"
     )
 
-    data object PlanADayTasksAdmin : NavigationItem(
+    data object DeliveryTasksAdmin : NavigationItem(
         route = "plan_a_day_tasks_admin"
     )
 
-    data object PlanADayOrderAdmin : NavigationItem(
+    data object DeliveryCreateAdmin : NavigationItem(
         route = "plan_a_day_order_admin"
     )
 

@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.thesis.arrivo.R
 import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.ui.theme.Theme
@@ -60,7 +62,9 @@ fun AppButton(
                 textAlign = TextAlign.Center,
                 fontSize = dpToSp(R.dimen.app_button_text_size),
                 color = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(dimensionResource(R.dimen.app_button_padding)),
             )
 
             if (!iconStart) {

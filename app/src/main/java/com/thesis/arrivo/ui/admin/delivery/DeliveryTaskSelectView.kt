@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.admin.plan_a_day
+package com.thesis.arrivo.ui.admin.delivery
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -46,18 +46,18 @@ import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
-import com.thesis.arrivo.view_models.PADSharedViewModel
-import com.thesis.arrivo.view_models.PADTasksViewModel
-import com.thesis.arrivo.view_models.factory.PADTasksViewModelFactory
+import com.thesis.arrivo.view_models.DeliverySharedViewModel
+import com.thesis.arrivo.view_models.DeliveryTaskSelectViewModel
+import com.thesis.arrivo.view_models.factory.DeliveryTaskSelectViewModelFactory
 
 @Composable
-fun PlanADayTasksView(padTasksViewModel: PADTasksViewModel) {
+fun DeliveryTasksView(deliveryTaskSelectViewModel: DeliveryTaskSelectViewModel) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        ShowTaskDetailsDialog(padTasksViewModel)
+        ShowTaskDetailsDialog(deliveryTaskSelectViewModel)
 
         /* CONFIGURATION */
         val startGuideline = createGuidelineFromStart(Settings.START_END_PERCENTAGE)
@@ -69,7 +69,7 @@ fun PlanADayTasksView(padTasksViewModel: PADTasksViewModel) {
         val dateAndFiltersBottomGuideline = createGuidelineFromTop(0.3f)
 
         EmployeeSelectorAndDatePicker(
-            padTasksViewModel = padTasksViewModel,
+            deliveryTaskSelectViewModel = deliveryTaskSelectViewModel,
             modifier = Modifier.constrainAs(dateAndFiltersRef) {
                 top.linkTo(dateAndFiltersTopGuideline)
                 bottom.linkTo(dateAndFiltersBottomGuideline)
@@ -86,7 +86,7 @@ fun PlanADayTasksView(padTasksViewModel: PADTasksViewModel) {
         val availableTasksListBottomGuideline = createGuidelineFromTop(0.87f)
 
         AvailableTasksList(
-            PADTasksViewModel = padTasksViewModel,
+            DeliveryTaskSelectViewModel = deliveryTaskSelectViewModel,
             modifier = Modifier.constrainAs(availableTasksListRef) {
                 top.linkTo(availableTasksListTopGuideline)
                 bottom.linkTo(availableTasksListBottomGuideline)
@@ -101,7 +101,7 @@ fun PlanADayTasksView(padTasksViewModel: PADTasksViewModel) {
         val buttonTopGuideline = createGuidelineFromTop(0.88f)
 
         ButtonSection(
-            PADTasksViewModel = padTasksViewModel,
+            DeliveryTaskSelectViewModel = deliveryTaskSelectViewModel,
             modifier = Modifier
                 .constrainAs(buttonRef) {
                     top.linkTo(buttonTopGuideline)
@@ -119,7 +119,7 @@ fun PlanADayTasksView(padTasksViewModel: PADTasksViewModel) {
 @Composable
 private fun EmployeeSelectorAndDatePicker(
     modifier: Modifier = Modifier,
-    padTasksViewModel: PADTasksViewModel
+    deliveryTaskSelectViewModel: DeliveryTaskSelectViewModel
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -128,20 +128,20 @@ private fun EmployeeSelectorAndDatePicker(
             .fillMaxSize()
     ) {
         AppSpinner(
-            items = padTasksViewModel.employeesList,
-            label = stringResource(R.string.plan_a_day_employee_selector_label),
-            selectedItem = padTasksViewModel.selectedEmployee,
-            onItemSelected = { padTasksViewModel.onEmployeeSelected(it) },
-            itemToString = { item -> padTasksViewModel.employeeToString(item) },
-            isError = padTasksViewModel.employeeSpinnerError,
-            errorMessage = stringResource(R.string.plan_a_day_employee_selector_error_message)
+            items = deliveryTaskSelectViewModel.employeesList,
+            label = stringResource(R.string.delivery_employee_selector_label),
+            selectedItem = deliveryTaskSelectViewModel.selectedEmployee,
+            onItemSelected = { deliveryTaskSelectViewModel.onEmployeeSelected(it) },
+            itemToString = { item -> deliveryTaskSelectViewModel.employeeToString(item) },
+            isError = deliveryTaskSelectViewModel.employeeSpinnerError,
+            errorMessage = stringResource(R.string.delivery_employee_selector_error_message)
         )
 
         DatePickerField(
-            selectedDate = padTasksViewModel.getSelectedDate(),
-            onDateSelected = { padTasksViewModel.onDateSelected(it) },
-            isError = padTasksViewModel.isDatePickerError,
-            errorMessage = stringResource(R.string.plan_a_day_tasks_date_picker_error_message)
+            selectedDate = deliveryTaskSelectViewModel.getSelectedDate(),
+            onDateSelected = { deliveryTaskSelectViewModel.onDateSelected(it) },
+            isError = deliveryTaskSelectViewModel.isDatePickerError,
+            errorMessage = stringResource(R.string.delivery_tasks_date_picker_error_message)
         )
     }
 }
@@ -150,7 +150,7 @@ private fun EmployeeSelectorAndDatePicker(
 @Composable
 fun AvailableTasksList(
     modifier: Modifier = Modifier,
-    PADTasksViewModel: PADTasksViewModel,
+    DeliveryTaskSelectViewModel: DeliveryTaskSelectViewModel,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
@@ -158,17 +158,17 @@ fun AvailableTasksList(
             .fillMaxSize()
     ) {
         Text(
-            text = stringResource(R.string.plan_a_day_available_tasks_section_title),
-            fontSize = dpToSp(R.dimen.plan_a_day_available_tasks_sector_title_text_size),
+            text = stringResource(R.string.delivery_available_tasks_section_title),
+            fontSize = dpToSp(R.dimen.delivery_available_tasks_sector_title_text_size),
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
 
-        if (PADTasksViewModel.availableTasks.isEmpty()) {
+        if (DeliveryTaskSelectViewModel.availableTasks.isEmpty()) {
             EmptyList(
-                loadingScreenStatusChecker = PADTasksViewModel,
+                loadingScreenStatusChecker = DeliveryTaskSelectViewModel,
                 modifier = Modifier.weight(1f)
             )
             return
@@ -180,10 +180,10 @@ fun AvailableTasksList(
                 .weight(1f)
                 .animateContentSize()
         ) {
-            items(PADTasksViewModel.availableTasks, key = { it.id }) { task ->
+            items(DeliveryTaskSelectViewModel.availableTasks, key = { it.id }) { task ->
                 AvailableTaskContainer(
                     task = task,
-                    PADTasksViewModel = PADTasksViewModel,
+                    DeliveryTaskSelectViewModel = DeliveryTaskSelectViewModel,
                     modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null)
                 )
             }
@@ -195,7 +195,7 @@ fun AvailableTasksList(
 @Composable
 fun AvailableTaskContainer(
     task: Task,
-    PADTasksViewModel: PADTasksViewModel,
+    DeliveryTaskSelectViewModel: DeliveryTaskSelectViewModel,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -206,17 +206,17 @@ fun AvailableTaskContainer(
             .fillMaxWidth()
             .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-            .padding(dimensionResource(R.dimen.plan_a_day_available_tasks_container_padding))
-            .clickable { PADTasksViewModel.onTaskSelected(task) }
+            .padding(dimensionResource(R.dimen.delivery_available_tasks_container_padding))
+            .clickable { DeliveryTaskSelectViewModel.onTaskSelected(task) }
     ) {
         Column(
             horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.plan_a_day_available_tasks_container_content_vertical_space)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.delivery_available_tasks_container_content_vertical_space)),
             modifier = Modifier.weight(1f)
         ) {
             Text(
                 text = task.title,
-                fontSize = dpToSp(R.dimen.plan_a_day_tasks_container_title_text_size),
+                fontSize = dpToSp(R.dimen.delivery_tasks_container_title_text_size),
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold,
                 maxLines = 2,
@@ -225,7 +225,7 @@ fun AvailableTaskContainer(
 
             Text(
                 text = task.addressText,
-                fontSize = dpToSp(R.dimen.plan_a_day_tasks_container_address_text_size),
+                fontSize = dpToSp(R.dimen.delivery_tasks_container_address_text_size),
                 color = MaterialTheme.colorScheme.primary,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
@@ -233,10 +233,10 @@ fun AvailableTaskContainer(
         }
 
         AppCheckbox(
-            checked = PADTasksViewModel.isTaskChecked(task),
-            onCheckedChange = { PADTasksViewModel.onTaskCheckedChange(task) },
-            size = dimensionResource(R.dimen.plan_a_day_tasks_container_checkbox_size),
-            modifier = Modifier.padding(end = dimensionResource(R.dimen.plan_a_day_tasks_container_checkbox_end_padding))
+            checked = DeliveryTaskSelectViewModel.isTaskChecked(task),
+            onCheckedChange = { DeliveryTaskSelectViewModel.onTaskCheckedChange(task) },
+            size = dimensionResource(R.dimen.delivery_tasks_container_checkbox_size),
+            modifier = Modifier.padding(end = dimensionResource(R.dimen.delivery_tasks_container_checkbox_end_padding))
         )
     }
 }
@@ -245,7 +245,7 @@ fun AvailableTaskContainer(
 @Composable
 private fun ButtonSection(
     modifier: Modifier = Modifier,
-    PADTasksViewModel: PADTasksViewModel
+    DeliveryTaskSelectViewModel: DeliveryTaskSelectViewModel
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -253,8 +253,8 @@ private fun ButtonSection(
             .fillMaxSize(),
     ) {
         AppButton(
-            onClick = { PADTasksViewModel.onButtonNextClick() },
-            text = stringResource(R.string.plan_a_day_button_next_text),
+            onClick = { DeliveryTaskSelectViewModel.onButtonNextClick() },
+            text = stringResource(R.string.delivery_button_next_text),
             icon = Icons.AutoMirrored.Filled.KeyboardArrowRight,
         )
     }
@@ -262,15 +262,15 @@ private fun ButtonSection(
 
 
 @Composable
-private fun ShowTaskDetailsDialog(PADTasksViewModel: PADTasksViewModel) {
-    if (!PADTasksViewModel.showTaskDetailsDialog)
+private fun ShowTaskDetailsDialog(DeliveryTaskSelectViewModel: DeliveryTaskSelectViewModel) {
+    if (!DeliveryTaskSelectViewModel.showTaskDetailsDialog)
         return
 
     TaskDetailsDialog(
-        task = PADTasksViewModel.selectedTask,
-        onDismiss = { PADTasksViewModel.onTaskDialogDismiss() },
-        onButtonClick = { PADTasksViewModel.onTaskDialogDismiss() },
-        buttonText = stringResource(R.string.plan_a_day_task_details_dialog_dismiss_button_text),
+        task = DeliveryTaskSelectViewModel.selectedTask,
+        onDismiss = { DeliveryTaskSelectViewModel.onTaskDialogDismiss() },
+        onButtonClick = { DeliveryTaskSelectViewModel.onTaskDialogDismiss() },
+        buttonText = stringResource(R.string.delivery_task_details_dialog_dismiss_button_text),
     )
 }
 
@@ -284,16 +284,16 @@ private fun Preview() {
         adminMode = true
     )
 
-    val PADTasksViewModel: PADTasksViewModel = viewModel(
-        factory = PADTasksViewModelFactory(
+    val DeliveryTaskSelectViewModel: DeliveryTaskSelectViewModel = viewModel(
+        factory = DeliveryTaskSelectViewModelFactory(
             context = LocalContext.current,
             loadingScreenManager = mainVm,
             navigationManager = NavigationManager(rememberNavController()),
-            padSharedViewModel = PADSharedViewModel()
+            deliverySharedViewModel = DeliverySharedViewModel()
         )
     )
 
     Theme.ArrivoTheme {
-        PlanADayTasksView(PADTasksViewModel)
+        DeliveryTasksView(DeliveryTaskSelectViewModel)
     }
 }

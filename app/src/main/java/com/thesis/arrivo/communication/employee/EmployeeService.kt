@@ -5,6 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface EmployeeService {
 
@@ -19,4 +20,7 @@ interface EmployeeService {
         @Path("id") id: Long,
         @Body updateAccountRequest: EmployeeUpdateRequest
     )
+
+    @GET("/employees/unassigned")
+    suspend fun getUnassignedEmployeesOnDate(@Query("date") date: String): List<Employee>
 }

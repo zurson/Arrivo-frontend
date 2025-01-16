@@ -17,6 +17,7 @@
     <string name="nav_accidents_label_admin">Accidents</string>
     <string name="nav_tasks_list_label_admin">Tasks</string>
     <string name="nav_employees_label_admin">Employees</string>
+    <string name="nav_deliveries_label_admin">Deliveries</string>
 
     <!-- LoginView -->
     <string name="login_title">Login to your account</string>
@@ -38,16 +39,26 @@
     <string name="create_account_create_button_text">Create Account</string>
     <string name="create_account_edit_button_text">Save</string>
 
-    <!-- Plan Employee Day -->
-    <string name="plan_a_day_redirect_button_text">Plan a Day</string>
-    <string name="plan_a_day_employee_selector_error_message">Select employee</string>
-    <string name="plan_a_day_employee_selector_label">Employee</string>
-    <string name="plan_a_day_button_next_text">Next</string>
-    <string name="plan_a_day_task_details_dialog_dismiss_button_text">OK</string>
-    <string name="plan_a_day_available_tasks_section_title">Available Tasks</string>
-    <string name="plan_a_day_tasks_date_picker_error_message">The date cannot be from the past</string>
+    <!-- Delivery -->
+    <string name="delivery_redirect_button_text">Plan a Day</string>
+    <string name="delivery_employee_selector_error_message">Select employee</string>
+    <string name="delivery_employee_selector_label">Employee</string>
+    <string name="delivery_button_next_text">Next</string>
+    <string name="delivery_task_details_dialog_dismiss_button_text">OK</string>
+    <string name="delivery_available_tasks_section_title">Available Tasks</string>
+    <string name="delivery_tasks_date_picker_error_message">The date cannot be from the past</string>
+    <string name="delivery_order_list_title">Task Order</string>
+    <string name="delivery_order_predicted_time_title">Predicted Time</string>
+    <string name="delivery_order_predicted_distance_title">Distance</string>
+    <string name="delivery_order_back_button_text">Back</string>
+    <string name="delivery_order_back_finish_text">Finish</string>
 
-    <string name="plan_a_day_no_task_selected_error_message">You have to select a task!</string>
+    <string name="delivery_no_task_selected_error_message">You have to select a task!</string>
+
+    <string name="delivery_optimization_exception_message">The appropriate time cannot be calculated for this set of tasks</string>
+    <string name="delivery_data_corrupted_exception_message">Data corrupted</string>
+
+    <string name="delivery_create_success_message">Delivery created successfully</string>
 
     <!-- Employees List -->
     <string name="employees_list_edit_button_text">Edit</string>
@@ -109,7 +120,6 @@
     <string name="tasks_list_details_dialog_address">Address</string>
     <string name="tasks_list_details_dialog_date">Date</string>
     <string name="tasks_list_details_dialog_employee">Employee</string>
-
 
     <!-- ROAD ACCIDENTS -->
     <string name="accidents_details_mark_as_resolved_button_text">Mark as Resolved</string>

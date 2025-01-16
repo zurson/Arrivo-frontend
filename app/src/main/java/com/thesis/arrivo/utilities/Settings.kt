@@ -31,6 +31,9 @@ class Settings {
         val LOADING_SCREEN_BG = Color(0x80CECCC8)
 
         const val DEFAULT_MAP_ZOOM: Float = 17f
+
+        val DELIVERY_TIME_OK_COLOR = Color.Green
+        val DELIVERY_TIME_EXCEEDED_COLOR = Color.Red
     }
 
 }

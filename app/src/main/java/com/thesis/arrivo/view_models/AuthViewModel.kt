@@ -119,6 +119,7 @@ class AuthViewModel(
     private fun loginViaEmail(context: Context) {
         loadingScreenManager.showLoadingScreen()
         FirebaseAuthManager().loginViaEmail(email, password) { authStatus ->
+            loadingScreenManager.hideLoadingScreen()
             if (authStatus.success) {
                 mainScaffoldViewModel.onAuthenticationSuccess()
             } else {
@@ -131,7 +132,6 @@ class AuthViewModel(
                 }
 
             }
-            loadingScreenManager.hideLoadingScreen()
         }
     }
 

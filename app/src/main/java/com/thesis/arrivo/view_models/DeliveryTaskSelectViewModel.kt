@@ -25,11 +25,11 @@ import com.thesis.arrivo.utilities.showDefaultErrorDialog
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-class PADTasksViewModel(
+class DeliveryTaskSelectViewModel(
     private val context: Context,
     private val navigationManager: NavigationManager,
     private val loadingScreenManager: LoadingScreenManager,
-    private val padSharedViewModel: PADSharedViewModel,
+    private val deliverySharedViewModel: DeliverySharedViewModel,
 ) : ViewModel(), LoadingScreenStatusChecker {
 
     companion object {
@@ -58,6 +58,8 @@ class PADTasksViewModel(
         _selectedDate.longValue = dateMillis ?: getCurrentDateMillis()
         selectedLocalDate = convertLongToLocalDate(selectedDate)
         _isDatePickerError.value = false
+
+        fetchUnassignedEmployeesOnDate()
     }
 
 
@@ -77,12 +79,16 @@ class PADTasksViewModel(
     private val employeesRepository = EmployeeRepository()
 
 
-    private fun fetchEmployeesList() {
+    private fun fetchUnassignedEmployeesOnDate() {
         viewModelScope.launch {
             serverRequestManager.sendRequest(
                 actionToPerform = {
                     _employeesList.clear()
-                    _employeesList.addAll(employeesRepository.getAllEmployees())
+                    _employeesList.addAll(
+                        employeesRepository.getUnassignedEmployeesOnDate(
+                            selectedLocalDate
+                        )
+                    )
                 },
             )
         }
@@ -192,8 +198,13 @@ class PADTasksViewModel(
         if (!validateConditions())
             return
 
-        padSharedViewModel.selectedTasks = checkedTasks
-        navigationManager.navigateTo(NavigationItem.PlanADayOrderAdmin)
+        deliverySharedViewModel.selectedTasks.clear()
+        deliverySharedViewModel.selectedTasks.addAll(checkedTasks)
+
+        deliverySharedViewModel.selectedDate = selectedLocalDate
+        deliverySharedViewModel.employee = selectedEmployee
+
+        navigationManager.navigateTo(NavigationItem.DeliveryCreateAdmin)
     }
 
 
@@ -212,7 +223,7 @@ class PADTasksViewModel(
             showDefaultErrorDialog(
                 context = context,
                 title = context.getString(R.string.error_title),
-                message = context.getString(R.string.plan_a_day_no_task_selected_error_message)
+                message = context.getString(R.string.delivery_no_task_selected_error_message)
             )
 
             return false
@@ -229,7 +240,7 @@ class PADTasksViewModel(
 
     init {
         fetchFreeTasks()
-        fetchEmployeesList()
+        fetchUnassignedEmployeesOnDate()
     }
 
     override fun isLoadingScreenEnabled(): Boolean = loadingScreenManager.isLoadingScreenEnabled()

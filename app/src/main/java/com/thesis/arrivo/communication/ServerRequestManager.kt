@@ -22,7 +22,7 @@ class ServerRequestManager(
             actionToPerform()
             onSuccess()
         } catch (e: Exception) {
-            if (showOnFailureDefaultInfoBox) onFailureToast(e)
+            if (showOnFailureDefaultInfoBox) onFailureErrorDialog(e)
             onFailure(e)
         } finally {
             loadingScreenManager.hideLoadingScreen()
@@ -30,7 +30,7 @@ class ServerRequestManager(
     }
 
 
-    private fun onFailureToast(exception: Exception) {
+    private fun onFailureErrorDialog(exception: Exception) {
         showErrorDialog(
             context = context,
             title = context.getString(R.string.error_title),

@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.TextUnit
 import com.google.gson.Gson
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.ErrorResponse
+import com.thesis.arrivo.utilities.exceptions.DataCorruptedException
+import com.thesis.arrivo.utilities.exceptions.OptimizationFailedException
 import retrofit2.HttpException
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -61,20 +63,31 @@ fun showToast(context: Context, text: String?, toastLength: Int = Toast.LENGTH_S
 
 fun mapError(e: Exception, context: Context): ErrorResponse {
     e.printStackTrace()
-    return when (e) {
+
+    when (e) {
         is HttpException -> {
             val errorBody = e.response()?.errorBody()?.string()
             val errors = parseErrorResponse(context, errorBody)
-            ErrorResponse(e.code(), errors)
+            return ErrorResponse(e.code(), errors)
+        }
+
+        is OptimizationFailedException -> {
+            return ErrorResponse(-1, listOf(e.message!!))
+        }
+
+        is DataCorruptedException -> {
+            return ErrorResponse(-1, listOf(e.message!!))
         }
 
         is IOException ->
-            ErrorResponse(
+            return ErrorResponse(
                 -1,
                 listOf(context.getString(R.string.io_error))
             )
 
-        else -> ErrorResponse(-1, listOf(context.getString(R.string.unexpected_error)))
+        else -> {
+            return ErrorResponse(-1, listOf(context.getString(R.string.unexpected_error)))
+        }
     }
 
 }

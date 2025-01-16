@@ -125,7 +125,7 @@ class EmployeeViewModel(
 
     private fun onSuccess(editMode: Boolean) {
         showSuccessToast(editMode)
-        navigationManager.navigateTo(NavigationItem.EmployeesAdmin, true)
+        navigationManager.navigateTo(NavigationItem.EmployeesListAdmin, true)
     }
 
 
@@ -150,8 +150,4 @@ class EmployeeViewModel(
         navigationManager.navigateTo(navigationItem = NavigationItem.CreateEmployeeAdmin)
     }
 
-
-    fun onPlanADayButtonClick() {
-        navigationManager.navigateTo(NavigationItem.PlanADayTasksAdmin)
-    }
 }

@@ -255,13 +255,6 @@ private fun ButtonsSection(
             icon = Icons.Filled.Add,
             modifier = Modifier.weight(1f),
         )
-
-        AppButton(
-            onClick = { employeeViewModel.onPlanADayButtonClick() },
-            text = stringResource(R.string.plan_a_day_redirect_button_text),
-            icon = Icons.Filled.CalendarMonth,
-            modifier = Modifier.weight(1f)
-        )
     }
 }
 

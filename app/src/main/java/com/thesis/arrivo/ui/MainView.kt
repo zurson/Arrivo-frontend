@@ -22,8 +22,8 @@ import com.thesis.arrivo.ui.admin.admin_employees.CreateEditEmployeeView
 import com.thesis.arrivo.ui.admin.admin_employees.EmployeesListView
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskCreateOrEditView
 import com.thesis.arrivo.ui.admin.admin_tasks.tasks_list.TasksListView
-import com.thesis.arrivo.ui.admin.plan_a_day.PlanADayOrderView
-import com.thesis.arrivo.ui.admin.plan_a_day.PlanADayTasksView
+import com.thesis.arrivo.ui.admin.delivery.DeliveryCreateView
+import com.thesis.arrivo.ui.admin.delivery.DeliveryTasksView
 import com.thesis.arrivo.ui.authentication.LoginView
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.ui.user.user_account_view.AccountView
@@ -33,12 +33,12 @@ import com.thesis.arrivo.ui.user.user_road_accident_view.RoadAccidentView
 import com.thesis.arrivo.ui.user.user_your_accidents_view.YourAccidentsView
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
-import com.thesis.arrivo.view_models.PADOrderViewModel
-import com.thesis.arrivo.view_models.PADSharedViewModel
-import com.thesis.arrivo.view_models.PADTasksViewModel
+import com.thesis.arrivo.view_models.DeliveryCreateViewModel
+import com.thesis.arrivo.view_models.DeliverySharedViewModel
+import com.thesis.arrivo.view_models.DeliveryTaskSelectViewModel
 import com.thesis.arrivo.view_models.factory.MainScaffoldViewModelFactory
-import com.thesis.arrivo.view_models.factory.PADOrderViewModelFactory
-import com.thesis.arrivo.view_models.factory.PADTasksViewModelFactory
+import com.thesis.arrivo.view_models.factory.DeliveryCreateViewModelFactory
+import com.thesis.arrivo.view_models.factory.DeliveryTaskSelectViewModelFactory
 
 
 @Composable
@@ -89,7 +89,7 @@ private fun SetupMainScaffold(
      * SHARED VIEW MODELS
      **/
 
-    val padSharedViewModel: PADSharedViewModel = viewModel()
+    val deliverySharedViewModel: DeliverySharedViewModel = viewModel()
 
     Theme.ArrivoTheme {
         MainScaffold(
@@ -111,6 +111,7 @@ private fun SetupMainScaffold(
                 composable(NavigationItem.AccidentsAdmin.route) {
                     AccidentsView(loadingScreenManager = mainScaffoldViewModel)
                 }
+
                 composable(NavigationItem.TasksListAdmin.route) {
                     TasksListView(
                         mainScaffoldViewModel = mainScaffoldViewModel,
@@ -139,7 +140,7 @@ private fun SetupMainScaffold(
                     )
                 }
 
-                composable(NavigationItem.EmployeesAdmin.route) {
+                composable(NavigationItem.EmployeesListAdmin.route) {
                     EmployeesListView(
                         mainScaffoldViewModel = mainScaffoldViewModel,
                         loadingScreenManager = mainScaffoldViewModel,
@@ -165,30 +166,43 @@ private fun SetupMainScaffold(
                     )
                 }
 
-                composable(NavigationItem.PlanADayTasksAdmin.route) {
-                    val viewModel: PADTasksViewModel = viewModel(
-                        factory = PADTasksViewModelFactory(
+                composable(NavigationItem.DeliveryTasksAdmin.route) {
+                    val viewModel: DeliveryTaskSelectViewModel = viewModel(
+                        factory = DeliveryTaskSelectViewModelFactory(
                             context = LocalContext.current,
                             loadingScreenManager = mainScaffoldViewModel,
                             navigationManager = navigationManager,
-                            padSharedViewModel = padSharedViewModel
+                            deliverySharedViewModel = deliverySharedViewModel
                         )
                     )
 
-                    PlanADayTasksView(padTasksViewModel = viewModel)
+                    DeliveryTasksView(deliveryTaskSelectViewModel = viewModel)
                 }
 
-                composable(NavigationItem.PlanADayOrderAdmin.route) {
-                    val viewModel: PADOrderViewModel = viewModel(
-                        factory = PADOrderViewModelFactory(
+                composable(NavigationItem.DeliveryCreateAdmin.route) {
+                    val viewModel: DeliveryCreateViewModel = viewModel(
+                        factory = DeliveryCreateViewModelFactory(
                             context = LocalContext.current,
                             loadingScreenManager = mainScaffoldViewModel,
                             navigationManager = navigationManager,
-                            padSharedViewModel = padSharedViewModel
+                            deliverySharedViewModel = deliverySharedViewModel
                         )
                     )
 
-                    PlanADayOrderView(padOrderViewModel = viewModel)
+                    DeliveryCreateView(deliveryCreateViewModel = viewModel)
+                }
+
+                composable(NavigationItem.DeliveriesListAdmin.route) {
+                    val viewModel: DeliveryTaskSelectViewModel = viewModel(
+                        factory = DeliveryTaskSelectViewModelFactory(
+                            context = LocalContext.current,
+                            loadingScreenManager = mainScaffoldViewModel,
+                            navigationManager = navigationManager,
+                            deliverySharedViewModel = deliverySharedViewModel
+                        )
+                    )
+
+                    DeliveryTasksView(deliveryTaskSelectViewModel = viewModel)
                 }
 
                 /** Authentication **/
