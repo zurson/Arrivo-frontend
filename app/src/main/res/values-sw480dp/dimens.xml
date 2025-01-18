@@ -64,6 +64,8 @@
 
     <dimen name="dialog_lazy_column_icon_size">40dp</dimen>
     <dimen name="dialog_lazy_column_height">300dp</dimen>
+    <dimen name="dialog_lazy_column_default_container_padding">16dp</dimen>
+    <dimen name="dialog_lazy_column_default_container_vertical_space">8dp</dimen>
 
     <!-- LIST ELEMENTS PADDING -->
     <dimen name="lists_elements_vertical_space">24dp</dimen>
@@ -128,12 +130,12 @@
 
     <!-- DELIVERY -->
     <dimen name="delivery_available_tasks_sector_title_text_size">30sp</dimen>
-    <dimen name="delivery_available_tasks_container_padding">16dp</dimen>
     <dimen name="delivery_available_tasks_container_content_vertical_space">16dp</dimen>
     <dimen name="delivery_tasks_container_title_text_size">30sp</dimen>
     <dimen name="delivery_tasks_container_address_text_size">24sp</dimen>
     <dimen name="delivery_tasks_container_checkbox_end_padding">16dp</dimen>
     <dimen name="delivery_tasks_container_checkbox_size">64dp</dimen>
+    <dimen name="delivery_available_tasks_container_padding">16dp</dimen>
 
     <dimen name="delivery_order_list_title_text_size">30sp</dimen>
     <dimen name="delivery_order_container_position_text_size">30sp</dimen>

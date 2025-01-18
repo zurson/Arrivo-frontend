@@ -12,9 +12,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.task.Task
+import com.thesis.arrivo.components.info_alert_dialog.AlertDialogLazyColumn
+import com.thesis.arrivo.components.info_alert_dialog.AlertDialogLazyListDefaultContainer
 import com.thesis.arrivo.components.info_alert_dialog.AlertDialogSingleButton
 import com.thesis.arrivo.components.info_alert_dialog.DialogRecord
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
+import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.Product
 import com.thesis.arrivo.view_models.TasksListViewModel
 
 @Composable
@@ -67,6 +70,12 @@ fun TaskDetailsDialog(
                 )
             }
 
+            AlertDialogLazyColumn(
+                title = "Products",
+                items = task.products.map { product -> { ProductContainer(product) } },
+                listHeight = dimensionResource(R.dimen.dialog_lazy_column_height),
+            )
+
             AlertDialogSingleButton(
                 text = buttonText,
                 onEditButtonClick = { onButtonClick() },
@@ -78,4 +87,15 @@ fun TaskDetailsDialog(
             )
         }
     }
+}
+
+
+@Composable
+private fun ProductContainer(product: Product) {
+    AlertDialogLazyListDefaultContainer(
+        item = product,
+        itemToLabelString = { product.name },
+        itemToValueString = { "${product.amount} psc" },
+        clickable = false
+    )
 }
