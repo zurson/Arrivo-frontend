@@ -3,6 +3,7 @@ package com.thesis.arrivo.view_models
 import android.content.Context
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +11,7 @@ import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.delivery.Delivery
 import com.thesis.arrivo.communication.delivery.DeliveryRepository
 import com.thesis.arrivo.communication.delivery.DeliveryStatus
+import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings.Companion.DELIVERY_ASSIGNED_COLOR
@@ -145,12 +147,65 @@ class DeliveriesListViewModel(
 
 
     /**
-     * Delivery Click
+     * Delivery Details
      **/
+
+    private val _selectedDelivery = mutableStateOf(Delivery.emptyDelivery())
+    val selectedDelivery: Delivery
+        get() = _selectedDelivery.value
+
+    private val _showDeliveryDetails = mutableStateOf(false)
+    val showDeliveryDetails: Boolean
+        get() = _showDeliveryDetails.value
+
+    private val _selectedTask = mutableStateOf(Task.emptyTask())
+    val selectedTask: Task
+        get() = _selectedTask.value
+
+    private val _showTaskDetails = mutableStateOf(false)
+    val showTaskDetails: Boolean
+        get() = _showTaskDetails.value
+
+
+    fun toggleShowDeliveryDetails() {
+        _showDeliveryDetails.value = !_showDeliveryDetails.value
+    }
+
+
+    fun toggleShowTaskDetails() {
+        _showTaskDetails.value = !_showTaskDetails.value
+    }
 
 
     fun onDeliverySelected(delivery: Delivery) {
+        _selectedDelivery.value = delivery
+        toggleShowDeliveryDetails()
+    }
 
+
+    fun onDeliveryDetailsDismiss() {
+        toggleShowDeliveryDetails()
+    }
+
+
+    fun onDeliveryDetailsButtonClick() {
+
+    }
+
+
+    fun onDeliveryDetailsTaskSelected(task: Task) {
+        _selectedTask.value = task
+        toggleShowTaskDetails()
+    }
+
+
+    fun onDeliveryDetailsTaskDialogDismiss() {
+        toggleShowTaskDetails()
+    }
+
+
+    fun onDeliveryDetailsTaskDialogButtonClick() {
+        toggleShowTaskDetails()
     }
 
 

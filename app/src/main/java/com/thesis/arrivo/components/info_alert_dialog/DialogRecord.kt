@@ -15,7 +15,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import com.thesis.arrivo.R
 import com.thesis.arrivo.utilities.dpToSp
 
@@ -39,12 +38,12 @@ fun DialogRecord(
             modifier = Modifier
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.alert_dialog_record_horizontal_space))
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.dialog_record_horizontal_space))
         ) {
             Text(
                 text = label,
                 color = MaterialTheme.colorScheme.onSurface,
-                fontSize = dpToSp(R.dimen.employee_details_label_text_size),
+                fontSize = dpToSp(R.dimen.dialog_record_label_text_size),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.wrapContentWidth()
             )
@@ -52,7 +51,7 @@ fun DialogRecord(
             Text(
                 text = formattedValue,
                 color = MaterialTheme.colorScheme.primary,
-                fontSize = dpToSp(R.dimen.employee_details_value_text_size),
+                fontSize = dpToSp(R.dimen.dialog_record_value_text_size),
                 fontWeight = FontWeight.Bold,
                 maxLines = maxLines,
                 overflow = textOverflow,

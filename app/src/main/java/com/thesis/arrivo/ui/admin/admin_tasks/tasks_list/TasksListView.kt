@@ -121,7 +121,7 @@ private fun ShowTaskDetailsDialog(tasksListViewModel: TasksListViewModel) {
             task = tasksListViewModel.selectedTask,
             onDismiss = { tasksListViewModel.onTaskDismiss() },
             onButtonClick = { tasksListViewModel.onTaskEditButtonClick() },
-            icon = Icons.Filled.Edit,
+            buttonIcon = Icons.Filled.Edit,
             buttonText = stringResource(R.string.tasks_list_details_dialog_button_text)
         )
     }

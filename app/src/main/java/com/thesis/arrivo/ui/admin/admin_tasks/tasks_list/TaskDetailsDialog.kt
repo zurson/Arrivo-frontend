@@ -23,7 +23,7 @@ fun TaskDetailsDialog(
     task: Task,
     onDismiss: () -> Unit,
     onButtonClick: () -> Unit,
-    icon: ImageVector? = null,
+    buttonIcon: ImageVector? = null,
     buttonText: String
 ) {
     InfoAlertDialog(
@@ -70,7 +70,7 @@ fun TaskDetailsDialog(
             AlertDialogSingleButton(
                 text = buttonText,
                 onEditButtonClick = { onButtonClick() },
-                icon = icon,
+                icon = buttonIcon,
                 modifier = Modifier
                     .padding(top = dimensionResource(R.dimen.alert_dialog_button_top_padding))
                     .padding(horizontal = dimensionResource(R.dimen.alert_dialog_button_horizontal_padding))

@@ -12,4 +12,18 @@ data class Delivery(
     val assignedDate: LocalDate,
     val status: DeliveryStatus,
     val employee: Employee
-)
+) {
+    companion object {
+        fun emptyDelivery(): Delivery {
+            return Delivery(
+                id = -1,
+                tasks = emptyList(),
+                timeMinutes = -1,
+                distanceKm = -1,
+                assignedDate = LocalDate.now(),
+                status = DeliveryStatus.ASSIGNED,
+                employee = Employee.emptyEmployee(),
+            )
+        }
+    }
+}

@@ -61,6 +61,18 @@
 
     <string name="delivery_create_success_message">Delivery created successfully</string>
 
+    <string name="delivery_details_dialog_window_title">Delivery Details</string>
+    <string name="delivery_details_dialog_record_status_label">Status</string>
+    <string name="delivery_details_dialog_record_distance_label">Distance</string>
+    <string name="delivery_details_dialog_record_date_label">Assigned Date</string>
+    <string name="delivery_details_dialog_record_employee_label">Employee</string>
+    <string name="delivery_details_dialog_record_time_label">Predicted Time</string>
+    <string name="delivery_details_dialog_tasks_list_title">Assigned Tasks</string>
+    <string name="delivery_details_dialog_edit_button_text">Edit</string>
+    <string name="delivery_details_dialog_task_dismiss_button_text">OK</string>
+
+    <string name="delivery_list_create_delivery_button_text">Create Delivery</string>
+
     <!-- Employees List -->
     <string name="employees_list_edit_button_text">Edit</string>
 

@@ -40,6 +40,7 @@ import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.components.date_picker.DatePickerField
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
 import com.thesis.arrivo.components.other_components.AppButton
+import com.thesis.arrivo.components.other_components.AppFilter
 import com.thesis.arrivo.components.other_components.ArrowRightIcon
 import com.thesis.arrivo.components.other_components.Circle
 import com.thesis.arrivo.components.other_components.ConfirmationDialog
@@ -48,7 +49,6 @@ import com.thesis.arrivo.components.other_components.GoogleMapView
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
-import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
@@ -143,46 +143,15 @@ private fun FiltersList(
         modifier = modifier
             .fillMaxWidth()
     ) {
-        Filter(
-            filter = RoadAccidentStatus.ACTIVE,
-            modifier = Modifier.weight(1f),
-            roadAccidentsViewModel = roadAccidentsViewModel
-        )
-
-        Filter(
-            filter = RoadAccidentStatus.ENDED,
-            modifier = Modifier.weight(1f),
-            roadAccidentsViewModel = roadAccidentsViewModel
-        )
-    }
-}
-
-
-@Composable
-private fun Filter(
-    modifier: Modifier = Modifier,
-    filter: RoadAccidentStatus,
-    roadAccidentsViewModel: RoadAccidentsViewModel
-) {
-    val active = roadAccidentsViewModel.getActiveFilters().contains(filter)
-    val color =
-        if (active) Settings.FILTER_ACTIVE_COLOR else MaterialTheme.colorScheme.surfaceContainerHighest
-
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .bounceClick()
-            .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
-            .background(color)
-            .clickable { roadAccidentsViewModel.toggleFilterActive(filter) }
-    ) {
-        Text(
-            text = capitalize(filter.name.lowercase()),
-            color = MaterialTheme.colorScheme.onSurface,
-            fontSize = dpToSp(R.dimen.accidents_filter_text_size),
-            modifier = Modifier
-                .padding(dimensionResource(R.dimen.accidents_filter_padding))
-        )
+        RoadAccidentStatus.entries.forEach { filter ->
+            AppFilter(
+                modifier = Modifier.weight(1f),
+                filter = filter,
+                isActive = roadAccidentsViewModel.getActiveFilters().contains(filter),
+                filterToString = { roadAccidentsViewModel.filterToString(it) },
+                onSelected = { roadAccidentsViewModel.toggleFilterActive(it) }
+            )
+        }
     }
 }
 
