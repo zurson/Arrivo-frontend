@@ -183,6 +183,12 @@ class AuthViewModel(
         return input.replace("[^0-9]".toRegex(), "")
     }
 
+
+    fun manageNavbarOnLogin() {
+        mainScaffoldViewModel.manageNavbarOnLogin()
+    }
+
+
     /**
      * Employee Edit Mode
      **/

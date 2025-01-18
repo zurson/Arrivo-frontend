@@ -33,15 +33,25 @@ import com.thesis.arrivo.ui.user.user_map_view.MapView
 import com.thesis.arrivo.ui.user.user_road_accident_view.RoadAccidentView
 import com.thesis.arrivo.ui.user.user_your_accidents_view.YourAccidentsView
 import com.thesis.arrivo.utilities.NavigationManager
+import com.thesis.arrivo.view_models.AuthViewModel
 import com.thesis.arrivo.view_models.DeliveriesListViewModel
 import com.thesis.arrivo.view_models.DeliveryCreateViewModel
 import com.thesis.arrivo.view_models.DeliverySharedViewModel
 import com.thesis.arrivo.view_models.DeliveryTaskSelectViewModel
+import com.thesis.arrivo.view_models.EmployeeViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.RoadAccidentsViewModel
+import com.thesis.arrivo.view_models.TaskManagerViewModel
+import com.thesis.arrivo.view_models.TasksListViewModel
+import com.thesis.arrivo.view_models.factory.AuthViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveriesListViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveryCreateViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveryTaskSelectViewModelFactory
+import com.thesis.arrivo.view_models.factory.EmployeeViewModelFactory
 import com.thesis.arrivo.view_models.factory.MainScaffoldViewModelFactory
+import com.thesis.arrivo.view_models.factory.RoadAccidentViewModelFactory
+import com.thesis.arrivo.view_models.factory.TaskListViewModelFactory
+import com.thesis.arrivo.view_models.factory.TaskManagerViewModelFactory
 
 
 @Composable
@@ -112,60 +122,124 @@ private fun SetupMainScaffold(
 
                 /** Admin **/
                 composable(NavigationItem.AccidentsAdmin.route) {
-                    AccidentsView(loadingScreenManager = mainScaffoldViewModel)
+                    val viewModel: RoadAccidentsViewModel = viewModel(
+                        factory = RoadAccidentViewModelFactory(
+                            context = LocalContext.current,
+                            loadingScreenManager = mainScaffoldViewModel
+                        )
+                    )
+
+                    AccidentsView(roadAccidentsViewModel = viewModel)
                 }
 
                 composable(NavigationItem.TasksListAdmin.route) {
-                    TasksListView(
-                        mainScaffoldViewModel = mainScaffoldViewModel,
-                        loadingScreenManager = mainScaffoldViewModel,
-                        navigationManager = navigationManager
+                    val viewModel: TasksListViewModel = viewModel(
+                        factory = TaskListViewModelFactory(
+                            context = LocalContext.current,
+                            mainScaffoldViewModel = mainScaffoldViewModel,
+                            loadingScreenManager = mainScaffoldViewModel,
+                            navigationManager = navigationManager,
+                        )
                     )
+
+                    TasksListView(viewModel)
                 }
 
                 composable(NavigationItem.TaskCreateAdmin.route) {
+                    val viewModel: TaskManagerViewModel = viewModel(
+                        factory = TaskManagerViewModelFactory(
+                            placesClient = placesClient,
+                            mainScaffoldViewModel = mainScaffoldViewModel,
+                            navigationManager = navigationManager,
+                            loadingScreenManager = mainScaffoldViewModel,
+                            context = LocalContext.current
+                        )
+                    )
+
                     TaskCreateOrEditView(
-                        placesClient = placesClient,
-                        mainScaffoldViewModel = mainScaffoldViewModel,
                         editMode = false,
-                        navigationManager = navigationManager,
-                        loadingScreenManager = mainScaffoldViewModel
+                        taskManagerViewModel = viewModel
                     )
                 }
 
                 composable(NavigationItem.TaskEditAdmin.route) {
+                    val viewModel: TaskManagerViewModel = viewModel(
+                        factory = TaskManagerViewModelFactory(
+                            placesClient = placesClient,
+                            mainScaffoldViewModel = mainScaffoldViewModel,
+                            navigationManager = navigationManager,
+                            loadingScreenManager = mainScaffoldViewModel,
+                            context = LocalContext.current
+                        )
+                    )
+
                     TaskCreateOrEditView(
-                        placesClient = placesClient,
-                        mainScaffoldViewModel = mainScaffoldViewModel,
                         editMode = true,
-                        navigationManager = navigationManager,
-                        loadingScreenManager = mainScaffoldViewModel
+                        taskManagerViewModel = viewModel
                     )
                 }
 
                 composable(NavigationItem.EmployeesListAdmin.route) {
+                    val viewModel: EmployeeViewModel = viewModel(
+                        factory = EmployeeViewModelFactory(
+                            navigationManager = navigationManager,
+                            loadingScreenManager = mainScaffoldViewModel,
+                            mainScaffoldViewModel = mainScaffoldViewModel,
+                            context = LocalContext.current
+                        )
+                    )
+
                     EmployeesListView(
                         mainScaffoldViewModel = mainScaffoldViewModel,
-                        loadingScreenManager = mainScaffoldViewModel,
-                        navigationManager = navigationManager
+                        employeeViewModel = viewModel
                     )
                 }
 
                 composable(NavigationItem.CreateEmployeeAdmin.route) {
+                    val viewModel: EmployeeViewModel = viewModel(
+                        factory = EmployeeViewModelFactory(
+                            navigationManager = navigationManager,
+                            loadingScreenManager = mainScaffoldViewModel,
+                            mainScaffoldViewModel = mainScaffoldViewModel,
+                            context = LocalContext.current
+                        )
+                    )
+
+                    val authVm: AuthViewModel = viewModel(
+                        factory = AuthViewModelFactory(
+                            loadingScreenManager = mainScaffoldViewModel,
+                            mainScaffoldViewModel = mainScaffoldViewModel,
+                        )
+                    )
+
                     CreateEditEmployeeView(
-                        mainScaffoldViewModel = mainScaffoldViewModel,
+                        employeeViewModel = viewModel,
+                        authViewModel = authVm,
                         editMode = false,
-                        navigationManager = navigationManager,
-                        loadingScreenManager = mainScaffoldViewModel
                     )
                 }
 
                 composable(NavigationItem.EditEmployeeAdmin.route) {
+                    val viewModel: EmployeeViewModel = viewModel(
+                        factory = EmployeeViewModelFactory(
+                            navigationManager = navigationManager,
+                            loadingScreenManager = mainScaffoldViewModel,
+                            mainScaffoldViewModel = mainScaffoldViewModel,
+                            context = LocalContext.current
+                        )
+                    )
+
+                    val authVm: AuthViewModel = viewModel(
+                        factory = AuthViewModelFactory(
+                            loadingScreenManager = mainScaffoldViewModel,
+                            mainScaffoldViewModel = mainScaffoldViewModel,
+                        )
+                    )
+
                     CreateEditEmployeeView(
-                        mainScaffoldViewModel = mainScaffoldViewModel,
-                        editMode = true,
-                        navigationManager = navigationManager,
-                        loadingScreenManager = mainScaffoldViewModel
+                        employeeViewModel = viewModel,
+                        authViewModel = authVm,
+                        editMode = false,
                     )
                 }
 
@@ -209,10 +283,14 @@ private fun SetupMainScaffold(
 
                 /** Authentication **/
                 composable(NavigationItem.Login.route) {
-                    LoginView(
-                        mainScaffoldViewModel = mainScaffoldViewModel,
-                        loadingScreenManager = mainScaffoldViewModel
+                    val viewModel: AuthViewModel = viewModel(
+                        factory = AuthViewModelFactory(
+                            mainScaffoldViewModel = mainScaffoldViewModel,
+                            loadingScreenManager = mainScaffoldViewModel
+                        )
                     )
+
+                    LoginView(viewModel)
                 }
             }
 

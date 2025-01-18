@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,39 +31,32 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.road_accidents.RoadAccident
+import com.thesis.arrivo.components.animations.bounceClick
+import com.thesis.arrivo.components.date_picker.DatePickerField
+import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
 import com.thesis.arrivo.components.other_components.AppButton
 import com.thesis.arrivo.components.other_components.ArrowRightIcon
 import com.thesis.arrivo.components.other_components.Circle
 import com.thesis.arrivo.components.other_components.ConfirmationDialog
 import com.thesis.arrivo.components.other_components.EmptyList
 import com.thesis.arrivo.components.other_components.GoogleMapView
-import com.thesis.arrivo.components.animations.bounceClick
-import com.thesis.arrivo.components.date_picker.DatePickerField
-import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.dpToSp
-import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.RoadAccidentsViewModel
+import com.thesis.arrivo.view_models.factory.RoadAccidentViewModelFactory
 
 @Composable
-fun AccidentsView(loadingScreenManager: LoadingScreenManager) {
-    val context = LocalContext.current
-    val roadAccidentsViewModel = remember {
-        RoadAccidentsViewModel(
-            context = context,
-            loadingScreenManager = loadingScreenManager
-        )
-    }
-
+fun AccidentsView(roadAccidentsViewModel: RoadAccidentsViewModel) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -101,7 +93,7 @@ fun AccidentsView(loadingScreenManager: LoadingScreenManager) {
 
         RoadAccidentsList(
             roadAccidentsViewModel = roadAccidentsViewModel,
-            loadingScreenStatusChecker = loadingScreenManager,
+            loadingScreenStatusChecker = roadAccidentsViewModel,
             modifier = Modifier.constrainAs(roadAccidentsListRef) {
                 top.linkTo(roadAccidentsListTopGuideline)
                 bottom.linkTo(parent.bottom)
@@ -370,15 +362,20 @@ private fun AccidentLocationOnMap(roadAccidentsViewModel: RoadAccidentsViewModel
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Preview() {
-    val vm = MainScaffoldViewModel(
-        navigationManager = NavigationManager(rememberNavController()),
+    val mainVm = MainScaffoldViewModel(
         context = LocalContext.current,
-        adminMode = true
+        adminMode = true,
+        navigationManager = NavigationManager(rememberNavController())
+    )
+
+    val viewModel: RoadAccidentsViewModel = viewModel(
+        factory = RoadAccidentViewModelFactory(
+            context = LocalContext.current,
+            loadingScreenManager = mainVm
+        )
     )
 
     Theme.ArrivoTheme {
-        AccidentsView(
-            loadingScreenManager = vm
-        )
+        AccidentsView(viewModel)
     }
 }

@@ -23,49 +23,29 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.google.android.libraries.places.api.net.PlacesClient
 import com.thesis.arrivo.R
 import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.components.other_components.AppButton
 import com.thesis.arrivo.components.other_components.AppTextField
 import com.thesis.arrivo.components.other_components.ConfirmationDialog
-import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
-import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
-import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.TaskManagerViewModel
 
 
 @Composable
 fun TaskCreateOrEditView(
-    placesClient: PlacesClient,
-    mainScaffoldViewModel: MainScaffoldViewModel,
-    navigationManager: NavigationManager,
-    loadingScreenManager: LoadingScreenManager,
+    taskManagerViewModel: TaskManagerViewModel,
     editMode: Boolean
 ) {
-    val context = LocalContext.current
-    val taskManagerViewModel =
-        remember {
-            TaskManagerViewModel(
-                context = context,
-                placesClient = placesClient,
-                mainScaffoldViewModel = mainScaffoldViewModel,
-                loadingScreenManager = loadingScreenManager,
-                navigationManager = navigationManager,
-            )
-        }
 
     if (editMode)
         taskManagerViewModel.prepareToEdit()
