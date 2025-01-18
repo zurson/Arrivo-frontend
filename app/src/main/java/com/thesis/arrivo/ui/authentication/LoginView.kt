@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.components.other_components.AppTextField
@@ -35,20 +36,17 @@ import com.thesis.arrivo.components.other_components.PasswordTextField
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.dpToSp
-import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.view_models.AuthViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.factory.AuthViewModelFactory
 
 
 @Composable
 fun LoginView(
-    mainScaffoldViewModel: MainScaffoldViewModel,
-    loadingScreenManager: LoadingScreenManager
+    authViewModel: AuthViewModel,
 ) {
     val context = LocalContext.current
-    val authViewModel = AuthViewModel(mainScaffoldViewModel, loadingScreenManager)
-
-    mainScaffoldViewModel.manageNavbarOnLogin()
+    authViewModel.manageNavbarOnLogin()
 
     ConstraintLayout(
         modifier = Modifier
@@ -237,16 +235,20 @@ fun LoginDescription(modifier: Modifier = Modifier) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Show() {
-    val vm = MainScaffoldViewModel(
+    val mainVm = MainScaffoldViewModel(
         LocalContext.current,
         false,
         NavigationManager(rememberNavController())
     )
 
-    Theme.ArrivoTheme {
-        LoginView(
-            mainScaffoldViewModel = vm,
-            loadingScreenManager = vm
+    val viewModel: AuthViewModel = viewModel(
+        factory = AuthViewModelFactory(
+            mainScaffoldViewModel = mainVm,
+            loadingScreenManager = mainVm
         )
+    )
+
+    Theme.ArrivoTheme {
+        LoginView(viewModel)
     }
 }

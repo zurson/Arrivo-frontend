@@ -21,6 +21,7 @@ import com.thesis.arrivo.utilities.Settings.Companion.ROAD_ACCIDENTS_FINISHED_CO
 import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.utilities.preparePhoneCall
 import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.launch
@@ -29,8 +30,8 @@ import java.time.LocalDate
 
 class RoadAccidentsViewModel(
     private val context: Context,
-    loadingScreenManager: LoadingScreenManager
-) : ViewModel() {
+    private val loadingScreenManager: LoadingScreenManager
+) : ViewModel(), LoadingScreenStatusChecker {
     private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
 
     companion object {
@@ -237,6 +238,10 @@ class RoadAccidentsViewModel(
 
     fun onConfirmationDismiss() {
         toggleShowConfirmationDialog()
+    }
+
+    override fun isLoadingScreenEnabled(): Boolean {
+        return loadingScreenManager.isLoadingScreenEnabled()
     }
 
 }

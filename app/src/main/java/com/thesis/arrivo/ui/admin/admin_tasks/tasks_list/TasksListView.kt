@@ -21,11 +21,9 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,31 +43,15 @@ import com.thesis.arrivo.components.other_components.AppLegendItem
 import com.thesis.arrivo.components.other_components.ArrowRightIcon
 import com.thesis.arrivo.components.other_components.Circle
 import com.thesis.arrivo.components.other_components.EmptyList
-import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
-import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
-import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.TasksListViewModel
 
 @Composable
 fun TasksListView(
-    mainScaffoldViewModel: MainScaffoldViewModel,
-    loadingScreenManager: LoadingScreenManager,
-    navigationManager: NavigationManager
+    tasksListViewModel: TasksListViewModel
 ) {
-    val context = LocalContext.current
-    val tasksListViewModel =
-        remember {
-            TasksListViewModel(
-                context = context,
-                mainScaffoldViewModel = mainScaffoldViewModel,
-                loadingScreenManager = loadingScreenManager,
-                navigationManager = navigationManager
-            )
-        }
-
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -104,7 +86,7 @@ fun TasksListView(
 
         TasksList(
             tasksListViewModel = tasksListViewModel,
-            loadingScreenStatusChecker = mainScaffoldViewModel,
+            loadingScreenStatusChecker = tasksListViewModel,
             modifier = Modifier.constrainAs(tasksListRef) {
                 top.linkTo(tasksListTopGuideline)
                 bottom.linkTo(tasksListBottomGuideline)

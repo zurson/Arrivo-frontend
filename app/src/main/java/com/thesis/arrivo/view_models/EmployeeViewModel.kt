@@ -10,6 +10,7 @@ import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.employee.EmployeeCreateAccountRequest
 import com.thesis.arrivo.communication.employee.EmployeeRepository
+import com.thesis.arrivo.communication.employee.EmployeeStatus
 import com.thesis.arrivo.communication.employee.EmployeeUpdateRequest
 import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.utilities.NavigationManager
@@ -23,7 +24,8 @@ import kotlinx.coroutines.launch
 class EmployeeViewModel(
     private val context: Context,
     loadingScreenManager: LoadingScreenManager,
-    private val navigationManager: NavigationManager
+    private val navigationManager: NavigationManager,
+    private val mainScaffoldViewModel: MainScaffoldViewModel,
 ) : ViewModel() {
     private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
 
@@ -61,7 +63,6 @@ class EmployeeViewModel(
 
 
     fun onCreateOrEditButtonClick(
-        mainScaffoldViewModel: MainScaffoldViewModel,
         authViewModel: AuthViewModel,
         editMode: Boolean
     ) {
@@ -148,6 +149,11 @@ class EmployeeViewModel(
 
     fun onCreateEmployeeAccountButtonClick() {
         navigationManager.navigateTo(navigationItem = NavigationItem.CreateEmployeeAdmin)
+    }
+
+
+    fun getEmployeeToEditStatus(): EmployeeStatus {
+        return mainScaffoldViewModel.employeeToEdit.status
     }
 
 }

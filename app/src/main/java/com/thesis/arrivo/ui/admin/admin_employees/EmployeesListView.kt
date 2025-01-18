@@ -16,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowRight
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -25,7 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.employee.Employee
@@ -49,27 +48,16 @@ import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
-import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.view_models.EmployeeViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.factory.EmployeeViewModelFactory
 
 @Composable
 fun EmployeesListView(
-    mainScaffoldViewModel: MainScaffoldViewModel,
-    loadingScreenManager: LoadingScreenManager,
-    navigationManager: NavigationManager
+    employeeViewModel: EmployeeViewModel,
+    mainScaffoldViewModel: MainScaffoldViewModel
 ) {
-    val context = LocalContext.current
-
-    val employeeViewModel = remember {
-        EmployeeViewModel(
-            loadingScreenManager = loadingScreenManager,
-            navigationManager = navigationManager,
-            context = context
-        )
-    }
-
     val employees by employeeViewModel.employees.collectAsState()
 
     ConstraintLayout(
@@ -262,17 +250,25 @@ private fun ButtonsSection(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Preview() {
-    val vm = MainScaffoldViewModel(
+    val mainVm = MainScaffoldViewModel(
         navigationManager = NavigationManager(rememberNavController()),
         context = LocalContext.current,
         adminMode = true
     )
 
+    val viewModel: EmployeeViewModel = viewModel(
+        factory = EmployeeViewModelFactory(
+            navigationManager = NavigationManager(rememberNavController()),
+            loadingScreenManager = mainVm,
+            mainScaffoldViewModel = mainVm,
+            context = LocalContext.current
+        )
+    )
+
     Theme.ArrivoTheme {
         EmployeesListView(
-            mainScaffoldViewModel = vm,
-            loadingScreenManager = vm,
-            navigationManager = NavigationManager(rememberNavController())
+            mainScaffoldViewModel = mainVm,
+            employeeViewModel = viewModel
         )
     }
 }

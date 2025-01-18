@@ -21,15 +21,16 @@ import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
+import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class TasksListViewModel(
     context: Context,
     private val mainScaffoldViewModel: MainScaffoldViewModel,
-    loadingScreenManager: LoadingScreenManager,
+    private val loadingScreenManager: LoadingScreenManager,
     private val navigationManager: NavigationManager,
-) : ViewModel() {
+) : ViewModel(), LoadingScreenStatusChecker {
     private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
 
     companion object {
@@ -192,5 +193,9 @@ class TasksListViewModel(
 
     init {
         fetchTasks()
+    }
+
+    override fun isLoadingScreenEnabled(): Boolean {
+        return loadingScreenManager.isLoadingScreenEnabled()
     }
 }
