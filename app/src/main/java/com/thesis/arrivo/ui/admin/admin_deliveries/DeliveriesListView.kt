@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,6 +45,7 @@ import com.thesis.arrivo.components.other_components.AppLegendItem
 import com.thesis.arrivo.components.other_components.ArrowRightIcon
 import com.thesis.arrivo.components.other_components.Circle
 import com.thesis.arrivo.components.other_components.EmptyList
+import com.thesis.arrivo.ui.admin.admin_tasks.tasks_list.TaskDetailsDialog
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
@@ -59,6 +61,9 @@ fun DeliveriesListView(deliveriesListViewModel: DeliveriesListViewModel) {
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
+        ShowDeliveryDetailsDialog(deliveriesListViewModel)
+        ShowDeliveryTaskDetailsDialog(deliveriesListViewModel)
+
         /* CONFIGURATION */
         val startGuideline = createGuidelineFromStart(Settings.START_END_PERCENTAGE)
         val endGuideline = createGuidelineFromEnd(Settings.START_END_PERCENTAGE)
@@ -282,7 +287,7 @@ private fun BottomSector(
 
             AppButton(
                 onClick = { deliveriesListViewModel.onCreateDeliveryButtonClick() },
-                text = "Create Delivery",
+                text = stringResource(R.string.delivery_list_create_delivery_button_text),
                 icon = Icons.Filled.Add,
             )
         }
@@ -303,6 +308,36 @@ private fun Legend() {
             )
         }
     }
+}
+
+
+@Composable
+private fun ShowDeliveryDetailsDialog(deliveryListViewModel: DeliveriesListViewModel) {
+    if (!deliveryListViewModel.showDeliveryDetails)
+        return
+
+    DeliveryDetailsDialog(
+        delivery = deliveryListViewModel.selectedDelivery,
+        onDismiss = { deliveryListViewModel.onDeliveryDetailsDismiss() },
+        onButtonClick = { deliveryListViewModel.onDeliveryDetailsButtonClick() },
+        buttonIcon = Icons.Outlined.Edit,
+        buttonText = stringResource(R.string.delivery_details_dialog_edit_button_text),
+        onTaskSelected = { deliveryListViewModel.onDeliveryDetailsTaskSelected(it) }
+    )
+}
+
+
+@Composable
+private fun ShowDeliveryTaskDetailsDialog(deliveryListViewModel: DeliveriesListViewModel) {
+    if (!deliveryListViewModel.showTaskDetails)
+        return
+
+    TaskDetailsDialog(
+        task = deliveryListViewModel.selectedTask,
+        onDismiss = { deliveryListViewModel.onDeliveryDetailsTaskDialogDismiss() },
+        onButtonClick = { deliveryListViewModel.onDeliveryDetailsTaskDialogButtonClick() },
+        buttonText = stringResource(R.string.delivery_details_dialog_task_dismiss_button_text)
+    )
 }
 
 

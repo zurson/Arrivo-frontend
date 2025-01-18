@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.admin.admin_tasks.tasks_list
+package com.thesis.arrivo.ui.admin.admin_deliveries
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,28 +9,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import com.thesis.arrivo.R
+import com.thesis.arrivo.communication.delivery.Delivery
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.components.info_alert_dialog.AlertDialogLazyColumn
 import com.thesis.arrivo.components.info_alert_dialog.AlertDialogLazyListDefaultContainer
 import com.thesis.arrivo.components.info_alert_dialog.AlertDialogSingleButton
 import com.thesis.arrivo.components.info_alert_dialog.DialogRecord
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
-import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.Product
-import com.thesis.arrivo.view_models.TasksListViewModel
 
 @Composable
-fun TaskDetailsDialog(
+fun DeliveryDetailsDialog(
     modifier: Modifier = Modifier,
-    task: Task,
+    delivery: Delivery,
     onDismiss: () -> Unit,
     onButtonClick: () -> Unit,
     buttonIcon: ImageVector? = null,
-    buttonText: String
+    buttonText: String,
+    onTaskSelected: (Task) -> Unit
 ) {
     InfoAlertDialog(
-        title = stringResource(R.string.tasks_list_details_dialog_window_title),
+        title = stringResource(R.string.delivery_details_dialog_window_title),
         onDismiss = { onDismiss() },
         modifier = modifier
     ) {
@@ -38,42 +37,42 @@ fun TaskDetailsDialog(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         ) {
             DialogRecord(
-                label = stringResource(R.string.tasks_list_details_dialog_title),
-                value = task.title,
-                maxLines = 2,
-                textOverflow = TextOverflow.Ellipsis
+                label = stringResource(R.string.delivery_details_dialog_record_status_label),
+                value = delivery.status,
             )
 
             DialogRecord(
-                label = stringResource(R.string.tasks_list_details_dialog_status),
-                value = TasksListViewModel.getRenamedFilter(task.status)
+                label = stringResource(R.string.delivery_details_dialog_record_date_label),
+                value = delivery.assignedDate.toString(),
             )
 
             DialogRecord(
-                label = stringResource(R.string.tasks_list_details_dialog_address),
-                value = task.addressText,
-                maxLines = 2,
-                textOverflow = TextOverflow.Ellipsis
+                label = stringResource(R.string.delivery_details_dialog_record_distance_label),
+                value = "${delivery.distanceKm} km",
             )
 
-            task.assignedDate?.let {
-                DialogRecord(
-                    label = stringResource(R.string.tasks_list_details_dialog_date),
-                    value = task.assignedDate
-                )
-            }
+            DialogRecord(
+                label = stringResource(R.string.delivery_details_dialog_record_time_label),
+                value = formatPredictedTimeText(delivery.timeMinutes),
+            )
 
-            task.employee?.let {
-                DialogRecord(
-                    label = stringResource(R.string.tasks_list_details_dialog_employee),
-                    value = "${task.employee.firstName} ${task.employee.lastName}"
-                )
-            }
+            DialogRecord(
+                label = stringResource(R.string.delivery_details_dialog_record_employee_label),
+                value = "${delivery.employee.firstName} ${delivery.employee.lastName}",
+                maxLines = 2,
+            )
 
             AlertDialogLazyColumn(
-                title = "Products",
-                items = task.products.map { product -> { ProductContainer(product) } },
+                title = stringResource(R.string.delivery_details_dialog_tasks_list_title),
                 listHeight = dimensionResource(R.dimen.dialog_lazy_column_height),
+                items = delivery.tasks.map { task ->
+                    {
+                        TaskContainer(
+                            task = task,
+                            onTaskSelected = onTaskSelected
+                        )
+                    }
+                },
             )
 
             AlertDialogSingleButton(
@@ -89,13 +88,21 @@ fun TaskDetailsDialog(
     }
 }
 
+private fun formatPredictedTimeText(timeInMinutes: Int): String {
+    val hours = timeInMinutes / 60
+    val minutes = timeInMinutes % 60
+
+    return "${hours}h ${minutes}min"
+}
+
 
 @Composable
-private fun ProductContainer(product: Product) {
+private fun TaskContainer(task: Task, onTaskSelected: (Task) -> Unit) {
     AlertDialogLazyListDefaultContainer(
-        item = product,
-        itemToLabelString = { product.name },
-        itemToValueString = { "${product.amount} psc" },
-        clickable = false
+        item = task,
+        itemToLabelString = { it.title },
+        itemToValueString = { it.addressText },
+        onItemSelected = { onTaskSelected(it) },
+        clickable = true
     )
 }

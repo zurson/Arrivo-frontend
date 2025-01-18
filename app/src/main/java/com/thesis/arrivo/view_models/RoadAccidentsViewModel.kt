@@ -18,6 +18,7 @@ import com.thesis.arrivo.ui.admin.admin_accidents.RoadAccidentCategory
 import com.thesis.arrivo.ui.admin.admin_accidents.RoadAccidentStatus
 import com.thesis.arrivo.utilities.Settings.Companion.ROAD_ACCIDENTS_ACTIVE_COLOR
 import com.thesis.arrivo.utilities.Settings.Companion.ROAD_ACCIDENTS_FINISHED_COLOR
+import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
@@ -95,6 +96,16 @@ class RoadAccidentsViewModel(
         }
 
         _accidentsToShow.addAll(filteredAccidents)
+    }
+
+
+    fun isFilterActive(filter: RoadAccidentStatus): Boolean {
+        return activeFilters.contains(filter)
+    }
+
+
+    fun filterToString(filter: RoadAccidentStatus): String {
+        return capitalize(filter.name.lowercase())
     }
 
 

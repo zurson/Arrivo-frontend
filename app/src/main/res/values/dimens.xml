@@ -52,20 +52,24 @@
     <dimen name="alert_dialog_window_width">500dp</dimen>
     <dimen name="alert_dialog_close_icon_size">32dp</dimen>
     <dimen name="alert_dialog_title_font_size">24sp</dimen>
-    <dimen name="alert_dialog_record_horizontal_space">8dp</dimen>
     <dimen name="alert_dialog_exit_icon_padding">10dp</dimen>
+
+    <dimen name="dialog_record_horizontal_space">8dp</dimen>
+    <dimen name="dialog_record_label_text_size">16sp</dimen>
+    <dimen name="dialog_record_value_text_size">16sp</dimen>
 
     <dimen name="alert_dialog_button_height">50dp</dimen>
     <dimen name="alert_dialog_button_horizontal_padding">16dp</dimen>
     <dimen name="alert_dialog_button_top_padding">16dp</dimen>
 
+    <dimen name="dialog_lazy_column_icon_size">30dp</dimen>
+    <dimen name="dialog_lazy_column_height">200dp</dimen>
+    <dimen name="dialog_lazy_column_default_container_padding">8dp</dimen>
+    <dimen name="dialog_lazy_column_default_container_vertical_space">4dp</dimen>
+
     <!-- LIST ELEMENTS PADDING -->
     <dimen name="lists_elements_vertical_space">16dp</dimen>
     <dimen name="lists_elements_horizontal_space">16dp</dimen>
-
-    <!-- EMPLOYEE DETAILS -->
-    <dimen name="employee_details_label_text_size">16sp</dimen>
-    <dimen name="employee_details_value_text_size">16sp</dimen>
 
     <!-- EMPTY LIST -->
     <dimen name="empty_list_text_size">20sp</dimen>
@@ -117,9 +121,6 @@
     <dimen name="tasks_list_bottom_sector_divider_height">5dp</dimen>
 
     <!-- ROAD ACCIDENTS LIST -->
-    <dimen name="accidents_filter_text_size">16sp</dimen>
-    <dimen name="accidents_filter_padding">8dp</dimen>
-
     <dimen name="accidents_container_padding">8dp</dimen>
     <dimen name="accidents_container_participant_text_size">20sp</dimen>
     <dimen name="accidents_container_category_text_size">16sp</dimen>
@@ -130,12 +131,12 @@
 
     <!-- DELIVERY -->
     <dimen name="delivery_available_tasks_sector_title_text_size">20sp</dimen>
-    <dimen name="delivery_available_tasks_container_padding">8dp</dimen>
     <dimen name="delivery_available_tasks_container_content_vertical_space">8dp</dimen>
     <dimen name="delivery_tasks_container_title_text_size">20sp</dimen>
     <dimen name="delivery_tasks_container_address_text_size">16sp</dimen>
     <dimen name="delivery_tasks_container_checkbox_end_padding">8dp</dimen>
     <dimen name="delivery_tasks_container_checkbox_size">32dp</dimen>
+    <dimen name="delivery_available_tasks_container_padding">8dp</dimen>
 
     <dimen name="delivery_order_list_title_text_size">20sp</dimen>
     <dimen name="delivery_order_container_position_text_size">20sp</dimen>
