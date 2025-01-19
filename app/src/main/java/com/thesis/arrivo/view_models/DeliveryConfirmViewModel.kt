@@ -28,7 +28,7 @@ import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.launch
 import java.util.LinkedList
 
-class DeliveryCreateViewModel(
+class DeliveryConfirmViewModel(
     private val context: Context,
     private val navigationManager: NavigationManager,
     private val loadingScreenManager: LoadingScreenManager,

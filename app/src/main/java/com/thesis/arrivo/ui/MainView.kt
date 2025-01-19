@@ -35,9 +35,9 @@ import com.thesis.arrivo.ui.user.user_your_accidents_view.YourAccidentsView
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.view_models.AuthViewModel
 import com.thesis.arrivo.view_models.DeliveriesListViewModel
-import com.thesis.arrivo.view_models.DeliveryCreateViewModel
+import com.thesis.arrivo.view_models.DeliveryConfirmViewModel
 import com.thesis.arrivo.view_models.DeliverySharedViewModel
-import com.thesis.arrivo.view_models.DeliveryTaskSelectViewModel
+import com.thesis.arrivo.view_models.DeliveryOptionsViewModel
 import com.thesis.arrivo.view_models.EmployeeViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.RoadAccidentsViewModel
@@ -45,8 +45,8 @@ import com.thesis.arrivo.view_models.TaskManagerViewModel
 import com.thesis.arrivo.view_models.TasksListViewModel
 import com.thesis.arrivo.view_models.factory.AuthViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveriesListViewModelFactory
-import com.thesis.arrivo.view_models.factory.DeliveryCreateViewModelFactory
-import com.thesis.arrivo.view_models.factory.DeliveryTaskSelectViewModelFactory
+import com.thesis.arrivo.view_models.factory.DeliveryConfirmViewModelFactory
+import com.thesis.arrivo.view_models.factory.DeliveryOptionsViewModelFactory
 import com.thesis.arrivo.view_models.factory.EmployeeViewModelFactory
 import com.thesis.arrivo.view_models.factory.MainScaffoldViewModelFactory
 import com.thesis.arrivo.view_models.factory.RoadAccidentViewModelFactory
@@ -244,8 +244,8 @@ private fun SetupMainScaffold(
                 }
 
                 composable(NavigationItem.DeliveryTasksAdmin.route) {
-                    val viewModel: DeliveryTaskSelectViewModel = viewModel(
-                        factory = DeliveryTaskSelectViewModelFactory(
+                    val viewModel: DeliveryOptionsViewModel = viewModel(
+                        factory = DeliveryOptionsViewModelFactory(
                             context = LocalContext.current,
                             loadingScreenManager = mainScaffoldViewModel,
                             navigationManager = navigationManager,
@@ -253,12 +253,12 @@ private fun SetupMainScaffold(
                         )
                     )
 
-                    DeliveryTasksView(deliveryTaskSelectViewModel = viewModel)
+                    DeliveryTasksView(deliveryOptionsViewModel = viewModel)
                 }
 
                 composable(NavigationItem.DeliveryCreateAdmin.route) {
-                    val viewModel: DeliveryCreateViewModel = viewModel(
-                        factory = DeliveryCreateViewModelFactory(
+                    val viewModel: DeliveryConfirmViewModel = viewModel(
+                        factory = DeliveryConfirmViewModelFactory(
                             context = LocalContext.current,
                             loadingScreenManager = mainScaffoldViewModel,
                             navigationManager = navigationManager,
@@ -266,7 +266,7 @@ private fun SetupMainScaffold(
                         )
                     )
 
-                    DeliveryCreateView(deliveryCreateViewModel = viewModel)
+                    DeliveryCreateView(deliveryConfirmViewModel = viewModel)
                 }
 
                 composable(NavigationItem.DeliveriesListAdmin.route) {

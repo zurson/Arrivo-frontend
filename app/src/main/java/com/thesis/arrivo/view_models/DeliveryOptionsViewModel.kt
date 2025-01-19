@@ -25,7 +25,7 @@ import com.thesis.arrivo.utilities.showDefaultErrorDialog
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-class DeliveryTaskSelectViewModel(
+class DeliveryOptionsViewModel(
     private val context: Context,
     private val navigationManager: NavigationManager,
     private val loadingScreenManager: LoadingScreenManager,
