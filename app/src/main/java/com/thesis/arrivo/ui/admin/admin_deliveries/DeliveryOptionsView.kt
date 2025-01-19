@@ -86,7 +86,7 @@ fun DeliveryTasksView(deliveryOptionsViewModel: DeliveryOptionsViewModel) {
         val availableTasksListBottomGuideline = createGuidelineFromTop(0.87f)
 
         AvailableTasksList(
-            DeliveryOptionsViewModel = deliveryOptionsViewModel,
+            deliveryOptionsViewModel = deliveryOptionsViewModel,
             modifier = Modifier.constrainAs(availableTasksListRef) {
                 top.linkTo(availableTasksListTopGuideline)
                 bottom.linkTo(availableTasksListBottomGuideline)
@@ -101,7 +101,7 @@ fun DeliveryTasksView(deliveryOptionsViewModel: DeliveryOptionsViewModel) {
         val buttonTopGuideline = createGuidelineFromTop(0.88f)
 
         ButtonSection(
-            DeliveryOptionsViewModel = deliveryOptionsViewModel,
+            deliveryOptionsViewModel = deliveryOptionsViewModel,
             modifier = Modifier
                 .constrainAs(buttonRef) {
                     top.linkTo(buttonTopGuideline)
@@ -150,7 +150,7 @@ private fun EmployeeSelectorAndDatePicker(
 @Composable
 fun AvailableTasksList(
     modifier: Modifier = Modifier,
-    DeliveryOptionsViewModel: DeliveryOptionsViewModel,
+    deliveryOptionsViewModel: DeliveryOptionsViewModel,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
@@ -166,9 +166,9 @@ fun AvailableTasksList(
             modifier = Modifier.fillMaxWidth()
         )
 
-        if (DeliveryOptionsViewModel.availableTasks.isEmpty()) {
+        if (deliveryOptionsViewModel.availableTasks.isEmpty()) {
             EmptyList(
-                loadingScreenStatusChecker = DeliveryOptionsViewModel,
+                loadingScreenStatusChecker = deliveryOptionsViewModel,
                 modifier = Modifier.weight(1f)
             )
             return
@@ -180,10 +180,10 @@ fun AvailableTasksList(
                 .weight(1f)
                 .animateContentSize()
         ) {
-            items(DeliveryOptionsViewModel.availableTasks, key = { it.id }) { task ->
+            items(deliveryOptionsViewModel.availableTasks, key = { it.id }) { task ->
                 AvailableTaskContainer(
                     task = task,
-                    DeliveryOptionsViewModel = DeliveryOptionsViewModel,
+                    deliveryOptionsViewModel = deliveryOptionsViewModel,
                     modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null)
                 )
             }
@@ -195,7 +195,7 @@ fun AvailableTasksList(
 @Composable
 fun AvailableTaskContainer(
     task: Task,
-    DeliveryOptionsViewModel: DeliveryOptionsViewModel,
+    deliveryOptionsViewModel: DeliveryOptionsViewModel,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -207,7 +207,7 @@ fun AvailableTaskContainer(
             .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .padding(dimensionResource(R.dimen.delivery_available_tasks_container_padding))
-            .clickable { DeliveryOptionsViewModel.onTaskSelected(task) }
+            .clickable { deliveryOptionsViewModel.onTaskSelected(task) }
     ) {
         Column(
             horizontalAlignment = Alignment.Start,
@@ -233,8 +233,8 @@ fun AvailableTaskContainer(
         }
 
         AppCheckbox(
-            checked = DeliveryOptionsViewModel.isTaskChecked(task),
-            onCheckedChange = { DeliveryOptionsViewModel.onTaskCheckedChange(task) },
+            checked = deliveryOptionsViewModel.isTaskChecked(task),
+            onCheckedChange = { deliveryOptionsViewModel.onTaskCheckedChange(task) },
             size = dimensionResource(R.dimen.delivery_tasks_container_checkbox_size),
             modifier = Modifier.padding(end = dimensionResource(R.dimen.delivery_tasks_container_checkbox_end_padding))
         )
@@ -245,7 +245,7 @@ fun AvailableTaskContainer(
 @Composable
 private fun ButtonSection(
     modifier: Modifier = Modifier,
-    DeliveryOptionsViewModel: DeliveryOptionsViewModel
+    deliveryOptionsViewModel: DeliveryOptionsViewModel
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -253,7 +253,7 @@ private fun ButtonSection(
             .fillMaxSize(),
     ) {
         AppButton(
-            onClick = { DeliveryOptionsViewModel.onButtonNextClick() },
+            onClick = { deliveryOptionsViewModel.onButtonNextClick() },
             text = stringResource(R.string.delivery_button_next_text),
             icon = Icons.AutoMirrored.Filled.KeyboardArrowRight,
         )
@@ -262,14 +262,14 @@ private fun ButtonSection(
 
 
 @Composable
-private fun ShowTaskDetailsDialog(DeliveryOptionsViewModel: DeliveryOptionsViewModel) {
-    if (!DeliveryOptionsViewModel.showTaskDetailsDialog)
+private fun ShowTaskDetailsDialog(deliveryOptionsViewModel: DeliveryOptionsViewModel) {
+    if (!deliveryOptionsViewModel.showTaskDetailsDialog)
         return
 
     TaskDetailsDialog(
-        task = DeliveryOptionsViewModel.selectedTask,
-        onDismiss = { DeliveryOptionsViewModel.onTaskDialogDismiss() },
-        onButtonClick = { DeliveryOptionsViewModel.onTaskDialogDismiss() },
+        task = deliveryOptionsViewModel.selectedTask,
+        onDismiss = { deliveryOptionsViewModel.onTaskDialogDismiss() },
+        onButtonClick = { deliveryOptionsViewModel.onTaskDialogDismiss() },
         buttonText = stringResource(R.string.delivery_task_details_dialog_dismiss_button_text),
     )
 }
@@ -284,7 +284,7 @@ private fun Preview() {
         adminMode = true
     )
 
-    val DeliveryOptionsViewModel: DeliveryOptionsViewModel = viewModel(
+    val deliveryOptionsViewModel: DeliveryOptionsViewModel = viewModel(
         factory = DeliveryOptionsViewModelFactory(
             context = LocalContext.current,
             loadingScreenManager = mainVm,
@@ -294,6 +294,6 @@ private fun Preview() {
     )
 
     Theme.ArrivoTheme {
-        DeliveryTasksView(DeliveryOptionsViewModel)
+        DeliveryTasksView(deliveryOptionsViewModel)
     }
 }
