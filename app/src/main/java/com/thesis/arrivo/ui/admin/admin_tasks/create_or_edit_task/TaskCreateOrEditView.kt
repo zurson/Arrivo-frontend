@@ -310,9 +310,7 @@ private fun ShowLocationSearchDialog(taskManagerViewModel: TaskManagerViewModel)
 
 
 @Composable
-private fun ShowProductDeleteConfirmationDialog(
-    taskManagerViewModel: TaskManagerViewModel,
-) {
+private fun ShowProductDeleteConfirmationDialog(taskManagerViewModel: TaskManagerViewModel) {
     if (!taskManagerViewModel.showDeleteConfirmationDialog)
         return
 

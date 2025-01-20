@@ -39,13 +39,13 @@ import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
-import com.thesis.arrivo.view_models.DeliveryCreateViewModel
+import com.thesis.arrivo.view_models.DeliveryConfirmViewModel
 import com.thesis.arrivo.view_models.DeliverySharedViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
-import com.thesis.arrivo.view_models.factory.DeliveryTaskSelectViewModelFactory
+import com.thesis.arrivo.view_models.factory.DeliveryConfirmViewModelFactory
 
 @Composable
-fun DeliveryCreateView(deliveryCreateViewModel: DeliveryCreateViewModel) {
+fun DeliveryCreateView(deliveryConfirmViewModel: DeliveryConfirmViewModel) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -61,7 +61,7 @@ fun DeliveryCreateView(deliveryCreateViewModel: DeliveryCreateViewModel) {
         val mainSectionBottomGuideline = createGuidelineFromTop(0.85f)
 
         MainSection(
-            deliveryCreateViewModel = deliveryCreateViewModel,
+            deliveryConfirmViewModel = deliveryConfirmViewModel,
             modifier = Modifier.constrainAs(mainSectionRef) {
                 top.linkTo(mainSectionTopGuideline)
                 bottom.linkTo(mainSectionBottomGuideline)
@@ -77,7 +77,7 @@ fun DeliveryCreateView(deliveryCreateViewModel: DeliveryCreateViewModel) {
         val buttonTopGuideline = createGuidelineFromTop(0.86f)
 
         ButtonsSection(
-            deliveryCreateViewModel = deliveryCreateViewModel,
+            deliveryConfirmViewModel = deliveryConfirmViewModel,
             modifier = Modifier
                 .constrainAs(buttonRef) {
                     top.linkTo(buttonTopGuideline)
@@ -94,7 +94,7 @@ fun DeliveryCreateView(deliveryCreateViewModel: DeliveryCreateViewModel) {
 
 @Composable
 private fun MainSection(
-    deliveryCreateViewModel: DeliveryCreateViewModel,
+    deliveryConfirmViewModel: DeliveryConfirmViewModel,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -112,14 +112,14 @@ private fun MainSection(
         )
 
         TasksList(
-            deliveryCreateViewModel = deliveryCreateViewModel,
+            deliveryConfirmViewModel = deliveryConfirmViewModel,
             modifier = Modifier.weight(1f)
         )
 
         DetailsSection(
-            timeText = deliveryCreateViewModel.getPredictedTimeText(),
-            textColor = deliveryCreateViewModel.getPredictedTimeTextColor(),
-            distanceKm = deliveryCreateViewModel.distanceKm
+            timeText = deliveryConfirmViewModel.getPredictedTimeText(),
+            textColor = deliveryConfirmViewModel.getPredictedTimeTextColor(),
+            distanceKm = deliveryConfirmViewModel.distanceKm
         )
     }
 }
@@ -127,17 +127,17 @@ private fun MainSection(
 
 @Composable
 private fun TasksList(
-    deliveryCreateViewModel: DeliveryCreateViewModel,
+    deliveryConfirmViewModel: DeliveryConfirmViewModel,
     modifier: Modifier = Modifier
 ) {
-    val data = deliveryCreateViewModel.selectedTasks
+    val data = deliveryConfirmViewModel.selectedTasks
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         modifier = modifier
     ) {
 
-        if (deliveryCreateViewModel.isLoadingScreenEnabled())
+        if (deliveryConfirmViewModel.isLoadingScreenEnabled())
             return@LazyColumn
 
         items(data) { task ->
@@ -291,7 +291,7 @@ private fun PredictedDistanceInfo(
 @Composable
 private fun ButtonsSection(
     modifier: Modifier = Modifier,
-    deliveryCreateViewModel: DeliveryCreateViewModel
+    deliveryConfirmViewModel: DeliveryConfirmViewModel
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -300,7 +300,7 @@ private fun ButtonsSection(
             .fillMaxSize(),
     ) {
         AppButton(
-            onClick = { deliveryCreateViewModel.onBackButtonClick() },
+            onClick = { deliveryConfirmViewModel.onBackButtonClick() },
             text = stringResource(R.string.delivery_order_back_button_text),
             icon = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
             iconStart = true,
@@ -308,7 +308,7 @@ private fun ButtonsSection(
         )
 
         AppButton(
-            onClick = { deliveryCreateViewModel.onFinishButtonClick() },
+            onClick = { deliveryConfirmViewModel.onFinishButtonClick() },
             text = stringResource(R.string.delivery_order_back_finish_text),
             icon = Icons.Filled.Check,
             modifier = Modifier.weight(1f)
@@ -326,8 +326,8 @@ private fun Preview() {
         adminMode = true
     )
 
-    val deliveryCreateViewModel: DeliveryCreateViewModel = viewModel(
-        factory = DeliveryTaskSelectViewModelFactory(
+    val deliveryConfirmViewModel: DeliveryConfirmViewModel = viewModel(
+        factory = DeliveryConfirmViewModelFactory(
             context = LocalContext.current,
             loadingScreenManager = mainVm,
             navigationManager = NavigationManager(rememberNavController()),
@@ -336,6 +336,6 @@ private fun Preview() {
     )
 
     Theme.ArrivoTheme {
-        DeliveryCreateView(deliveryCreateViewModel)
+        DeliveryCreateView(deliveryConfirmViewModel)
     }
 }

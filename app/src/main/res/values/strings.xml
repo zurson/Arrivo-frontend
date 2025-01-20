@@ -60,6 +60,8 @@
     <string name="delivery_data_corrupted_exception_message">Data corrupted</string>
 
     <string name="delivery_create_success_message">Delivery created successfully</string>
+    <string name="delivery_update_success_message">Delivery updated successfully</string>
+    <string name="delivery_cancel_success_message">Delivery cancelled successfully</string>
 
     <string name="delivery_details_dialog_window_title">Delivery Details</string>
     <string name="delivery_details_dialog_record_status_label">Status</string>
@@ -70,6 +72,9 @@
     <string name="delivery_details_dialog_tasks_list_title">Assigned Tasks</string>
     <string name="delivery_details_dialog_edit_button_text">Edit</string>
     <string name="delivery_details_dialog_task_dismiss_button_text">OK</string>
+    <string name="delivery_details_dialog_delivery_cancel_button_text">Cancel Delivery</string>
+    <string name="delivery_details_dialog__delivery_cancel_confirmation_dialog_title">Cancel Delivery</string>
+    <string name="delivery_details_dialog__delivery_confirmation_dialog_text">Cancel delivery?</string>
 
     <string name="delivery_list_create_delivery_button_text">Create Delivery</string>
 

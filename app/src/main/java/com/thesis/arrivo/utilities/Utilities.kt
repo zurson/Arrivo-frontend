@@ -23,6 +23,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Date
 import java.util.Locale
 import kotlin.reflect.KClass
@@ -149,6 +150,11 @@ fun getCurrentDateMillis() = Instant.now().toEpochMilli()
 
 fun convertLongToLocalDate(longVal: Long): LocalDate =
     LocalDate.ofEpochDay(longVal / 86400000L)
+
+
+fun localDateToMillis(localDate: LocalDate): Long {
+    return localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+}
 
 
 fun preparePhoneCall(context: Context, phoneNumber: String) {

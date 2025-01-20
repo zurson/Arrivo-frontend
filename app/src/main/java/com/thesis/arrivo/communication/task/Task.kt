@@ -1,10 +1,8 @@
 package com.thesis.arrivo.communication.task
 
 import com.thesis.arrivo.communication.employee.Employee
-import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.Product
 import com.thesis.arrivo.utilities.Location
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 data class Task(
     val id: Long,

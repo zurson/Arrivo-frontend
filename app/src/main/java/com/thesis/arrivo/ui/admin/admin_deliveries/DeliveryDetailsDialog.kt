@@ -2,11 +2,13 @@ package com.thesis.arrivo.ui.admin.admin_deliveries
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Cancel
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.thesis.arrivo.R
@@ -14,19 +16,20 @@ import com.thesis.arrivo.communication.delivery.Delivery
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.components.info_alert_dialog.AlertDialogLazyColumn
 import com.thesis.arrivo.components.info_alert_dialog.AlertDialogLazyListDefaultContainer
-import com.thesis.arrivo.components.info_alert_dialog.AlertDialogSingleButton
 import com.thesis.arrivo.components.info_alert_dialog.DialogRecord
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
+import com.thesis.arrivo.components.other_components.AppButton
 
 @Composable
 fun DeliveryDetailsDialog(
     modifier: Modifier = Modifier,
     delivery: Delivery,
     onDismiss: () -> Unit,
-    onButtonClick: () -> Unit,
-    buttonIcon: ImageVector? = null,
-    buttonText: String,
-    onTaskSelected: (Task) -> Unit
+    onEditButtonClick: () -> Unit,
+    onDeliveryCancelButtonClick: () -> Unit,
+    onTaskSelected: (Task) -> Unit,
+    showEditButton: (Delivery) -> Boolean,
+    showCancelButton: (Delivery) -> Boolean
 ) {
     InfoAlertDialog(
         title = stringResource(R.string.delivery_details_dialog_window_title),
@@ -75,15 +78,43 @@ fun DeliveryDetailsDialog(
                 },
             )
 
-            AlertDialogSingleButton(
-                text = buttonText,
-                onEditButtonClick = { onButtonClick() },
-                icon = buttonIcon,
-                modifier = Modifier
-                    .padding(top = dimensionResource(R.dimen.alert_dialog_button_top_padding))
-                    .padding(horizontal = dimensionResource(R.dimen.alert_dialog_button_horizontal_padding))
-                    .height(dimensionResource(R.dimen.alert_dialog_button_height))
-            )
+            val cancelButtonVisible = showCancelButton(delivery)
+            val editButtonVisible = showEditButton(delivery)
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.alert_dialog_button_horizontal_padding))
+            ) {
+
+                // Cancel button
+                if (cancelButtonVisible) {
+                    AppButton(
+                        onClick = { onDeliveryCancelButtonClick() },
+                        text = stringResource(R.string.delivery_details_dialog_delivery_cancel_button_text),
+                        icon = Icons.Outlined.Cancel,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+
+                // Edit button
+                if (editButtonVisible) {
+                    AppButton(
+                        onClick = { onEditButtonClick() },
+                        text = stringResource(R.string.delivery_details_dialog_edit_button_text),
+                        icon = Icons.Outlined.Edit,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+
+                // Dismiss button
+                if (!cancelButtonVisible && !editButtonVisible) {
+                    AppButton(
+                        onClick = { onDismiss() },
+                        text = stringResource(R.string.delivery_details_dialog_task_dismiss_button_text),
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            }
         }
     }
 }

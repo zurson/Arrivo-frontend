@@ -18,4 +18,11 @@ class DeliveryRepository {
         return deliveryService.createDelivery(createRequest)
     }
 
+    suspend fun updateDelivery(id: Long, updateRequest: DeliveryUpdateRequest): Delivery {
+        return deliveryService.updateDelivery(id, updateRequest)
+    }
+
+    suspend fun cancelDelivery(id: Long) {
+        deliveryService.cancelDelivery(id)
+    }
 }

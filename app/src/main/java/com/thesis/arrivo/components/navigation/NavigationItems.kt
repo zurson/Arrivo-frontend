@@ -93,12 +93,16 @@ sealed class NavigationItem(
         route = "edit_employee_admin"
     )
 
-    data object DeliveryTasksAdmin : NavigationItem(
-        route = "plan_a_day_tasks_admin"
+    data object DeliveryOptionsAdmin : NavigationItem(
+        route = "delivery_option_admin"
     )
 
-    data object DeliveryCreateAdmin : NavigationItem(
-        route = "plan_a_day_order_admin"
+    data object DeliveryOptionsEditAdmin : NavigationItem(
+        route = "delivery_options_edit_admin"
+    )
+
+    data object DeliveryConfirmAdmin : NavigationItem(
+        route = "delivery_confirm_admin"
     )
 
     /** Login **/
