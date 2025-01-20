@@ -41,6 +41,7 @@ import com.thesis.arrivo.view_models.DeliverySharedViewModel
 import com.thesis.arrivo.view_models.EmployeeViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.RoadAccidentsViewModel
+import com.thesis.arrivo.view_models.RoleViewModel
 import com.thesis.arrivo.view_models.TaskManagerViewModel
 import com.thesis.arrivo.view_models.TasksListViewModel
 import com.thesis.arrivo.view_models.factory.AuthViewModelFactory
@@ -63,7 +64,7 @@ fun MainView(placesClient: PlacesClient) {
     val mainScaffoldViewModel: MainScaffoldViewModel = viewModel(
         factory = MainScaffoldViewModelFactory(
             context = context,
-            adminMode = true,
+            adminMode = false,
             navigationManager = navigationManager
         )
     )
@@ -313,6 +314,5 @@ private fun SetupMainScaffold(
         }
 
         LoadingScreen(mainScaffoldViewModel.isLoadingScreenEnabled())
-        mainScaffoldViewModel.startAuthListeners()
     }
 }

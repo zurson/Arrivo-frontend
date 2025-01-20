@@ -1,10 +1,10 @@
 package com.thesis.arrivo.view_models
 
-import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.thesis.arrivo.activities.MainActivity
 import com.thesis.arrivo.communication.employee.Employee
@@ -15,13 +15,10 @@ import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.changeActivity
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
-class MainScaffoldViewModel(
-    private val context: Context,
-    private var adminMode: Boolean,
-    private val navigationManager: NavigationManager
-) : ViewModel(), LoadingScreenManager {
+class MainScaffoldViewModel(private val navigationManager: NavigationManager) : ViewModel(),
+    LoadingScreenManager {
 
     companion object {
         fun reset() {
@@ -34,6 +31,10 @@ class MainScaffoldViewModel(
             )
         }
     }
+
+
+    private var adminMode: Boolean = false
+
 
     /**
      * NavBar elements
@@ -79,12 +80,23 @@ class MainScaffoldViewModel(
 
     fun getStartDestination(callback: (NavigationItem) -> Unit) {
         isUserAuthenticated { isAuthenticated ->
-            val startDestination = when (isAuthenticated) {
-                true -> getNavbarElements().first()
-                false -> NavigationItem.Login
+            if (isAuthenticated) {
+                checkIsAdmin { isAdmin ->
+                    adminMode = isAdmin
+                    val startDestination = getNavbarElements().first()
+                    callback(startDestination)
+                }
+            } else {
+                callback(NavigationItem.Login)
             }
+        }
+    }
 
-            callback(startDestination)
+    private fun checkIsAdmin(callback: (Boolean) -> Unit) {
+        val roleViewModel = RoleViewModel(this)
+        viewModelScope.launch {
+            roleViewModel.fetchUserRole()
+            callback(roleViewModel.isAdmin())
         }
     }
 
@@ -132,37 +144,6 @@ class MainScaffoldViewModel(
     /**
      * Auth
      **/
-
-    private var accountBlockJob: Job? = null
-
-
-    private fun listenAuthStatus() {
-        FirebaseAuth.AuthStateListener {
-
-        }
-
-//        if (accountBlockJob?.isActive == true)
-//            return
-//
-//        accountBlockJob = CoroutineScope(Dispatchers.IO).launch {
-//            while (isActive) {
-//                delay(AUTH_ACCOUNT_STATUS_CHECK_INTERVAL_MS)
-//
-//                if (FirebaseAuth.getInstance().currentUser == null || !isConnectedToInternet())
-//                    continue
-//
-//                isUserAuthenticated { isAuthenticated ->
-//                    if (!isAuthenticated)
-//                        reset()
-//                }
-//            }
-//        }
-    }
-
-
-    fun startAuthListeners() {
-//        listenAuthStatus()
-    }
 
 
     fun onAuthenticationSuccess() {
