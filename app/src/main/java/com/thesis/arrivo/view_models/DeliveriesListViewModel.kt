@@ -1,12 +1,14 @@
 package com.thesis.arrivo.view_models
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.delivery.Delivery
 import com.thesis.arrivo.communication.delivery.DeliveryRepository
@@ -21,11 +23,12 @@ import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
+import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class DeliveriesListViewModel(
-    context: Context,
+    private val context: Context,
     private val navigationManager: NavigationManager,
     private val loadingScreenManager: LoadingScreenManager,
     private val deliverySharedViewModel: DeliverySharedViewModel
@@ -168,6 +171,55 @@ class DeliveriesListViewModel(
         get() = _showTaskDetails.value
 
 
+    private val _showDeliveryCancelConfirmationDialog = mutableStateOf(false)
+    val showDeliveryCancelConfirmationDialog: Boolean
+        get() = _showDeliveryCancelConfirmationDialog.value
+
+
+    fun toggleShowDeliveryCancelConfirmationDialog() {
+        _showDeliveryCancelConfirmationDialog.value = !_showDeliveryCancelConfirmationDialog.value
+    }
+
+
+    fun onDeliveryCancelConfirmationYesClick() {
+        toggleShowDeliveryDetails()
+        toggleShowDeliveryCancelConfirmationDialog()
+
+        cancelDelivery()
+    }
+
+
+    private fun cancelDelivery() {
+        viewModelScope.launch {
+            serverRequestManager.sendRequest(
+                actionToPerform = { deliveryRepository.cancelDelivery(selectedDelivery.id) },
+                onSuccess = { onDeliveryCancelSuccess() }
+            )
+        }
+    }
+
+
+    private fun onDeliveryCancelSuccess() {
+        navigationManager.navigateTo(NavigationItem.DeliveriesListAdmin, true)
+
+        showToast(
+            context = context,
+            text = context.getString(R.string.delivery_cancel_success_message),
+            toastLength = Toast.LENGTH_LONG
+        )
+    }
+
+
+    fun onDeliveryCancelConfirmationNoClick() {
+        toggleShowDeliveryCancelConfirmationDialog()
+    }
+
+
+    fun onDeliveryCancelConfirmationDismiss() {
+        toggleShowDeliveryCancelConfirmationDialog()
+    }
+
+
     fun toggleShowDeliveryDetails() {
         _showDeliveryDetails.value = !_showDeliveryDetails.value
     }
@@ -189,7 +241,7 @@ class DeliveriesListViewModel(
     }
 
 
-    fun onDeliveryDetailsButtonClick() {
+    fun onDeliveryDetailsEditButtonClick() {
         toggleShowDeliveryDetails()
 
         deliverySharedViewModel.employee = selectedDelivery.employee
@@ -202,6 +254,21 @@ class DeliveriesListViewModel(
         deliverySharedViewModel.deliveryToEdit = selectedDelivery
 
         navigationManager.navigateTo(NavigationItem.DeliveryOptionsEditAdmin)
+    }
+
+
+    fun onDeliveryDetailsCancelButtonClick() {
+        toggleShowDeliveryCancelConfirmationDialog()
+    }
+
+
+    fun showDeliveryDetailsEditButton(delivery: Delivery): Boolean {
+        return delivery.status != DeliveryStatus.COMPLETED
+    }
+
+
+    fun showDeliveryDetailsCancelButton(delivery: Delivery): Boolean {
+        return delivery.status != DeliveryStatus.COMPLETED
     }
 
 

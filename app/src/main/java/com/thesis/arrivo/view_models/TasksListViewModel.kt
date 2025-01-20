@@ -14,7 +14,7 @@ import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TaskStatus
 import com.thesis.arrivo.communication.task.TasksRepository
 import com.thesis.arrivo.components.navigation.NavigationItem
-import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskToEdit
+import com.thesis.arrivo.communication.task.TaskToEdit
 import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings

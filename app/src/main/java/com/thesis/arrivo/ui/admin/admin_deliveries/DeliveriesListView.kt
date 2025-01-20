@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,6 +43,7 @@ import com.thesis.arrivo.components.other_components.AppHorizontalDivider
 import com.thesis.arrivo.components.other_components.AppLegendItem
 import com.thesis.arrivo.components.other_components.ArrowRightIcon
 import com.thesis.arrivo.components.other_components.Circle
+import com.thesis.arrivo.components.other_components.ConfirmationDialog
 import com.thesis.arrivo.components.other_components.EmptyList
 import com.thesis.arrivo.ui.admin.admin_tasks.tasks_list.TaskDetailsDialog
 import com.thesis.arrivo.ui.theme.Theme
@@ -64,6 +64,7 @@ fun DeliveriesListView(deliveriesListViewModel: DeliveriesListViewModel) {
     ) {
         ShowDeliveryDetailsDialog(deliveriesListViewModel)
         ShowDeliveryTaskDetailsDialog(deliveriesListViewModel)
+        ShowDeliveryCancelConfirmationDialog(deliveriesListViewModel)
 
         /* CONFIGURATION */
         val startGuideline = createGuidelineFromStart(Settings.START_END_PERCENTAGE)
@@ -320,10 +321,11 @@ private fun ShowDeliveryDetailsDialog(deliveryListViewModel: DeliveriesListViewM
     DeliveryDetailsDialog(
         delivery = deliveryListViewModel.selectedDelivery,
         onDismiss = { deliveryListViewModel.onDeliveryDetailsDismiss() },
-        onButtonClick = { deliveryListViewModel.onDeliveryDetailsButtonClick() },
-        buttonIcon = Icons.Outlined.Edit,
-        buttonText = stringResource(R.string.delivery_details_dialog_edit_button_text),
-        onTaskSelected = { deliveryListViewModel.onDeliveryDetailsTaskSelected(it) }
+        onEditButtonClick = { deliveryListViewModel.onDeliveryDetailsEditButtonClick() },
+        onDeliveryCancelButtonClick = { deliveryListViewModel.onDeliveryDetailsCancelButtonClick() },
+        onTaskSelected = { deliveryListViewModel.onDeliveryDetailsTaskSelected(it) },
+        showEditButton = { deliveryListViewModel.showDeliveryDetailsEditButton(it) },
+        showCancelButton = { deliveryListViewModel.showDeliveryDetailsCancelButton(it) },
     )
 }
 
@@ -338,6 +340,22 @@ private fun ShowDeliveryTaskDetailsDialog(deliveryListViewModel: DeliveriesListV
         onDismiss = { deliveryListViewModel.onDeliveryDetailsTaskDialogDismiss() },
         onButtonClick = { deliveryListViewModel.onDeliveryDetailsTaskDialogButtonClick() },
         buttonText = stringResource(R.string.delivery_details_dialog_task_dismiss_button_text)
+    )
+}
+
+
+@Composable
+private fun ShowDeliveryCancelConfirmationDialog(deliveriesListViewModel: DeliveriesListViewModel) {
+    if (!deliveriesListViewModel.showDeliveryCancelConfirmationDialog)
+        return
+
+    ConfirmationDialog(
+        dialogTitle = stringResource(R.string.delivery_details_dialog__delivery_cancel_confirmation_dialog_title),
+        lineOne = stringResource(R.string.delivery_details_dialog__delivery_confirmation_dialog_text),
+        lineTwo = null,
+        onYesClick = { deliveriesListViewModel.onDeliveryCancelConfirmationYesClick() },
+        onNoClick = { deliveriesListViewModel.onDeliveryCancelConfirmationNoClick() },
+        onDismiss = { deliveriesListViewModel.onDeliveryCancelConfirmationDismiss() },
     )
 }
 

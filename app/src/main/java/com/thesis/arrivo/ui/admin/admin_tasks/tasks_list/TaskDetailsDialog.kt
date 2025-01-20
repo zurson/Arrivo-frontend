@@ -17,7 +17,7 @@ import com.thesis.arrivo.components.info_alert_dialog.AlertDialogLazyListDefault
 import com.thesis.arrivo.components.info_alert_dialog.AlertDialogSingleButton
 import com.thesis.arrivo.components.info_alert_dialog.DialogRecord
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
-import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.Product
+import com.thesis.arrivo.communication.task.Product
 import com.thesis.arrivo.view_models.TasksListViewModel
 
 @Composable

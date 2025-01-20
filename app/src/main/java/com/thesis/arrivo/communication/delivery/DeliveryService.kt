@@ -1,6 +1,7 @@
 package com.thesis.arrivo.communication.delivery
 
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -19,4 +20,7 @@ interface DeliveryService {
 
     @PUT("delivery/{id}")
     suspend fun updateDelivery(@Path("id") id: Long, @Body updateRequest: DeliveryUpdateRequest): Delivery
+
+    @DELETE("delivery/{id}")
+    suspend fun cancelDelivery(@Path("id") id: Long)
 }
