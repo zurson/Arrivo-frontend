@@ -1,7 +1,9 @@
 package com.thesis.arrivo.components.other_components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,7 +11,6 @@ import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -39,17 +40,19 @@ fun AppButton(
     iconStart: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
-    Button(
-        onClick = { onClick() },
+    Box(
         modifier = modifier
             .bounceClick()
+            .clickable { onClick() }
             .fillMaxWidth()
             .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
             .background(MaterialTheme.colorScheme.primary)
+            .padding(dimensionResource(R.dimen.app_button_padding))
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
         ) {
             if (iconStart) {
                 icon?.let { DefaultAppButtonIcon(icon) }
@@ -62,9 +65,7 @@ fun AppButton(
                 textAlign = TextAlign.Center,
                 fontSize = dpToSp(R.dimen.app_button_text_size),
                 color = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(dimensionResource(R.dimen.app_button_padding)),
+                modifier = Modifier.weight(1f)
             )
 
             if (!iconStart) {
