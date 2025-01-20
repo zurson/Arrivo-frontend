@@ -247,9 +247,7 @@ fun BasicTextField(
 @Composable
 private fun Preview() {
     val mainVm = MainScaffoldViewModel(
-        navigationManager = NavigationManager(rememberNavController()),
-        context = LocalContext.current,
-        adminMode = true
+        navigationManager = NavigationManager(rememberNavController())
     )
 
     val viewModel: EmployeeViewModel = viewModel(

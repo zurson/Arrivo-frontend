@@ -236,8 +236,6 @@ fun LoginDescription(modifier: Modifier = Modifier) {
 @Composable
 private fun Show() {
     val mainVm = MainScaffoldViewModel(
-        LocalContext.current,
-        false,
         NavigationManager(rememberNavController())
     )
 

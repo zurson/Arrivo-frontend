@@ -15,9 +15,7 @@ class MainScaffoldViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainScaffoldViewModel::class.java)) {
             return MainScaffoldViewModel(
-                context = context,
-                navigationManager = navigationManager,
-                adminMode = adminMode
+                navigationManager = navigationManager
             ) as T
         }
 
