@@ -25,4 +25,8 @@ class EmployeeRepository {
     suspend fun getUnassignedEmployeesOnDate(date: LocalDate): List<Employee> {
         return employeeService.getUnassignedEmployeesOnDate(date.toString())
     }
+
+    suspend fun getUserRole(): Role {
+        return employeeService.getUserRole()
+    }
 }

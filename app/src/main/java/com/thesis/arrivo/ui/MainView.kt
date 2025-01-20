@@ -62,8 +62,6 @@ fun MainView(placesClient: PlacesClient) {
 
     val mainScaffoldViewModel: MainScaffoldViewModel = viewModel(
         factory = MainScaffoldViewModelFactory(
-            context = context,
-            adminMode = true,
             navigationManager = navigationManager
         )
     )
@@ -239,7 +237,7 @@ private fun SetupMainScaffold(
                     CreateEditEmployeeView(
                         employeeViewModel = viewModel,
                         authViewModel = authVm,
-                        editMode = false,
+                        editMode = true,
                     )
                 }
 
@@ -313,6 +311,5 @@ private fun SetupMainScaffold(
         }
 
         LoadingScreen(mainScaffoldViewModel.isLoadingScreenEnabled())
-        mainScaffoldViewModel.startAuthListeners()
     }
 }

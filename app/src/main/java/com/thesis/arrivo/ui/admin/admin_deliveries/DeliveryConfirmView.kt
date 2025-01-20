@@ -321,9 +321,7 @@ private fun ButtonsSection(
 @Composable
 private fun Preview() {
     val mainVm = MainScaffoldViewModel(
-        navigationManager = NavigationManager(rememberNavController()),
-        context = LocalContext.current,
-        adminMode = true
+        navigationManager = NavigationManager(rememberNavController())
     )
 
     val deliveryConfirmViewModel: DeliveryConfirmViewModel = viewModel(

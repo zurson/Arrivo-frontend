@@ -3,6 +3,8 @@ package com.thesis.arrivo.utilities
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
@@ -15,9 +17,11 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.TextUnit
 import com.google.gson.Gson
 import com.thesis.arrivo.R
+import com.thesis.arrivo.activities.MainActivity
 import com.thesis.arrivo.communication.ErrorResponse
 import com.thesis.arrivo.utilities.exceptions.DataCorruptedException
 import com.thesis.arrivo.utilities.exceptions.OptimizationFailedException
+import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import retrofit2.HttpException
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -40,6 +44,7 @@ fun runOnMainThread(
 fun changeActivity(context: Context, destActivity: KClass<*>, finish: Boolean = false) {
     runOnMainThread {
         val intent = Intent(context, destActivity.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         context.startActivity(intent)
 
         if (finish) (context as? Activity)?.finish()
@@ -53,22 +58,29 @@ fun dpToSp(@DimenRes id: Int): TextUnit {
 }
 
 
-fun showToast(context: Context, text: String?, toastLength: Int = Toast.LENGTH_SHORT) {
+fun showToast(text: String?, toastLength: Int = Toast.LENGTH_SHORT) {
     text?.let {
-        (context as? Activity)?.runOnUiThread {
-            Toast.makeText(context, it, toastLength).show()
+        runOnMainThread {
+            Toast.makeText(MainActivity.context, it, toastLength).show()
         }
     }
 }
 
 
-fun mapError(e: Exception, context: Context): ErrorResponse {
+fun mapError(e: Exception, context: Context): ErrorResponse? {
     e.printStackTrace()
 
     when (e) {
         is HttpException -> {
+            val codeText = e.code().toString()
+            if (codeText.startsWith("4") || codeText.startsWith("5")) {
+                MainScaffoldViewModel.reset()
+                return null
+            }
+
             val errorBody = e.response()?.errorBody()?.string()
             val errors = parseErrorResponse(context, errorBody)
+
             return ErrorResponse(e.code(), errors)
         }
 
@@ -82,8 +94,8 @@ fun mapError(e: Exception, context: Context): ErrorResponse {
 
         is IOException ->
             return ErrorResponse(
-                -1,
-                listOf(context.getString(R.string.io_error))
+                code = -1,
+                errors = listOf(context.getString(R.string.io_error))
             )
 
         else -> {
@@ -104,7 +116,10 @@ fun parseErrorResponse(context: Context, errorBody: String?): List<String> {
 }
 
 
-fun showErrorDialog(context: Context, title: String, errorResponse: ErrorResponse) {
+fun showErrorDialog(context: Context, title: String, errorResponse: ErrorResponse?) {
+    if (errorResponse == null)
+        return
+
     val errorMessage = if (errorResponse.errors.isNotEmpty()) {
         errorResponse.errors.joinToString(separator = "\n") { "- $it" }
     } else {
@@ -165,9 +180,19 @@ fun preparePhoneCall(context: Context, phoneNumber: String) {
         context.startActivity(intent)
     } else {
         showToast(
-            context,
             context.getString(R.string.call_incorrect_phone_number),
             Toast.LENGTH_SHORT
         )
     }
+}
+
+
+fun isNetworkAvailable(): Boolean {
+    val connectivityManager =
+        MainActivity.context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+    val activeNetwork = connectivityManager.activeNetwork
+    val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
+
+    return capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
 }

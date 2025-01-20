@@ -203,7 +203,6 @@ class DeliveriesListViewModel(
         navigationManager.navigateTo(NavigationItem.DeliveriesListAdmin, true)
 
         showToast(
-            context = context,
             text = context.getString(R.string.delivery_cancel_success_message),
             toastLength = Toast.LENGTH_LONG
         )

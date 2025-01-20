@@ -9,6 +9,7 @@ import com.thesis.arrivo.communication.gson.LocalDateAdapter
 import com.thesis.arrivo.communication.gson.LocalDateTimeAdapter
 import com.thesis.arrivo.communication.road_accidents.RoadAccidentsService
 import com.thesis.arrivo.communication.task.TasksService
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.time.LocalDate
@@ -22,10 +23,17 @@ object RetrofitInstance {
         .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeAdapter())
         .create()
 
+    private val okHttpClient: OkHttpClient by lazy {
+        OkHttpClient.Builder()
+            .addInterceptor(AuthInterceptor())
+            .build()
+    }
+
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(okHttpClient)
             .build()
     }
 
@@ -49,3 +57,4 @@ object RetrofitInstance {
         retrofit.create(DeliveryService::class.java)
     }
 }
+

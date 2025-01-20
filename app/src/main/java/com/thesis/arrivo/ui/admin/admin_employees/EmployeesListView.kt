@@ -66,10 +66,7 @@ fun EmployeesListView(
             .background(MaterialTheme.colorScheme.background)
     ) {
 
-        ShowEmployeeDetails(
-            employeeViewModel = employeeViewModel,
-            mainScaffoldViewModel = mainScaffoldViewModel
-        )
+        ShowEmployeeDetails(employeeViewModel = employeeViewModel)
 
         /* CONFIGURATION */
         val startGuideline = createGuidelineFromStart(Settings.START_END_PERCENTAGE)
@@ -115,15 +112,12 @@ fun EmployeesListView(
 
 
 @Composable
-private fun ShowEmployeeDetails(
-    mainScaffoldViewModel: MainScaffoldViewModel,
-    employeeViewModel: EmployeeViewModel
-) {
+private fun ShowEmployeeDetails(employeeViewModel: EmployeeViewModel) {
     if (employeeViewModel.showEmployeeDetails)
         EmployeesDetailsAlertDialog(
             emp = employeeViewModel.clickedEmployee,
             onDismiss = { employeeViewModel.toggleShowEmployeeDetails() },
-            onEditButtonClick = { employeeViewModel.onEmployeeEditButtonClick(mainScaffoldViewModel) }
+            onEditButtonClick = { employeeViewModel.onEmployeeEditButtonClick() }
         )
 }
 
@@ -251,9 +245,7 @@ private fun ButtonsSection(
 @Composable
 private fun Preview() {
     val mainVm = MainScaffoldViewModel(
-        navigationManager = NavigationManager(rememberNavController()),
-        context = LocalContext.current,
-        adminMode = true
+        navigationManager = NavigationManager(rememberNavController())
     )
 
     val viewModel: EmployeeViewModel = viewModel(

@@ -32,12 +32,12 @@ fun EmployeesDetailsAlertDialog(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         ) {
             DialogRecord(
-                label = "Email",
+                label = stringResource(R.string.employee_details_dialog_record_email_label),
                 value = emp.email
             )
 
             DialogRecord(
-                label = "Phone",
+                label = stringResource(R.string.employee_details_dialog_record_phone_label),
                 value = emp.phoneNumber,
                 valueFormatter = { value ->
                     "${value.toString().substring(0, 3)}-${
@@ -47,7 +47,7 @@ fun EmployeesDetailsAlertDialog(
             )
 
             DialogRecord(
-                label = "Status",
+                label = stringResource(R.string.employee_details_dialog_record_status_label),
                 value = emp.status
             )
 

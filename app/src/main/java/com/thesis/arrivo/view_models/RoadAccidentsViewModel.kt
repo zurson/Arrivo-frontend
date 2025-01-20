@@ -226,7 +226,6 @@ class RoadAccidentsViewModel(
 
     private fun onUpdateSuccess() {
         showToast(
-            context = context,
             text = context.getString(R.string.accidents_mark_as_resolved_success_text),
             toastLength = Toast.LENGTH_LONG
         )

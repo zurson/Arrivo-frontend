@@ -279,9 +279,7 @@ private fun ShowTaskDetailsDialog(deliveryOptionsViewModel: DeliveryOptionsViewM
 @Composable
 private fun Preview() {
     val mainVm = MainScaffoldViewModel(
-        navigationManager = NavigationManager(rememberNavController()),
-        context = LocalContext.current,
-        adminMode = true
+        navigationManager = NavigationManager(rememberNavController())
     )
 
     val deliveryOptionsViewModel: DeliveryOptionsViewModel = viewModel(
