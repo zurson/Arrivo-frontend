@@ -21,11 +21,13 @@ import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
+import com.thesis.arrivo.utilities.localDateToMillis
 import com.thesis.arrivo.utilities.showDefaultErrorDialog
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class DeliveryOptionsViewModel(
+    val editMode: Boolean,
     private val context: Context,
     private val navigationManager: NavigationManager,
     private val loadingScreenManager: LoadingScreenManager,
@@ -40,12 +42,14 @@ class DeliveryOptionsViewModel(
 
     private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
 
+
     /**
      * Date Picker
      **/
 
 
     private var selectedLocalDate: LocalDate = convertLongToLocalDate(selectedDate)
+
     private val _isDatePickerError = mutableStateOf(false)
     val isDatePickerError: Boolean
         get() = _isDatePickerError.value
@@ -60,6 +64,27 @@ class DeliveryOptionsViewModel(
         _isDatePickerError.value = false
 
         fetchUnassignedEmployeesOnDate()
+
+        if (editMode) {
+            _availableTasks.addAll(prevCheckedTasks.filter { prevCheckedTask ->
+                prevCheckedTask.id !in _availableTasks.map { it.id }
+            })
+
+//            if (!isSelectedDateEditDate()) {
+//                _availableTasks.removeAll(prevCheckedTasks)
+//                checkedTasks.clear()
+//            } else {
+//                prevCheckedTasks.forEach { prevCheckedTask ->
+//                    if (!_availableTasks.contains(prevCheckedTask))
+//                        _availableTasks.add(prevCheckedTask)
+//                }
+//            }
+        }
+    }
+
+
+    private fun isSelectedDateEditDate(): Boolean {
+        return selectedLocalDate.toEpochDay() == editDate.toEpochDay()
     }
 
 
@@ -67,6 +92,8 @@ class DeliveryOptionsViewModel(
      * Employee Selector
      **/
 
+
+    private var editModeFirstEmpSet = false
 
     var selectedEmployee by mutableStateOf(Employee.emptyEmployee())
     var employeeSpinnerError by mutableStateOf(false)
@@ -85,12 +112,34 @@ class DeliveryOptionsViewModel(
                 actionToPerform = {
                     _employeesList.clear()
                     _employeesList.addAll(
-                        employeesRepository.getUnassignedEmployeesOnDate(
-                            selectedLocalDate
-                        )
+                        employeesRepository.getUnassignedEmployeesOnDate(selectedLocalDate)
                     )
                 },
+                onSuccess = { onEmployeesFetchSuccess() }
             )
+        }
+    }
+
+
+    private fun shouldSelectedEmpBeSelected(): Boolean {
+        return _employeesList.find { employee -> employee.id == selectedEmployee.id } != null
+    }
+
+
+    private fun onEmployeesFetchSuccess() {
+        if (editMode && isSelectedDateEditDate()) {
+            _employeesList.add(deliverySharedViewModel.employee)
+
+            if (!editModeFirstEmpSet) {
+                selectedEmployee = deliverySharedViewModel.employee
+                isEmployeeSelected = true
+                editModeFirstEmpSet = true
+            }
+        }
+
+        if (!shouldSelectedEmpBeSelected()) {
+            selectedEmployee = Employee.emptyEmployee()
+            isEmployeeSelected = false
         }
     }
 
@@ -125,9 +174,19 @@ class DeliveryOptionsViewModel(
                 actionToPerform = {
                     _availableTasks.clear()
                     _availableTasks.addAll(tasksRepository.getFreeTasks())
-                }
+                },
+                onSuccess = { onTaskFetchSuccess() }
             )
         }
+    }
+
+
+    private fun onTaskFetchSuccess() {
+        if (!editMode)
+            return
+
+        checkedTasks.addAll(prevCheckedTasks)
+        sortTasksList()
     }
 
 
@@ -204,7 +263,7 @@ class DeliveryOptionsViewModel(
         deliverySharedViewModel.selectedDate = selectedLocalDate
         deliverySharedViewModel.employee = selectedEmployee
 
-        navigationManager.navigateTo(NavigationItem.DeliveryCreateAdmin)
+        navigationManager.navigateTo(NavigationItem.DeliveryConfirmAdmin)
     }
 
 
@@ -234,13 +293,37 @@ class DeliveryOptionsViewModel(
 
 
     /**
+     * Edit Mode
+     **/
+
+
+    private lateinit var editDate: LocalDate
+    private lateinit var editedEmployee: Employee
+    private val prevCheckedTasks: MutableList<Task> = mutableListOf()
+
+
+    /**
      * Initializer
      **/
 
 
     init {
+        deliverySharedViewModel.editMode = editMode
+
+        _selectedDate.longValue = getCurrentDateMillis()
+        selectedLocalDate = convertLongToLocalDate(selectedDate)
+
         fetchFreeTasks()
-        fetchUnassignedEmployeesOnDate()
+
+        if (!editMode)
+            fetchUnassignedEmployeesOnDate()
+        else {
+            editDate = deliverySharedViewModel.selectedDate
+            editedEmployee = deliverySharedViewModel.employee
+            prevCheckedTasks.addAll(deliverySharedViewModel.selectedTasks)
+
+            onDateSelected(localDateToMillis(editDate))
+        }
     }
 
     override fun isLoadingScreenEnabled(): Boolean = loadingScreenManager.isLoadingScreenEnabled()

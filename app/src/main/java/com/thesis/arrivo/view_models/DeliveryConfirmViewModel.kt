@@ -13,6 +13,7 @@ import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.delivery.DeliveryCreateRequest
 import com.thesis.arrivo.communication.delivery.DeliveryRepository
 import com.thesis.arrivo.communication.delivery.DeliveryTask
+import com.thesis.arrivo.communication.delivery.DeliveryUpdateRequest
 import com.thesis.arrivo.communication.delivery.OptimizeRoutesRequest
 import com.thesis.arrivo.communication.delivery.TaskToOptimize
 import com.thesis.arrivo.communication.task.Task
@@ -52,23 +53,53 @@ class DeliveryConfirmViewModel(
 
 
     fun onFinishButtonClick() {
+        val operation = if (deliverySharedViewModel.editMode) {
+            DeliveryOperation.Update(
+                id = deliverySharedViewModel.deliveryToEdit.id,
+                data = prepareUpdateDeliveryRequest()
+            )
+        } else {
+            DeliveryOperation.Create(
+                data = prepareCreateDeliveryRequest()
+            )
+        }
+
+        handleDeliveryOperation(operation)
+    }
+
+
+    private fun handleDeliveryOperation(operation: DeliveryOperation) {
         viewModelScope.launch {
             serverRequestManager.sendRequest(
                 actionToPerform = {
-                    deliveryRepository.createDelivery(prepareCreateDeliveryRequest())
+                    when (operation) {
+                        is DeliveryOperation.Create -> deliveryRepository.createDelivery(
+                            prepareCreateDeliveryRequest()
+                        )
+
+                        is DeliveryOperation.Update -> deliveryRepository.updateDelivery(
+                            operation.id,
+                            operation.data
+                        )
+                    }
                 },
-                onSuccess = { onCreateDeliverySuccess() }
+                onSuccess = { onOperationSuccess() }
             )
         }
     }
 
 
-    private fun onCreateDeliverySuccess() {
-        navigationManager.navigateTo(NavigationItem.EmployeesListAdmin)
+    private fun onOperationSuccess() {
+        navigationManager.navigateTo(NavigationItem.DeliveriesListAdmin)
+
+        val messageId: Int = when (deliverySharedViewModel.editMode) {
+            true -> R.string.delivery_update_success_message
+            false -> R.string.delivery_create_success_message
+        }
 
         showToast(
             context = context,
-            text = context.getString(R.string.delivery_create_success_message),
+            text = context.getString(messageId),
             toastLength = Toast.LENGTH_LONG
         )
     }
@@ -82,6 +113,24 @@ class DeliveryConfirmViewModel(
             employeeId = deliverySharedViewModel.employee.id,
             date = deliverySharedViewModel.selectedDate
         )
+    }
+
+
+    private fun prepareUpdateDeliveryRequest(): DeliveryUpdateRequest {
+        return DeliveryUpdateRequest(
+            tasksIdList = selectedTasks.map { task -> DeliveryTask(task.id) },
+            timeMinutes = _predictedTimeMinutes.intValue,
+            distanceKm = distanceKm,
+            employeeId = deliverySharedViewModel.employee.id,
+            date = deliverySharedViewModel.selectedDate
+        )
+    }
+
+
+    sealed class DeliveryOperation {
+        data class Create(val data: DeliveryCreateRequest) : DeliveryOperation()
+        data class Update(val id: Long, val data: DeliveryUpdateRequest) :
+            DeliveryOperation()
     }
 
 

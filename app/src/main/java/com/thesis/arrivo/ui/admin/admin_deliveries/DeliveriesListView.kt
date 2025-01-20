@@ -51,6 +51,7 @@ import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.DeliveriesListViewModel
+import com.thesis.arrivo.view_models.DeliverySharedViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.factory.DeliveriesListViewModelFactory
 
@@ -355,6 +356,7 @@ private fun Preview() {
             context = LocalContext.current,
             loadingScreenManager = mainVm,
             navigationManager = NavigationManager(rememberNavController()),
+            deliverySharedViewModel = DeliverySharedViewModel(),
         )
     )
 

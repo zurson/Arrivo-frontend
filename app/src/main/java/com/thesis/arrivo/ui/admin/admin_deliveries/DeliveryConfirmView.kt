@@ -42,7 +42,7 @@ import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.DeliveryConfirmViewModel
 import com.thesis.arrivo.view_models.DeliverySharedViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
-import com.thesis.arrivo.view_models.factory.DeliveryOptionsViewModelFactory
+import com.thesis.arrivo.view_models.factory.DeliveryConfirmViewModelFactory
 
 @Composable
 fun DeliveryCreateView(deliveryConfirmViewModel: DeliveryConfirmViewModel) {
@@ -327,7 +327,7 @@ private fun Preview() {
     )
 
     val deliveryConfirmViewModel: DeliveryConfirmViewModel = viewModel(
-        factory = DeliveryOptionsViewModelFactory(
+        factory = DeliveryConfirmViewModelFactory(
             context = LocalContext.current,
             loadingScreenManager = mainVm,
             navigationManager = NavigationManager(rememberNavController()),

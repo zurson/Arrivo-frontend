@@ -28,6 +28,7 @@ class DeliveriesListViewModel(
     context: Context,
     private val navigationManager: NavigationManager,
     private val loadingScreenManager: LoadingScreenManager,
+    private val deliverySharedViewModel: DeliverySharedViewModel
 ) : ViewModel(), LoadingScreenStatusChecker {
 
     private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
@@ -97,7 +98,7 @@ class DeliveriesListViewModel(
 
 
     fun onCreateDeliveryButtonClick() {
-        navigationManager.navigateTo(NavigationItem.DeliveryTasksAdmin)
+        navigationManager.navigateTo(NavigationItem.DeliveryOptionsAdmin)
     }
 
 
@@ -189,7 +190,18 @@ class DeliveriesListViewModel(
 
 
     fun onDeliveryDetailsButtonClick() {
+        toggleShowDeliveryDetails()
 
+        deliverySharedViewModel.employee = selectedDelivery.employee
+
+        deliverySharedViewModel.selectedTasks.clear()
+        deliverySharedViewModel.selectedTasks.addAll(selectedDelivery.tasks)
+
+        deliverySharedViewModel.selectedDate = selectedDelivery.assignedDate
+
+        deliverySharedViewModel.deliveryToEdit = selectedDelivery
+
+        navigationManager.navigateTo(NavigationItem.DeliveryOptionsEditAdmin)
     }
 
 

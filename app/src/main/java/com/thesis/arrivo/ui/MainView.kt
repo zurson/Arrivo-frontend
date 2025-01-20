@@ -36,8 +36,8 @@ import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.view_models.AuthViewModel
 import com.thesis.arrivo.view_models.DeliveriesListViewModel
 import com.thesis.arrivo.view_models.DeliveryConfirmViewModel
-import com.thesis.arrivo.view_models.DeliverySharedViewModel
 import com.thesis.arrivo.view_models.DeliveryOptionsViewModel
+import com.thesis.arrivo.view_models.DeliverySharedViewModel
 import com.thesis.arrivo.view_models.EmployeeViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.RoadAccidentsViewModel
@@ -243,9 +243,10 @@ private fun SetupMainScaffold(
                     )
                 }
 
-                composable(NavigationItem.DeliveryTasksAdmin.route) {
+                composable(NavigationItem.DeliveryOptionsAdmin.route) {
                     val viewModel: DeliveryOptionsViewModel = viewModel(
                         factory = DeliveryOptionsViewModelFactory(
+                            editMode = false,
                             context = LocalContext.current,
                             loadingScreenManager = mainScaffoldViewModel,
                             navigationManager = navigationManager,
@@ -256,7 +257,21 @@ private fun SetupMainScaffold(
                     DeliveryTasksView(deliveryOptionsViewModel = viewModel)
                 }
 
-                composable(NavigationItem.DeliveryCreateAdmin.route) {
+                composable(NavigationItem.DeliveryOptionsEditAdmin.route) {
+                    val viewModel: DeliveryOptionsViewModel = viewModel(
+                        factory = DeliveryOptionsViewModelFactory(
+                            editMode = true,
+                            context = LocalContext.current,
+                            loadingScreenManager = mainScaffoldViewModel,
+                            navigationManager = navigationManager,
+                            deliverySharedViewModel = deliverySharedViewModel
+                        )
+                    )
+
+                    DeliveryTasksView(deliveryOptionsViewModel = viewModel)
+                }
+
+                composable(NavigationItem.DeliveryConfirmAdmin.route) {
                     val viewModel: DeliveryConfirmViewModel = viewModel(
                         factory = DeliveryConfirmViewModelFactory(
                             context = LocalContext.current,
@@ -275,6 +290,7 @@ private fun SetupMainScaffold(
                             context = LocalContext.current,
                             loadingScreenManager = mainScaffoldViewModel,
                             navigationManager = navigationManager,
+                            deliverySharedViewModel = deliverySharedViewModel
                         )
                     )
 

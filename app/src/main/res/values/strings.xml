@@ -60,6 +60,7 @@
     <string name="delivery_data_corrupted_exception_message">Data corrupted</string>
 
     <string name="delivery_create_success_message">Delivery created successfully</string>
+    <string name="delivery_update_success_message">Delivery updated successfully</string>
 
     <string name="delivery_details_dialog_window_title">Delivery Details</string>
     <string name="delivery_details_dialog_record_status_label">Status</string>

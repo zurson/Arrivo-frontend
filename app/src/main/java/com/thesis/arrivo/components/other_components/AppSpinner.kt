@@ -81,7 +81,6 @@ private fun <T> BaseAppSpinner(
     errorMessage: String
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var currentSelection by remember { mutableStateOf(selectedItem) }
 
     Box(
         contentAlignment = Alignment.Center,
@@ -92,7 +91,7 @@ private fun <T> BaseAppSpinner(
             onExpandedChange = { expanded = !expanded }
         ) {
             OutlinedTextField(
-                value = itemToString(currentSelection),
+                value = itemToString(selectedItem),
                 singleLine = true,
                 label = { Text(text = label, fontSize = dpToSp(R.dimen.form_label_text_size)) },
                 onValueChange = {},
@@ -138,7 +137,6 @@ private fun <T> BaseAppSpinner(
                             )
                         },
                         onClick = {
-                            currentSelection = item
                             onItemSelected(item)
                             expanded = false
                         }

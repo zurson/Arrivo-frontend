@@ -5,10 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
-import com.thesis.arrivo.view_models.DeliverySharedViewModel
 import com.thesis.arrivo.view_models.DeliveryOptionsViewModel
+import com.thesis.arrivo.view_models.DeliverySharedViewModel
 
 class DeliveryOptionsViewModelFactory(
+    private val editMode: Boolean,
     private val context: Context,
     private val loadingScreenManager: LoadingScreenManager,
     private val navigationManager: NavigationManager,
@@ -18,6 +19,7 @@ class DeliveryOptionsViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(DeliveryOptionsViewModel::class.java)) {
             return DeliveryOptionsViewModel(
+                editMode = editMode,
                 context = context,
                 loadingScreenManager = loadingScreenManager,
                 navigationManager = navigationManager,

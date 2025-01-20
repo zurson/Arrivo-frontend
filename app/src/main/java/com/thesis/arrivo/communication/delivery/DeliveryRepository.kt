@@ -18,4 +18,7 @@ class DeliveryRepository {
         return deliveryService.createDelivery(createRequest)
     }
 
+    suspend fun updateDelivery(id: Long, updateRequest: DeliveryUpdateRequest): Delivery {
+        return deliveryService.updateDelivery(id, updateRequest)
+    }
 }

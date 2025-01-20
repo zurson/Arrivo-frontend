@@ -45,9 +45,9 @@ import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
-import com.thesis.arrivo.view_models.MainScaffoldViewModel
-import com.thesis.arrivo.view_models.DeliverySharedViewModel
 import com.thesis.arrivo.view_models.DeliveryOptionsViewModel
+import com.thesis.arrivo.view_models.DeliverySharedViewModel
+import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.factory.DeliveryOptionsViewModelFactory
 
 @Composable
@@ -134,7 +134,7 @@ private fun EmployeeSelectorAndDatePicker(
             onItemSelected = { deliveryOptionsViewModel.onEmployeeSelected(it) },
             itemToString = { item -> deliveryOptionsViewModel.employeeToString(item) },
             isError = deliveryOptionsViewModel.employeeSpinnerError,
-            errorMessage = stringResource(R.string.delivery_employee_selector_error_message)
+            errorMessage = stringResource(R.string.delivery_employee_selector_error_message),
         )
 
         DatePickerField(
@@ -286,6 +286,7 @@ private fun Preview() {
 
     val deliveryOptionsViewModel: DeliveryOptionsViewModel = viewModel(
         factory = DeliveryOptionsViewModelFactory(
+            editMode = false, 
             context = LocalContext.current,
             loadingScreenManager = mainVm,
             navigationManager = NavigationManager(rememberNavController()),

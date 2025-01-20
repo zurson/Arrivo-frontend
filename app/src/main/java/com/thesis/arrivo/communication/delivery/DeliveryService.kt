@@ -3,6 +3,8 @@ package com.thesis.arrivo.communication.delivery
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 
 interface DeliveryService {
 
@@ -14,4 +16,7 @@ interface DeliveryService {
 
     @POST("delivery/create")
     suspend fun createDelivery(@Body createRequest: DeliveryCreateRequest): Delivery
+
+    @PUT("delivery/{id}")
+    suspend fun updateDelivery(@Path("id") id: Long, @Body updateRequest: DeliveryUpdateRequest): Delivery
 }
