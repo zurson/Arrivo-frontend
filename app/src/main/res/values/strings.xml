@@ -40,6 +40,10 @@
     <string name="create_account_create_button_text">Create Account</string>
     <string name="create_account_edit_button_text">Save</string>
 
+    <string name="employee_details_dialog_record_email_label">Email</string>
+    <string name="employee_details_dialog_record_phone_label">Phone</string>
+    <string name="employee_details_dialog_record_status_label">Status</string>
+
     <!-- Delivery -->
     <string name="delivery_redirect_button_text">Plan a Day</string>
     <string name="delivery_employee_selector_error_message">Select employee</string>

@@ -239,7 +239,7 @@ private fun SetupMainScaffold(
                     CreateEditEmployeeView(
                         employeeViewModel = viewModel,
                         authViewModel = authVm,
-                        editMode = false,
+                        editMode = true,
                     )
                 }
 

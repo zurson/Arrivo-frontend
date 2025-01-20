@@ -130,20 +130,11 @@ class EmployeeViewModel(
     }
 
 
-    fun onEmployeeEditButtonClick(
-        mainScaffoldViewModel: MainScaffoldViewModel,
-    ) {
-        setEmployeeToEdit(mainScaffoldViewModel = mainScaffoldViewModel)
+    fun onEmployeeEditButtonClick() {
+        mainScaffoldViewModel.employeeToEdit = clickedEmployee
         toggleShowEmployeeDetails()
 
         navigationManager.navigateTo(navigationItem = NavigationItem.EditEmployeeAdmin)
-    }
-
-
-    private fun setEmployeeToEdit(
-        mainScaffoldViewModel: MainScaffoldViewModel,
-    ) {
-        mainScaffoldViewModel.employeeToEdit = clickedEmployee
     }
 
 
