@@ -1,6 +1,5 @@
 package com.thesis.arrivo.view_models
 
-import android.content.Context
 import android.util.Patterns
 import android.widget.Toast
 import androidx.compose.material.icons.Icons
@@ -12,6 +11,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.thesis.arrivo.R
+import com.thesis.arrivo.activities.MainActivity
 import com.thesis.arrivo.communication.employee.EmployeeCreateAccountRequest
 import com.thesis.arrivo.communication.employee.EmployeeStatus
 import com.thesis.arrivo.communication.employee.EmployeeUpdateRequest
@@ -31,7 +33,6 @@ class AuthViewModel(
     var phoneNumber by mutableStateOf("")
     var email by mutableStateOf("")
     var password by mutableStateOf("")
-    var repeatedPassword by mutableStateOf("")
     var employmentStatus by mutableStateOf(EmployeeStatus.HIRED)
 
     var isErrorFirstName by mutableStateOf(false)
@@ -39,7 +40,6 @@ class AuthViewModel(
     var isErrorPhoneNumber by mutableStateOf(false)
     var isErrorEmail by mutableStateOf(false)
     var isErrorPassword by mutableStateOf(false)
-    var isErrorRepeatPassword by mutableStateOf(false)
 
     var firstNameErrorText by mutableStateOf("")
     var lastNameErrorText by mutableStateOf("")
@@ -47,7 +47,6 @@ class AuthViewModel(
     var emailErrorText by mutableStateOf("")
 
     private var passwordVisible by mutableStateOf(false)
-        private set
 
     val passwordVisualTransformation: VisualTransformation
         get() = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
@@ -73,15 +72,9 @@ class AuthViewModel(
     }
 
 
-    private fun validateRepeatPassword(): Boolean {
-        isErrorRepeatPassword = password != repeatedPassword
-        return !isErrorRepeatPassword
-    }
-
-
-    fun onLoginButtonClick(context: Context) {
+    fun onLoginButtonClick() {
         if (validateEmail() && validatePassword())
-            loginViaEmail(context)
+            loginViaEmail()
     }
 
 
@@ -105,18 +98,8 @@ class AuthViewModel(
         )
     }
 
-//    fun registerViaEmail(context: Context) {
-//        FirebaseAuthManager().registerViaEmail(email, password) { authStatus ->
-//            if (authStatus.success) {
-//                mainScaffoldViewModel.onLoginSuccess()
-//            } else {
-//
-//            }
-//        }
-//    }
 
-
-    private fun loginViaEmail(context: Context) {
+    private fun loginViaEmail() {
         loadingScreenManager.showLoadingScreen()
         FirebaseAuthManager().loginViaEmail(email, password) { authStatus ->
             loadingScreenManager.hideLoadingScreen()
@@ -125,7 +108,6 @@ class AuthViewModel(
             } else {
                 authStatus.exception?.let {
                     showToast(
-                        context,
                         authStatus.exception.message,
                         toastLength = Toast.LENGTH_LONG
                     )
@@ -186,6 +168,44 @@ class AuthViewModel(
 
     fun manageNavbarOnLogin() {
         mainScaffoldViewModel.manageNavbarOnLogin()
+    }
+
+
+    fun onResetPasswordButtonClick() {
+        if (!validateEmail())
+            return
+
+        sendPasswordResetEmail()
+    }
+
+
+    private fun sendPasswordResetEmail() {
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    onPasswordResetEmailSendSuccess()
+                } else {
+                    onPasswordResetEmailSendFailure()
+                }
+            }
+    }
+
+
+    private fun onPasswordResetEmailSendSuccess() {
+        showToast(
+            text = MainActivity.context.getString(R.string.password_reset_email_sent),
+            toastLength = Toast.LENGTH_LONG
+        )
+
+        email = ""
+    }
+
+
+    private fun onPasswordResetEmailSendFailure() {
+        showToast(
+            text = MainActivity.context.getString(R.string.password_reset_email_failure),
+            toastLength = Toast.LENGTH_LONG
+        )
     }
 
 

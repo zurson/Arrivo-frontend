@@ -425,7 +425,6 @@ class TaskManagerViewModel(
                 R.string.task_create_or_edit_create_success_message
 
         showToast(
-            context = context,
             text = context.getString(messageId),
             toastLength = Toast.LENGTH_LONG,
         )

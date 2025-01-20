@@ -98,7 +98,6 @@ class DeliveryConfirmViewModel(
         }
 
         showToast(
-            context = context,
             text = context.getString(messageId),
             toastLength = Toast.LENGTH_LONG
         )

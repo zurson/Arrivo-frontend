@@ -58,10 +58,10 @@ fun dpToSp(@DimenRes id: Int): TextUnit {
 }
 
 
-fun showToast(context: Context, text: String?, toastLength: Int = Toast.LENGTH_SHORT) {
+fun showToast(text: String?, toastLength: Int = Toast.LENGTH_SHORT) {
     text?.let {
-        (context as? Activity)?.runOnUiThread {
-            Toast.makeText(context, it, toastLength).show()
+        runOnMainThread {
+            Toast.makeText(MainActivity.context, it, toastLength).show()
         }
     }
 }
@@ -180,7 +180,6 @@ fun preparePhoneCall(context: Context, phoneNumber: String) {
         context.startActivity(intent)
     } else {
         showToast(
-            context,
             context.getString(R.string.call_incorrect_phone_number),
             Toast.LENGTH_SHORT
         )
