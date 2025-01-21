@@ -19,7 +19,6 @@ import com.google.gson.Gson
 import com.thesis.arrivo.R
 import com.thesis.arrivo.activities.MainActivity
 import com.thesis.arrivo.communication.ErrorResponse
-import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.exceptions.DataCorruptedException
 import com.thesis.arrivo.utilities.exceptions.OptimizationFailedException
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
@@ -200,4 +199,15 @@ fun isNetworkAvailable(): Boolean {
     val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
 
     return capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+}
+
+
+fun formatPhoneNumber(phoneNumber: String): String {
+    return try {
+        "${phoneNumber.substring(0, 3)}-" +
+                "${phoneNumber.substring(3, 6)}-" +
+                phoneNumber.substring(6)
+    } catch (e: Exception) {
+        phoneNumber
+    }
 }

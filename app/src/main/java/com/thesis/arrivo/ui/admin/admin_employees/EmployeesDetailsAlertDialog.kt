@@ -15,6 +15,7 @@ import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.components.info_alert_dialog.AlertDialogSingleButton
 import com.thesis.arrivo.components.info_alert_dialog.DialogRecord
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
+import com.thesis.arrivo.utilities.formatPhoneNumber
 
 @Composable
 fun EmployeesDetailsAlertDialog(
@@ -39,11 +40,7 @@ fun EmployeesDetailsAlertDialog(
             DialogRecord(
                 label = stringResource(R.string.employee_details_dialog_record_phone_label),
                 value = emp.phoneNumber,
-                valueFormatter = { value ->
-                    "${value.toString().substring(0, 3)}-${
-                        value.toString().substring(3, 6)
-                    }-${value.toString().substring(6)}"
-                }
+                valueFormatter = { value -> formatPhoneNumber("$value") }
             )
 
             DialogRecord(

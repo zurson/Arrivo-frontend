@@ -156,4 +156,9 @@
     <dimen name="delivery_list_container_employee_text_size">24sp</dimen>
     <dimen name="delivery_list_container_date_text_size">16sp</dimen>
 
+    <!-- USER ACCOUNT -->
+    <dimen name="account_details_icon_size">32dp</dimen>
+    <dimen name="account_details_text_size">16sp</dimen>
+    <dimen name="account_user_name_text_size">24sp</dimen>
+
 </resources>

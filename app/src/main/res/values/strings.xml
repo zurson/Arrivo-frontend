@@ -164,4 +164,8 @@
     <string name="accidents_location_dialog_title">Accident Location</string>
     <string name="accident_location_dialog_dismiss_button_text">OK</string>
 
+    <!-- USER ACCOUNT -->
+    <string name="account_logout_button_text">Logout</string>
+    <string name="account_admin_account_name">Admin Account</string>
+
 </resources>
