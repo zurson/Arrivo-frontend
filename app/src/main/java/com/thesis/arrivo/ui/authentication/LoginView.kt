@@ -92,23 +92,21 @@ fun LoginView(authViewModel: AuthViewModel) {
 
         /* LOGIN BUTTON SECTION */
         val (loginButtonRef) = createRefs()
+        val buttonTopGuideline = createGuidelineFromTop(0.85f)
         val buttonsBottomGuideline = createGuidelineFromBottom(0.05f)
 
-        Box(
-            modifier = Modifier
-                .constrainAs(loginButtonRef) {
-                    bottom.linkTo(buttonsBottomGuideline)
-                    start.linkTo(startGuideline)
-                    end.linkTo(endGuideline)
-                    width = Dimension.fillToConstraints
-                }
-                .fillMaxWidth()
-        ) {
-            AppButton(
-                onClick = { authViewModel.onLoginButtonClick() },
-                text = stringResource(R.string.login_login_button_text),
-            )
-        }
+        ButtonSection(
+            authViewModel = authViewModel,
+            modifier = Modifier.constrainAs(loginButtonRef) {
+                top.linkTo(buttonTopGuideline)
+                bottom.linkTo(buttonsBottomGuideline)
+                start.linkTo(startGuideline)
+                end.linkTo(endGuideline)
+                width = Dimension.fillToConstraints
+                height = Dimension.fillToConstraints
+            }
+        )
+
     }
 }
 
@@ -188,6 +186,21 @@ private fun FormsSection(modifier: Modifier = Modifier, authViewModel: AuthViewM
             modifier = Modifier
                 .bounceClick()
                 .clickable { authViewModel.onResetPasswordButtonClick() }
+        )
+    }
+}
+
+
+@Composable
+private fun ButtonSection(modifier: Modifier = Modifier, authViewModel: AuthViewModel) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .fillMaxSize()
+    ) {
+        AppButton(
+            onClick = { authViewModel.onLoginButtonClick() },
+            text = stringResource(R.string.login_login_button_text),
         )
     }
 }
