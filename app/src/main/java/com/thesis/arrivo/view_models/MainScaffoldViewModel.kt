@@ -52,7 +52,7 @@ class MainScaffoldViewModel(
         isUserAuthenticated { authStatus ->
             authenticated = authStatus
 
-            if (!authenticated) {
+            if (!authStatus) {
                 appStartFinish()
                 return@isUserAuthenticated
             }
@@ -66,7 +66,7 @@ class MainScaffoldViewModel(
                 }
 
                 setNavbarVisibility(true)
-                appStartFinish()
+                _appLoading.value = false
             }
         }
     }
