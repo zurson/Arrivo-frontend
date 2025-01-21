@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -45,8 +46,6 @@ import com.thesis.arrivo.view_models.factory.MainScaffoldViewModelFactory
 
 @Composable
 fun LoginView(authViewModel: AuthViewModel) {
-    authViewModel.manageNavbarOnLogin()
-
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -93,23 +92,21 @@ fun LoginView(authViewModel: AuthViewModel) {
 
         /* LOGIN BUTTON SECTION */
         val (loginButtonRef) = createRefs()
+        val buttonTopGuideline = createGuidelineFromTop(0.85f)
         val buttonsBottomGuideline = createGuidelineFromBottom(0.05f)
 
-        Box(
-            modifier = Modifier
-                .constrainAs(loginButtonRef) {
-                    bottom.linkTo(buttonsBottomGuideline)
-                    start.linkTo(startGuideline)
-                    end.linkTo(endGuideline)
-                    width = Dimension.fillToConstraints
-                }
-                .fillMaxWidth()
-        ) {
-            AppButton(
-                onClick = { authViewModel.onLoginButtonClick() },
-                text = stringResource(R.string.login_login_button_text),
-            )
-        }
+        ButtonSection(
+            authViewModel = authViewModel,
+            modifier = Modifier.constrainAs(loginButtonRef) {
+                top.linkTo(buttonTopGuideline)
+                bottom.linkTo(buttonsBottomGuideline)
+                start.linkTo(startGuideline)
+                end.linkTo(endGuideline)
+                width = Dimension.fillToConstraints
+                height = Dimension.fillToConstraints
+            }
+        )
+
     }
 }
 
@@ -194,11 +191,29 @@ private fun FormsSection(modifier: Modifier = Modifier, authViewModel: AuthViewM
 }
 
 
+@Composable
+private fun ButtonSection(modifier: Modifier = Modifier, authViewModel: AuthViewModel) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .fillMaxSize()
+    ) {
+        AppButton(
+            onClick = { authViewModel.onLoginButtonClick() },
+            text = stringResource(R.string.login_login_button_text),
+        )
+    }
+}
+
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Preview() {
     val mainVm: MainScaffoldViewModel = viewModel(
-        factory = MainScaffoldViewModelFactory(NavigationManager(rememberNavController()))
+        factory = MainScaffoldViewModelFactory(
+            context = LocalContext.current,
+            navigationManager = NavigationManager(rememberNavController())
+        )
     )
 
     val viewModel: AuthViewModel = viewModel(

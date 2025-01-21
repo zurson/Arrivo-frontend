@@ -430,7 +430,7 @@ class TaskManagerViewModel(
         )
 
         navigationManager.navigateTo(
-            navigationItem = NavigationItem.TasksListAdmin,
+            routeOrItem = NavigationItem.TasksListAdmin,
             clearHistory = true
         )
     }

@@ -15,17 +15,19 @@ class ServerRequestManager(
         actionToPerform: suspend () -> Unit,
         onFailure: (Exception) -> Unit = { },
         onSuccess: () -> Unit = { },
-        showOnFailureDefaultInfoBox: Boolean = true
+        showOnFailureDefaultInfoBox: Boolean = true,
+        useLoadingScreen: Boolean = true
     ) {
         try {
-            loadingScreenManager.showLoadingScreen()
+            if (useLoadingScreen) loadingScreenManager.showLoadingScreen()
+
             actionToPerform()
             onSuccess()
         } catch (e: Exception) {
             if (showOnFailureDefaultInfoBox) onFailureErrorDialog(e)
             onFailure(e)
         } finally {
-            loadingScreenManager.hideLoadingScreen()
+            if (useLoadingScreen) loadingScreenManager.hideLoadingScreen()
         }
     }
 

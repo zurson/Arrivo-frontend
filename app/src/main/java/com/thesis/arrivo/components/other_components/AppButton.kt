@@ -3,7 +3,6 @@ package com.thesis.arrivo.components.other_components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,7 +22,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.thesis.arrivo.R
 import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.ui.theme.Theme
@@ -40,37 +38,35 @@ fun AppButton(
     iconStart: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
-    Box(
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
             .bounceClick()
             .clickable { onClick() }
             .fillMaxWidth()
             .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
             .background(MaterialTheme.colorScheme.primary)
-            .padding(dimensionResource(R.dimen.app_button_padding))
+            .padding(horizontal = dimensionResource(R.dimen.app_button_padding))
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            if (iconStart) {
-                icon?.let { DefaultAppButtonIcon(icon) }
-            }
+        if (iconStart) {
+            icon?.let { DefaultAppButtonIcon(icon) }
+        }
 
-            Text(
-                text = text,
-                maxLines = max(maxLines, APP_BUTTON_DEFAULT_MAX_LINES),
-                overflow = TextOverflow.Ellipsis,
-                textAlign = TextAlign.Center,
-                fontSize = dpToSp(R.dimen.app_button_text_size),
-                color = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier.weight(1f)
-            )
+        Text(
+            text = text,
+            maxLines = max(maxLines, APP_BUTTON_DEFAULT_MAX_LINES),
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Center,
+            fontSize = dpToSp(R.dimen.app_button_text_size),
+            color = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier
+                .weight(1f)
+                .padding(vertical = dimensionResource(R.dimen.app_button_padding))
+        )
 
-            if (!iconStart) {
-                icon?.let { DefaultAppButtonIcon(icon) }
-            }
+        if (!iconStart) {
+            icon?.let { DefaultAppButtonIcon(icon) }
         }
     }
 }
@@ -83,7 +79,7 @@ private fun DefaultAppButtonIcon(icon: ImageVector) {
         contentDescription = null,
         tint = MaterialTheme.colorScheme.onPrimary,
         modifier = Modifier
-            .requiredSize(dimensionResource(R.dimen.app_button_icon_size)),
+            .requiredSize(dimensionResource(R.dimen.app_button_icon_size))
     )
 }
 

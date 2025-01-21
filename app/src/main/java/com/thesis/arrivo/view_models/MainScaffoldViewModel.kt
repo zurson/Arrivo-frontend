@@ -1,11 +1,13 @@
 package com.thesis.arrivo.view_models
 
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.thesis.arrivo.R
 import com.thesis.arrivo.activities.MainActivity
 import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.task.Task
@@ -15,10 +17,15 @@ import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.changeActivity
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
+import com.thesis.arrivo.utilities.interfaces.LoggedInUserAccessor
+import com.thesis.arrivo.utilities.showDefaultErrorDialog
 import kotlinx.coroutines.launch
 
-class MainScaffoldViewModel(private val navigationManager: NavigationManager) : ViewModel(),
-    LoadingScreenManager {
+class MainScaffoldViewModel(
+    private val context: Context,
+    private val navigationManager: NavigationManager
+) : ViewModel(),
+    LoadingScreenManager, LoggedInUserAccessor {
 
     companion object {
         fun reset() {
@@ -32,20 +39,73 @@ class MainScaffoldViewModel(private val navigationManager: NavigationManager) : 
         }
     }
 
+    private val loggedInUserDetailsViewModel = LoggedInUserDetailsViewModel(context, this)
 
-    private var adminMode: Boolean = false
+
+    /**
+     * Start App
+     **/
+
+    fun startApp() {
+        _appLoading.value = true
+
+        isUserAuthenticated { authStatus ->
+            authenticated = authStatus
+
+            if (!authStatus) {
+                appStartFinish()
+                return@isUserAuthenticated
+            }
+
+            fetchLoggedInUserDetails { userDetailsFetchingStatus ->
+                if (!userDetailsFetchingStatus) {
+                    appStartFinish()
+                    setNavbarVisibility(false)
+                    reset()
+                    return@fetchLoggedInUserDetails
+                }
+
+                setNavbarVisibility(true)
+                _appLoading.value = false
+            }
+        }
+    }
+
+
+    private fun showUserDetailsFetchFailAlertBox() {
+        showDefaultErrorDialog(
+            context = context,
+            title = context.getString(R.string.error_title),
+            message = context.getString(R.string.unexpected_error)
+        )
+    }
+
+
+    private fun appStartFinish() {
+        authenticated = false
+        _appLoading.value = false
+    }
 
 
     /**
      * NavBar elements
      **/
 
+
+    private val _appLoading = mutableStateOf(true)
+    val appLoading: Boolean
+        get() = _appLoading.value
+
+
+    private var authenticated: Boolean = false
+
+
     private val navbarElementUser = listOf(
         NavigationItem.TasksUser,
         NavigationItem.MapUser,
         NavigationItem.AccidentsUser,
         NavigationItem.ReportsUser,
-        NavigationItem.AccountUser
+        NavigationItem.AccountManagement,
     )
 
     private val navbarElementsAdmin = listOf(
@@ -53,10 +113,19 @@ class MainScaffoldViewModel(private val navigationManager: NavigationManager) : 
         NavigationItem.TasksListAdmin,
         NavigationItem.DeliveriesListAdmin,
         NavigationItem.EmployeesListAdmin,
+        NavigationItem.AccountManagement
     )
 
     fun getNavbarElements(): List<NavigationItem> =
-        if (adminMode) navbarElementsAdmin else navbarElementUser
+        if (isAdmin()) navbarElementsAdmin else navbarElementUser
+
+
+    fun getStartDestination(): String {
+        return when (authenticated) {
+            true -> getNavbarElements().first().route
+            false -> NavigationItem.Login.route
+        }
+    }
 
 
     private fun isUserAuthenticated(callback: (Boolean) -> Unit) {
@@ -78,25 +147,11 @@ class MainScaffoldViewModel(private val navigationManager: NavigationManager) : 
     }
 
 
-    fun getStartDestination(callback: (NavigationItem) -> Unit) {
-        isUserAuthenticated { isAuthenticated ->
-            if (isAuthenticated) {
-                checkIsAdmin { isAdmin ->
-                    adminMode = isAdmin
-                    val startDestination = getNavbarElements().first()
-                    callback(startDestination)
-                }
-            } else {
-                callback(NavigationItem.Login)
-            }
-        }
-    }
-
-    private fun checkIsAdmin(callback: (Boolean) -> Unit) {
-        val roleViewModel = RoleViewModel(this)
+    private fun fetchLoggedInUserDetails(callback: (Boolean) -> Unit) {
         viewModelScope.launch {
-            roleViewModel.fetchUserRole()
-            callback(roleViewModel.isAdmin())
+            loggedInUserDetailsViewModel.fetch { success ->
+                callback(success)
+            }
         }
     }
 
@@ -132,7 +187,7 @@ class MainScaffoldViewModel(private val navigationManager: NavigationManager) : 
      * Navbar visibility status
      **/
 
-    private val _showNavbar = mutableStateOf(true)
+    private val _showNavbar = mutableStateOf(false)
     val showNavbar: Boolean
         get() = _showNavbar.value
 
@@ -147,16 +202,18 @@ class MainScaffoldViewModel(private val navigationManager: NavigationManager) : 
 
 
     fun onAuthenticationSuccess() {
-        getStartDestination { dest -> navigationManager.navigateTo(dest, true) }
-        setNavbarVisibility(true)
-    }
+        fetchLoggedInUserDetails { success ->
+            if (success) {
+                authenticated = true
+                setNavbarVisibility(true)
+            } else {
+                authenticated = false
+                setNavbarVisibility(false)
+                showUserDetailsFetchFailAlertBox()
+            }
 
-
-    fun manageNavbarOnLogin() {
-        if (FirebaseAuth.getInstance().currentUser == null)
-            setNavbarVisibility(false)
-        else
-            setNavbarVisibility(true)
+            navigationManager.navigateTo(getStartDestination(), true)
+        }
     }
 
 
@@ -199,7 +256,22 @@ class MainScaffoldViewModel(private val navigationManager: NavigationManager) : 
 
 
     /**
+     * Logged In User Details Accessor
+     **/
+
+
+    override fun getLoggedInUserDetails(): Employee {
+        return loggedInUserDetailsViewModel.getLoggedUserDetails()
+    }
+
+    override fun isAdmin(): Boolean {
+        return loggedInUserDetailsViewModel.isAdmin()
+    }
+
+
+    /**
      * Other
      **/
+
 
 }

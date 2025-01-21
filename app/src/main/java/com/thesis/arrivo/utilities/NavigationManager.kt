@@ -5,15 +5,22 @@ import com.thesis.arrivo.components.navigation.NavigationItem
 
 class NavigationManager(private val navController: NavHostController) {
 
-    fun navigateTo(navigationItem: NavigationItem, clearHistory: Boolean = false) {
+    fun navigateTo(routeOrItem: Any, clearHistory: Boolean = false) {
+        val route = when (routeOrItem) {
+            is NavigationItem -> routeOrItem.route
+            is String -> routeOrItem
+            else -> throw IllegalArgumentException("Unsupported type for navigation")
+        }
+
         runOnMainThread {
-            navController.navigate(navigationItem.route) {
+            navController.navigate(route) {
                 if (clearHistory) {
                     popUpTo(0) { inclusive = true }
                 }
             }
         }
     }
+
 
     fun navigateBack() {
         navController.popBackStack()

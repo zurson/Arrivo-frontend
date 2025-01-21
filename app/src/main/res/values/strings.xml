@@ -12,7 +12,9 @@
     <string name="nav_map_label_user">Map</string>
     <string name="nav_road_accident_label_user">Accident</string>
     <string name="nav_your_reports_label_user">Reports</string>
-    <string name="nav_help_label_user">Account</string>
+
+    <!-- NavBar - Common -->
+    <string name="nav_account_management_label">Account</string>
 
     <!-- NavBar - Admin -->
     <string name="nav_accidents_label_admin">Accidents</string>
@@ -161,5 +163,9 @@
     <string name="accidents_mark_as_resolved_success_text">Report marked as resolved successfully!</string>
     <string name="accidents_location_dialog_title">Accident Location</string>
     <string name="accident_location_dialog_dismiss_button_text">OK</string>
+
+    <!-- USER ACCOUNT -->
+    <string name="account_logout_button_text">Logout</string>
+    <string name="account_admin_account_name">Admin Account</string>
 
 </resources>

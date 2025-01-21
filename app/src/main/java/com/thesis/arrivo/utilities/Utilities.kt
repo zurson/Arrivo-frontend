@@ -44,10 +44,13 @@ fun runOnMainThread(
 fun changeActivity(context: Context, destActivity: KClass<*>, finish: Boolean = false) {
     runOnMainThread {
         val intent = Intent(context, destActivity.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         context.startActivity(intent)
 
-        if (finish) (context as? Activity)?.finish()
+        // Optionally finish the current activity
+        if (finish) {
+            (context as? Activity)?.finish()
+        }
     }
 }
 
@@ -72,8 +75,8 @@ fun mapError(e: Exception, context: Context): ErrorResponse? {
 
     when (e) {
         is HttpException -> {
-            val codeText = e.code().toString()
-            if (codeText.startsWith("4") || codeText.startsWith("5")) {
+            val code = e.code()
+            if (code == 401 || code == 500 || code == 403) {
                 MainScaffoldViewModel.reset()
                 return null
             }
@@ -125,6 +128,7 @@ fun showErrorDialog(context: Context, title: String, errorResponse: ErrorRespons
     } else {
         context.getString(R.string.unexpected_error)
     }
+
 
     AlertDialog.Builder(context)
         .setTitle(title)
@@ -195,4 +199,15 @@ fun isNetworkAvailable(): Boolean {
     val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
 
     return capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+}
+
+
+fun formatPhoneNumber(phoneNumber: String): String {
+    return try {
+        "${phoneNumber.substring(0, 3)}-" +
+                "${phoneNumber.substring(3, 6)}-" +
+                phoneNumber.substring(6)
+    } catch (e: Exception) {
+        phoneNumber
+    }
 }
