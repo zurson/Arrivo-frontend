@@ -38,6 +38,6 @@ class LoggedInUserDetailsViewModel(context: Context, loadingScreenManager: Loadi
     }
 
 
-    fun getLoggedUserDetails(): Employee = loggedUserDetails!!
+    fun getLoggedUserDetails(): Employee = loggedUserDetails ?: Employee.emptyEmployee()
 
 }
