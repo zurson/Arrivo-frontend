@@ -19,6 +19,7 @@ import com.google.gson.Gson
 import com.thesis.arrivo.R
 import com.thesis.arrivo.activities.MainActivity
 import com.thesis.arrivo.communication.ErrorResponse
+import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.exceptions.DataCorruptedException
 import com.thesis.arrivo.utilities.exceptions.OptimizationFailedException
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
@@ -75,8 +76,8 @@ fun mapError(e: Exception, context: Context): ErrorResponse? {
 
     when (e) {
         is HttpException -> {
-            val codeText = e.code().toString()
-            if (codeText.startsWith("4") || codeText.startsWith("5")) {
+            val code = e.code()
+            if (code == 401 || code == 500 || code == 403) {
                 MainScaffoldViewModel.reset()
                 return null
             }
@@ -128,6 +129,7 @@ fun showErrorDialog(context: Context, title: String, errorResponse: ErrorRespons
     } else {
         context.getString(R.string.unexpected_error)
     }
+
 
     AlertDialog.Builder(context)
         .setTitle(title)

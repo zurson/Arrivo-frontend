@@ -166,11 +166,6 @@ class AuthViewModel(
     }
 
 
-    fun manageNavbarOnLogin() {
-        mainScaffoldViewModel.manageNavbarOnLogin()
-    }
-
-
     fun onResetPasswordButtonClick() {
         if (!validateEmail())
             return

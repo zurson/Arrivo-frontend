@@ -1,11 +1,13 @@
 package com.thesis.arrivo.view_models
 
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.thesis.arrivo.R
 import com.thesis.arrivo.activities.MainActivity
 import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.task.Task
@@ -16,9 +18,13 @@ import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.changeActivity
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoggedInUserAccessor
+import com.thesis.arrivo.utilities.showDefaultErrorDialog
 import kotlinx.coroutines.launch
 
-class MainScaffoldViewModel(private val navigationManager: NavigationManager) : ViewModel(),
+class MainScaffoldViewModel(
+    private val context: Context,
+    private val navigationManager: NavigationManager
+) : ViewModel(),
     LoadingScreenManager, LoggedInUserAccessor {
 
     companion object {
@@ -33,7 +39,7 @@ class MainScaffoldViewModel(private val navigationManager: NavigationManager) : 
         }
     }
 
-    private val loggedInUserDetailsViewModel = LoggedInUserDetailsViewModel(this)
+    private val loggedInUserDetailsViewModel = LoggedInUserDetailsViewModel(context, this)
 
 
     /**
@@ -41,42 +47,43 @@ class MainScaffoldViewModel(private val navigationManager: NavigationManager) : 
      **/
 
     fun startApp() {
-        // Show loading screen and initiate loading state
-        showLoadingScreen()
         _appLoading.value = true
 
-        // Check if the user is authenticated
         isUserAuthenticated { authStatus ->
-            // Update the authentication state
             authenticated = authStatus
-            println("Authentication status: $authenticated")
 
             if (!authenticated) {
-                // If authentication fails, reset and stop the app initialization
-                println("Authentication failed. Resetting...")
-                authenticated = false
-                _appLoading.value = false
-                hideLoadingScreen()  // Hide loading screen after reset
-                return@isUserAuthenticated  // Exit early to prevent further processing
+                appStartFinish()
+                return@isUserAuthenticated
             }
 
-            // If authenticated, fetch logged-in user details
             fetchLoggedInUserDetails { userDetailsFetchingStatus ->
                 if (!userDetailsFetchingStatus) {
-                    // If fetching user details fails, reset and stop further execution
-                    println("Failed to fetch user details. Resetting...")
+                    appStartFinish()
+                    setNavbarVisibility(false)
                     reset()
-                    _appLoading.value = false
-                    hideLoadingScreen()  // Hide loading screen after reset
-                    return@fetchLoggedInUserDetails  // Exit early to prevent further processing
+                    return@fetchLoggedInUserDetails
                 }
 
-                println("SUCCES to fetch user details!")
-                // If everything is successful, hide the loading screen and proceed
-                _appLoading.value = false
-                hideLoadingScreen()
+                setNavbarVisibility(true)
+                appStartFinish()
             }
         }
+    }
+
+
+    private fun showUserDetailsFetchFailAlertBox() {
+        showDefaultErrorDialog(
+            context = context,
+            title = context.getString(R.string.error_title),
+            message = context.getString(R.string.unexpected_error)
+        )
+    }
+
+
+    private fun appStartFinish() {
+        authenticated = false
+        _appLoading.value = false
     }
 
 
@@ -180,7 +187,7 @@ class MainScaffoldViewModel(private val navigationManager: NavigationManager) : 
      * Navbar visibility status
      **/
 
-    private val _showNavbar = mutableStateOf(true)
+    private val _showNavbar = mutableStateOf(false)
     val showNavbar: Boolean
         get() = _showNavbar.value
 
@@ -202,18 +209,11 @@ class MainScaffoldViewModel(private val navigationManager: NavigationManager) : 
             } else {
                 authenticated = false
                 setNavbarVisibility(false)
+                showUserDetailsFetchFailAlertBox()
             }
 
             navigationManager.navigateTo(getStartDestination(), true)
         }
-    }
-
-
-    fun manageNavbarOnLogin() {
-        if (FirebaseAuth.getInstance().currentUser == null)
-            setNavbarVisibility(false)
-        else
-            setNavbarVisibility(true)
     }
 
 

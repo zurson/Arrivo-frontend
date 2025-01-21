@@ -1,17 +1,18 @@
 package com.thesis.arrivo.view_models
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.thesis.arrivo.activities.MainActivity
 import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.employee.EmployeeRepository
 import com.thesis.arrivo.communication.employee.Role
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 
-class LoggedInUserDetailsViewModel(loadingScreenManager: LoadingScreenManager) : ViewModel() {
+class LoggedInUserDetailsViewModel(context: Context, loadingScreenManager: LoadingScreenManager) :
+    ViewModel() {
 
     private val serverRequestManager = ServerRequestManager(
-        context = MainActivity.context,
+        context = context,
         loadingScreenManager = loadingScreenManager
     )
 
@@ -24,7 +25,7 @@ class LoggedInUserDetailsViewModel(loadingScreenManager: LoadingScreenManager) :
             actionToPerform = { loggedUserDetails = employeeRepository.getLoggedInUserDetails() },
             onFailure = { callback(false) },
             onSuccess = { callback(true) },
-            useLoadingScreen = false
+            showOnFailureDefaultInfoBox = false
         )
     }
 

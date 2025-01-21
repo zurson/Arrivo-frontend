@@ -332,6 +332,7 @@ private fun AccidentLocationOnMap(roadAccidentsViewModel: RoadAccidentsViewModel
 @Composable
 private fun Preview() {
     val mainVm = MainScaffoldViewModel(
+        context = LocalContext.current,
         navigationManager = NavigationManager(rememberNavController())
     )
 

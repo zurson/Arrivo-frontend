@@ -364,6 +364,7 @@ private fun ShowDeliveryCancelConfirmationDialog(deliveriesListViewModel: Delive
 @Composable
 private fun Preview() {
     val mainVm = MainScaffoldViewModel(
+        context = LocalContext.current,
         navigationManager = NavigationManager(rememberNavController())
     )
 

@@ -61,6 +61,7 @@ fun MainView(placesClient: PlacesClient) {
 
     val mainScaffoldViewModel: MainScaffoldViewModel = viewModel(
         factory = MainScaffoldViewModelFactory(
+            context = LocalContext.current,
             navigationManager = navigationManager
         )
     )
@@ -69,8 +70,10 @@ fun MainView(placesClient: PlacesClient) {
         mainScaffoldViewModel.startApp()
     }
 
-    if (mainScaffoldViewModel.appLoading)
+    if (mainScaffoldViewModel.appLoading) {
+        LoadingScreen(true)
         return
+    }
 
     SetupMainScaffold(
         placesClient = placesClient,
@@ -90,9 +93,6 @@ private fun SetupMainScaffold(
     navigationManager: NavigationManager,
     deliverySharedViewModel: DeliverySharedViewModel
 ) {
-    val startDestination = mainScaffoldViewModel.getStartDestination()
-    println("START START START START START START START START START START : $startDestination")
-
     Theme.ArrivoTheme {
         MainScaffold(
             mainScaffoldViewModel = mainScaffoldViewModel

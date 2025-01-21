@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -45,8 +46,6 @@ import com.thesis.arrivo.view_models.factory.MainScaffoldViewModelFactory
 
 @Composable
 fun LoginView(authViewModel: AuthViewModel) {
-    authViewModel.manageNavbarOnLogin()
-
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -198,7 +197,10 @@ private fun FormsSection(modifier: Modifier = Modifier, authViewModel: AuthViewM
 @Composable
 private fun Preview() {
     val mainVm: MainScaffoldViewModel = viewModel(
-        factory = MainScaffoldViewModelFactory(NavigationManager(rememberNavController()))
+        factory = MainScaffoldViewModelFactory(
+            context = LocalContext.current,
+            navigationManager = NavigationManager(rememberNavController())
+        )
     )
 
     val viewModel: AuthViewModel = viewModel(
