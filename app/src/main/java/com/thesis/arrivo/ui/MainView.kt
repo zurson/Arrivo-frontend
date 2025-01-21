@@ -1,15 +1,13 @@
 package com.thesis.arrivo.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,8 +24,8 @@ import com.thesis.arrivo.ui.admin.admin_employees.EmployeesListView
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskCreateOrEditView
 import com.thesis.arrivo.ui.admin.admin_tasks.tasks_list.TasksListView
 import com.thesis.arrivo.ui.authentication.LoginView
+import com.thesis.arrivo.ui.common.AccountView
 import com.thesis.arrivo.ui.theme.Theme
-import com.thesis.arrivo.ui.user.user_account_view.AccountView
 import com.thesis.arrivo.ui.user.user_delivery_view.DeliveryView
 import com.thesis.arrivo.ui.user.user_map_view.MapView
 import com.thesis.arrivo.ui.user.user_road_accident_view.RoadAccidentView
@@ -56,9 +54,10 @@ import com.thesis.arrivo.view_models.factory.TaskManagerViewModelFactory
 
 @Composable
 fun MainView(placesClient: PlacesClient) {
-    val context = LocalContext.current
     val navHostController = rememberNavController()
     val navigationManager = NavigationManager(navHostController)
+
+    val deliverySharedViewModel: DeliverySharedViewModel = viewModel()
 
     val mainScaffoldViewModel: MainScaffoldViewModel = viewModel(
         factory = MainScaffoldViewModelFactory(
@@ -66,11 +65,19 @@ fun MainView(placesClient: PlacesClient) {
         )
     )
 
+    LaunchedEffect(key1 = true) {
+        mainScaffoldViewModel.startApp()
+    }
+
+    if (mainScaffoldViewModel.appLoading)
+        return
+
     SetupMainScaffold(
         placesClient = placesClient,
         navHostController = navHostController,
         mainScaffoldViewModel = mainScaffoldViewModel,
-        navigationManager = navigationManager
+        navigationManager = navigationManager,
+        deliverySharedViewModel = deliverySharedViewModel
     )
 }
 
@@ -80,27 +87,11 @@ private fun SetupMainScaffold(
     placesClient: PlacesClient,
     navHostController: NavHostController,
     mainScaffoldViewModel: MainScaffoldViewModel,
-    navigationManager: NavigationManager
+    navigationManager: NavigationManager,
+    deliverySharedViewModel: DeliverySharedViewModel
 ) {
-    var startDestination by remember { mutableStateOf<NavigationItem?>(null) }
-
-    LaunchedEffect(Unit) {
-        mainScaffoldViewModel.getStartDestination { dest ->
-            startDestination = dest
-        }
-    }
-
-    if (startDestination == null) {
-        mainScaffoldViewModel.showLoadingScreen()
-        return
-    }
-    mainScaffoldViewModel.hideLoadingScreen()
-
-    /**
-     * SHARED VIEW MODELS
-     **/
-
-    val deliverySharedViewModel: DeliverySharedViewModel = viewModel()
+    val startDestination = mainScaffoldViewModel.getStartDestination()
+    println("START START START START START START START START START START : $startDestination")
 
     Theme.ArrivoTheme {
         MainScaffold(
@@ -108,208 +99,209 @@ private fun SetupMainScaffold(
         ) { contentPadding ->
             NavHost(
                 navController = navHostController,
-                startDestination = startDestination!!.route,
+                startDestination = mainScaffoldViewModel.getStartDestination(),
                 modifier = Modifier.padding(contentPadding)
             ) {
-                /** User **/
-                composable(NavigationItem.TasksUser.route) { DeliveryView() }
-                composable(NavigationItem.MapUser.route) { MapView() }
-                composable(NavigationItem.AccidentsUser.route) { RoadAccidentView() }
-                composable(NavigationItem.ReportsUser.route) { YourAccidentsView() }
-                composable(NavigationItem.AccountUser.route) { AccountView() }
+                setupUserViews(mainScaffoldViewModel = mainScaffoldViewModel)
 
-                /** Admin **/
-                composable(NavigationItem.AccidentsAdmin.route) {
-                    val viewModel: RoadAccidentsViewModel = viewModel(
-                        factory = RoadAccidentViewModelFactory(
-                            context = LocalContext.current,
-                            loadingScreenManager = mainScaffoldViewModel
-                        )
-                    )
+                setupCommonViews(mainScaffoldViewModel = mainScaffoldViewModel)
 
-                    AccidentsView(roadAccidentsViewModel = viewModel)
-                }
+                setupAdminViews(
+                    placesClient = placesClient,
+                    mainScaffoldViewModel = mainScaffoldViewModel,
+                    navigationManager = navigationManager,
+                    deliverySharedViewModel = deliverySharedViewModel
+                )
 
-                composable(NavigationItem.TasksListAdmin.route) {
-                    val viewModel: TasksListViewModel = viewModel(
-                        factory = TaskListViewModelFactory(
-                            context = LocalContext.current,
-                            mainScaffoldViewModel = mainScaffoldViewModel,
-                            loadingScreenManager = mainScaffoldViewModel,
-                            navigationManager = navigationManager,
-                        )
-                    )
-
-                    TasksListView(viewModel)
-                }
-
-                composable(NavigationItem.TaskCreateAdmin.route) {
-                    val viewModel: TaskManagerViewModel = viewModel(
-                        factory = TaskManagerViewModelFactory(
-                            placesClient = placesClient,
-                            mainScaffoldViewModel = mainScaffoldViewModel,
-                            navigationManager = navigationManager,
-                            loadingScreenManager = mainScaffoldViewModel,
-                            context = LocalContext.current
-                        )
-                    )
-
-                    TaskCreateOrEditView(
-                        editMode = false,
-                        taskManagerViewModel = viewModel
-                    )
-                }
-
-                composable(NavigationItem.TaskEditAdmin.route) {
-                    val viewModel: TaskManagerViewModel = viewModel(
-                        factory = TaskManagerViewModelFactory(
-                            placesClient = placesClient,
-                            mainScaffoldViewModel = mainScaffoldViewModel,
-                            navigationManager = navigationManager,
-                            loadingScreenManager = mainScaffoldViewModel,
-                            context = LocalContext.current
-                        )
-                    )
-
-                    TaskCreateOrEditView(
-                        editMode = true,
-                        taskManagerViewModel = viewModel
-                    )
-                }
-
-                composable(NavigationItem.EmployeesListAdmin.route) {
-                    val viewModel: EmployeeViewModel = viewModel(
-                        factory = EmployeeViewModelFactory(
-                            navigationManager = navigationManager,
-                            loadingScreenManager = mainScaffoldViewModel,
-                            mainScaffoldViewModel = mainScaffoldViewModel,
-                            context = LocalContext.current
-                        )
-                    )
-
-                    EmployeesListView(
-                        mainScaffoldViewModel = mainScaffoldViewModel,
-                        employeeViewModel = viewModel
-                    )
-                }
-
-                composable(NavigationItem.CreateEmployeeAdmin.route) {
-                    val viewModel: EmployeeViewModel = viewModel(
-                        factory = EmployeeViewModelFactory(
-                            navigationManager = navigationManager,
-                            loadingScreenManager = mainScaffoldViewModel,
-                            mainScaffoldViewModel = mainScaffoldViewModel,
-                            context = LocalContext.current
-                        )
-                    )
-
-                    val authVm: AuthViewModel = viewModel(
-                        factory = AuthViewModelFactory(
-                            loadingScreenManager = mainScaffoldViewModel,
-                            mainScaffoldViewModel = mainScaffoldViewModel,
-                        )
-                    )
-
-                    CreateEditEmployeeView(
-                        employeeViewModel = viewModel,
-                        authViewModel = authVm,
-                        editMode = false,
-                    )
-                }
-
-                composable(NavigationItem.EditEmployeeAdmin.route) {
-                    val viewModel: EmployeeViewModel = viewModel(
-                        factory = EmployeeViewModelFactory(
-                            navigationManager = navigationManager,
-                            loadingScreenManager = mainScaffoldViewModel,
-                            mainScaffoldViewModel = mainScaffoldViewModel,
-                            context = LocalContext.current
-                        )
-                    )
-
-                    val authVm: AuthViewModel = viewModel(
-                        factory = AuthViewModelFactory(
-                            loadingScreenManager = mainScaffoldViewModel,
-                            mainScaffoldViewModel = mainScaffoldViewModel,
-                        )
-                    )
-
-                    CreateEditEmployeeView(
-                        employeeViewModel = viewModel,
-                        authViewModel = authVm,
-                        editMode = true,
-                    )
-                }
-
-                composable(NavigationItem.DeliveryOptionsAdmin.route) {
-                    val viewModel: DeliveryOptionsViewModel = viewModel(
-                        factory = DeliveryOptionsViewModelFactory(
-                            editMode = false,
-                            context = LocalContext.current,
-                            loadingScreenManager = mainScaffoldViewModel,
-                            navigationManager = navigationManager,
-                            deliverySharedViewModel = deliverySharedViewModel
-                        )
-                    )
-
-                    DeliveryTasksView(deliveryOptionsViewModel = viewModel)
-                }
-
-                composable(NavigationItem.DeliveryOptionsEditAdmin.route) {
-                    val viewModel: DeliveryOptionsViewModel = viewModel(
-                        factory = DeliveryOptionsViewModelFactory(
-                            editMode = true,
-                            context = LocalContext.current,
-                            loadingScreenManager = mainScaffoldViewModel,
-                            navigationManager = navigationManager,
-                            deliverySharedViewModel = deliverySharedViewModel
-                        )
-                    )
-
-                    DeliveryTasksView(deliveryOptionsViewModel = viewModel)
-                }
-
-                composable(NavigationItem.DeliveryConfirmAdmin.route) {
-                    val viewModel: DeliveryConfirmViewModel = viewModel(
-                        factory = DeliveryConfirmViewModelFactory(
-                            context = LocalContext.current,
-                            loadingScreenManager = mainScaffoldViewModel,
-                            navigationManager = navigationManager,
-                            deliverySharedViewModel = deliverySharedViewModel
-                        )
-                    )
-
-                    DeliveryCreateView(deliveryConfirmViewModel = viewModel)
-                }
-
-                composable(NavigationItem.DeliveriesListAdmin.route) {
-                    val viewModel: DeliveriesListViewModel = viewModel(
-                        factory = DeliveriesListViewModelFactory(
-                            context = LocalContext.current,
-                            loadingScreenManager = mainScaffoldViewModel,
-                            navigationManager = navigationManager,
-                            deliverySharedViewModel = deliverySharedViewModel
-                        )
-                    )
-
-                    DeliveriesListView(deliveriesListViewModel = viewModel)
-                }
-
-                /** Authentication **/
-                composable(NavigationItem.Login.route) {
-                    val viewModel: AuthViewModel = viewModel(
-                        factory = AuthViewModelFactory(
-                            mainScaffoldViewModel = mainScaffoldViewModel,
-                            loadingScreenManager = mainScaffoldViewModel
-                        )
-                    )
-
-                    LoginView(viewModel)
-                }
+                setupAuthenticationViews(mainScaffoldViewModel = mainScaffoldViewModel)
             }
-
         }
-
         LoadingScreen(mainScaffoldViewModel.isLoadingScreenEnabled())
+    }
+}
+
+@SuppressLint("ComposableDestinationInComposeScope")
+private fun NavGraphBuilder.setupUserViews(mainScaffoldViewModel: MainScaffoldViewModel) {
+    composable(NavigationItem.TasksUser.route) { DeliveryView() }
+    composable(NavigationItem.MapUser.route) { MapView() }
+    composable(NavigationItem.AccidentsUser.route) { RoadAccidentView() }
+    composable(NavigationItem.ReportsUser.route) { YourAccidentsView() }
+    composable(NavigationItem.AccountManagement.route) { AccountView(mainScaffoldViewModel) }
+}
+
+@SuppressLint("ComposableDestinationInComposeScope")
+private fun NavGraphBuilder.setupAdminViews(
+    placesClient: PlacesClient,
+    mainScaffoldViewModel: MainScaffoldViewModel,
+    navigationManager: NavigationManager,
+    deliverySharedViewModel: DeliverySharedViewModel
+) {
+    composable(NavigationItem.AccidentsAdmin.route) {
+        val viewModel: RoadAccidentsViewModel = viewModel(
+            factory = RoadAccidentViewModelFactory(
+                context = LocalContext.current,
+                loadingScreenManager = mainScaffoldViewModel
+            )
+        )
+        AccidentsView(roadAccidentsViewModel = viewModel)
+    }
+
+    composable(NavigationItem.TasksListAdmin.route) {
+        val viewModel: TasksListViewModel = viewModel(
+            factory = TaskListViewModelFactory(
+                context = LocalContext.current,
+                mainScaffoldViewModel = mainScaffoldViewModel,
+                loadingScreenManager = mainScaffoldViewModel,
+                navigationManager = navigationManager,
+            )
+        )
+        TasksListView(viewModel)
+    }
+
+    composable(NavigationItem.TaskCreateAdmin.route) {
+        val viewModel: TaskManagerViewModel = viewModel(
+            factory = TaskManagerViewModelFactory(
+                placesClient = placesClient,
+                mainScaffoldViewModel = mainScaffoldViewModel,
+                navigationManager = navigationManager,
+                loadingScreenManager = mainScaffoldViewModel,
+                context = LocalContext.current
+            )
+        )
+        TaskCreateOrEditView(editMode = false, taskManagerViewModel = viewModel)
+    }
+
+    composable(NavigationItem.TaskEditAdmin.route) {
+        val viewModel: TaskManagerViewModel = viewModel(
+            factory = TaskManagerViewModelFactory(
+                placesClient = placesClient,
+                mainScaffoldViewModel = mainScaffoldViewModel,
+                navigationManager = navigationManager,
+                loadingScreenManager = mainScaffoldViewModel,
+                context = LocalContext.current
+            )
+        )
+        TaskCreateOrEditView(editMode = true, taskManagerViewModel = viewModel)
+    }
+
+    composable(NavigationItem.EmployeesListAdmin.route) {
+        val viewModel: EmployeeViewModel = viewModel(
+            factory = EmployeeViewModelFactory(
+                navigationManager = navigationManager,
+                loadingScreenManager = mainScaffoldViewModel,
+                mainScaffoldViewModel = mainScaffoldViewModel,
+                context = LocalContext.current
+            )
+        )
+        EmployeesListView(
+            mainScaffoldViewModel = mainScaffoldViewModel,
+            employeeViewModel = viewModel
+        )
+    }
+
+    composable(NavigationItem.CreateEmployeeAdmin.route) {
+        val viewModel: EmployeeViewModel = viewModel(
+            factory = EmployeeViewModelFactory(
+                navigationManager = navigationManager,
+                loadingScreenManager = mainScaffoldViewModel,
+                mainScaffoldViewModel = mainScaffoldViewModel,
+                context = LocalContext.current
+            )
+        )
+        val authVm: AuthViewModel = viewModel(
+            factory = AuthViewModelFactory(
+                loadingScreenManager = mainScaffoldViewModel,
+                mainScaffoldViewModel = mainScaffoldViewModel,
+            )
+        )
+        CreateEditEmployeeView(viewModel, authVm, editMode = false)
+    }
+
+    composable(NavigationItem.EditEmployeeAdmin.route) {
+        val viewModel: EmployeeViewModel = viewModel(
+            factory = EmployeeViewModelFactory(
+                navigationManager = navigationManager,
+                loadingScreenManager = mainScaffoldViewModel,
+                mainScaffoldViewModel = mainScaffoldViewModel,
+                context = LocalContext.current
+            )
+        )
+        val authVm: AuthViewModel = viewModel(
+            factory = AuthViewModelFactory(
+                loadingScreenManager = mainScaffoldViewModel,
+                mainScaffoldViewModel = mainScaffoldViewModel,
+            )
+        )
+        CreateEditEmployeeView(viewModel, authVm, editMode = true)
+    }
+
+    composable(NavigationItem.DeliveryOptionsAdmin.route) {
+        val viewModel: DeliveryOptionsViewModel = viewModel(
+            factory = DeliveryOptionsViewModelFactory(
+                editMode = false,
+                context = LocalContext.current,
+                loadingScreenManager = mainScaffoldViewModel,
+                navigationManager = navigationManager,
+                deliverySharedViewModel = deliverySharedViewModel
+            )
+        )
+        DeliveryTasksView(deliveryOptionsViewModel = viewModel)
+    }
+
+    composable(NavigationItem.DeliveryOptionsEditAdmin.route) {
+        val viewModel: DeliveryOptionsViewModel = viewModel(
+            factory = DeliveryOptionsViewModelFactory(
+                editMode = true,
+                context = LocalContext.current,
+                loadingScreenManager = mainScaffoldViewModel,
+                navigationManager = navigationManager,
+                deliverySharedViewModel = deliverySharedViewModel
+            )
+        )
+        DeliveryTasksView(deliveryOptionsViewModel = viewModel)
+    }
+
+    composable(NavigationItem.DeliveryConfirmAdmin.route) {
+        val viewModel: DeliveryConfirmViewModel = viewModel(
+            factory = DeliveryConfirmViewModelFactory(
+                context = LocalContext.current,
+                loadingScreenManager = mainScaffoldViewModel,
+                navigationManager = navigationManager,
+                deliverySharedViewModel = deliverySharedViewModel
+            )
+        )
+        DeliveryCreateView(deliveryConfirmViewModel = viewModel)
+    }
+
+    composable(NavigationItem.DeliveriesListAdmin.route) {
+        val viewModel: DeliveriesListViewModel = viewModel(
+            factory = DeliveriesListViewModelFactory(
+                context = LocalContext.current,
+                loadingScreenManager = mainScaffoldViewModel,
+                navigationManager = navigationManager,
+                deliverySharedViewModel = deliverySharedViewModel
+            )
+        )
+        DeliveriesListView(deliveriesListViewModel = viewModel)
+    }
+}
+
+@SuppressLint("ComposableDestinationInComposeScope")
+private fun NavGraphBuilder.setupAuthenticationViews(mainScaffoldViewModel: MainScaffoldViewModel) {
+    composable(NavigationItem.Login.route) {
+        val viewModel: AuthViewModel = viewModel(
+            factory = AuthViewModelFactory(
+                mainScaffoldViewModel = mainScaffoldViewModel,
+                loadingScreenManager = mainScaffoldViewModel
+            )
+        )
+        LoginView(viewModel)
+    }
+}
+
+@SuppressLint("ComposableDestinationInComposeScope")
+private fun NavGraphBuilder.setupCommonViews(mainScaffoldViewModel: MainScaffoldViewModel) {
+    composable(NavigationItem.AccountManagement.route) {
+        AccountView(mainScaffoldViewModel)
     }
 }

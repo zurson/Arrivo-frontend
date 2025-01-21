@@ -2,11 +2,12 @@ package com.thesis.arrivo.communication.employee
 
 data class Employee(
     val id: Long,
-    var firstName: String,
-    var lastName: String,
-    var email: String,
-    var phoneNumber: String,
-    var status: EmployeeStatus,
+    val firstName: String,
+    val lastName: String,
+    val email: String,
+    val phoneNumber: String,
+    val status: EmployeeStatus,
+    val role: Role
 ) {
 
     companion object {
@@ -17,7 +18,8 @@ data class Employee(
                 lastName = "",
                 email = "",
                 phoneNumber = "",
-                status = EmployeeStatus.DELETED
+                status = EmployeeStatus.DELETED,
+                role = Role.USER
             )
         }
     }

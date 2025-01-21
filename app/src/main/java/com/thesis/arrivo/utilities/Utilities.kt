@@ -44,10 +44,13 @@ fun runOnMainThread(
 fun changeActivity(context: Context, destActivity: KClass<*>, finish: Boolean = false) {
     runOnMainThread {
         val intent = Intent(context, destActivity.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         context.startActivity(intent)
 
-        if (finish) (context as? Activity)?.finish()
+        // Optionally finish the current activity
+        if (finish) {
+            (context as? Activity)?.finish()
+        }
     }
 }
 

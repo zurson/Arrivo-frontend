@@ -24,6 +24,6 @@ interface EmployeeService {
     @GET("/employees/unassigned")
     suspend fun getUnassignedEmployeesOnDate(@Query("date") date: String): List<Employee>
 
-    @GET("/employees/role")
-    suspend fun getUserRole(): Role
+    @GET("/employees/details")
+    suspend fun getLoggedInUserDetails(): Employee
 }

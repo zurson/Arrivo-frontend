@@ -45,9 +45,11 @@ sealed class NavigationItem(
         icon = Icons.Outlined.FormatListNumberedRtl
     )
 
-    data object AccountUser : NavigationItem(
-        route = "account_user",
-        title = R.string.nav_help_label_user,
+    /** Common **/
+
+    data object AccountManagement : NavigationItem(
+        route = "account_management",
+        title = R.string.nav_account_management_label,
         icon = Icons.Outlined.AccountCircle
     )
 

@@ -15,10 +15,11 @@ import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.changeActivity
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
+import com.thesis.arrivo.utilities.interfaces.LoggedInUserAccessor
 import kotlinx.coroutines.launch
 
 class MainScaffoldViewModel(private val navigationManager: NavigationManager) : ViewModel(),
-    LoadingScreenManager {
+    LoadingScreenManager, LoggedInUserAccessor {
 
     companion object {
         fun reset() {
@@ -32,20 +33,72 @@ class MainScaffoldViewModel(private val navigationManager: NavigationManager) : 
         }
     }
 
+    private val loggedInUserDetailsViewModel = LoggedInUserDetailsViewModel(this)
 
-    private var adminMode: Boolean = false
+
+    /**
+     * Start App
+     **/
+
+    fun startApp() {
+        // Show loading screen and initiate loading state
+        showLoadingScreen()
+        _appLoading.value = true
+
+        // Check if the user is authenticated
+        isUserAuthenticated { authStatus ->
+            // Update the authentication state
+            authenticated = authStatus
+            println("Authentication status: $authenticated")
+
+            if (!authenticated) {
+                // If authentication fails, reset and stop the app initialization
+                println("Authentication failed. Resetting...")
+                authenticated = false
+                _appLoading.value = false
+                hideLoadingScreen()  // Hide loading screen after reset
+                return@isUserAuthenticated  // Exit early to prevent further processing
+            }
+
+            // If authenticated, fetch logged-in user details
+            fetchLoggedInUserDetails { userDetailsFetchingStatus ->
+                if (!userDetailsFetchingStatus) {
+                    // If fetching user details fails, reset and stop further execution
+                    println("Failed to fetch user details. Resetting...")
+                    reset()
+                    _appLoading.value = false
+                    hideLoadingScreen()  // Hide loading screen after reset
+                    return@fetchLoggedInUserDetails  // Exit early to prevent further processing
+                }
+
+                println("SUCCES to fetch user details!")
+                // If everything is successful, hide the loading screen and proceed
+                _appLoading.value = false
+                hideLoadingScreen()
+            }
+        }
+    }
 
 
     /**
      * NavBar elements
      **/
 
+
+    private val _appLoading = mutableStateOf(true)
+    val appLoading: Boolean
+        get() = _appLoading.value
+
+
+    private var authenticated: Boolean = false
+
+
     private val navbarElementUser = listOf(
         NavigationItem.TasksUser,
         NavigationItem.MapUser,
         NavigationItem.AccidentsUser,
         NavigationItem.ReportsUser,
-        NavigationItem.AccountUser
+        NavigationItem.AccountManagement,
     )
 
     private val navbarElementsAdmin = listOf(
@@ -53,10 +106,19 @@ class MainScaffoldViewModel(private val navigationManager: NavigationManager) : 
         NavigationItem.TasksListAdmin,
         NavigationItem.DeliveriesListAdmin,
         NavigationItem.EmployeesListAdmin,
+        NavigationItem.AccountManagement
     )
 
     fun getNavbarElements(): List<NavigationItem> =
-        if (adminMode) navbarElementsAdmin else navbarElementUser
+        if (isAdmin()) navbarElementsAdmin else navbarElementUser
+
+
+    fun getStartDestination(): String {
+        return when (authenticated) {
+            true -> getNavbarElements().first().route
+            false -> NavigationItem.Login.route
+        }
+    }
 
 
     private fun isUserAuthenticated(callback: (Boolean) -> Unit) {
@@ -78,25 +140,11 @@ class MainScaffoldViewModel(private val navigationManager: NavigationManager) : 
     }
 
 
-    fun getStartDestination(callback: (NavigationItem) -> Unit) {
-        isUserAuthenticated { isAuthenticated ->
-            if (isAuthenticated) {
-                checkIsAdmin { isAdmin ->
-                    adminMode = isAdmin
-                    val startDestination = getNavbarElements().first()
-                    callback(startDestination)
-                }
-            } else {
-                callback(NavigationItem.Login)
-            }
-        }
-    }
-
-    private fun checkIsAdmin(callback: (Boolean) -> Unit) {
-        val roleViewModel = RoleViewModel(this)
+    private fun fetchLoggedInUserDetails(callback: (Boolean) -> Unit) {
         viewModelScope.launch {
-            roleViewModel.fetchUserRole()
-            callback(roleViewModel.isAdmin())
+            loggedInUserDetailsViewModel.fetch { success ->
+                callback(success)
+            }
         }
     }
 
@@ -147,8 +195,17 @@ class MainScaffoldViewModel(private val navigationManager: NavigationManager) : 
 
 
     fun onAuthenticationSuccess() {
-        getStartDestination { dest -> navigationManager.navigateTo(dest, true) }
-        setNavbarVisibility(true)
+        fetchLoggedInUserDetails { success ->
+            if (success) {
+                authenticated = true
+                setNavbarVisibility(true)
+            } else {
+                authenticated = false
+                setNavbarVisibility(false)
+            }
+
+            navigationManager.navigateTo(getStartDestination(), true)
+        }
     }
 
 
@@ -199,7 +256,22 @@ class MainScaffoldViewModel(private val navigationManager: NavigationManager) : 
 
 
     /**
+     * Logged In User Details Accessor
+     **/
+
+
+    override fun getLoggedInUserDetails(): Employee {
+        return loggedInUserDetailsViewModel.getLoggedUserDetails()
+    }
+
+    override fun isAdmin(): Boolean {
+        return loggedInUserDetailsViewModel.isAdmin()
+    }
+
+
+    /**
      * Other
      **/
+
 
 }

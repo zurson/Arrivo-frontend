@@ -133,12 +133,12 @@ class EmployeeViewModel(
         mainScaffoldViewModel.employeeToEdit = clickedEmployee
         toggleShowEmployeeDetails()
 
-        navigationManager.navigateTo(navigationItem = NavigationItem.EditEmployeeAdmin)
+        navigationManager.navigateTo(routeOrItem = NavigationItem.EditEmployeeAdmin)
     }
 
 
     fun onCreateEmployeeAccountButtonClick() {
-        navigationManager.navigateTo(navigationItem = NavigationItem.CreateEmployeeAdmin)
+        navigationManager.navigateTo(routeOrItem = NavigationItem.CreateEmployeeAdmin)
     }
 
 

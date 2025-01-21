@@ -98,7 +98,7 @@ class TasksListViewModel(
 
 
     fun onAddTaskButtonClick() {
-        navigationManager.navigateTo(navigationItem = NavigationItem.TaskCreateAdmin)
+        navigationManager.navigateTo(routeOrItem = NavigationItem.TaskCreateAdmin)
     }
 
 
@@ -122,7 +122,7 @@ class TasksListViewModel(
 
     fun onTaskEditButtonClick() {
         toggleShowTaskDetailsDialog()
-        navigationManager.navigateTo(navigationItem = NavigationItem.TaskEditAdmin)
+        navigationManager.navigateTo(routeOrItem = NavigationItem.TaskEditAdmin)
     }
 
 
