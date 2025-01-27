@@ -3,7 +3,6 @@ package com.thesis.arrivo.view_models
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -14,31 +13,28 @@ import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.road_accidents.RoadAccident
 import com.thesis.arrivo.communication.road_accidents.RoadAccidentsRepository
-import com.thesis.arrivo.ui.admin.admin_accidents.RoadAccidentCategory
-import com.thesis.arrivo.ui.admin.admin_accidents.RoadAccidentStatus
+import com.thesis.arrivo.ui.common.road_accidents_list.RoadAccidentCategory
+import com.thesis.arrivo.ui.common.road_accidents_list.RoadAccidentStatus
+import com.thesis.arrivo.utilities.SelectedDateManager
 import com.thesis.arrivo.utilities.Settings.Companion.ROAD_ACCIDENTS_ACTIVE_COLOR
 import com.thesis.arrivo.utilities.Settings.Companion.ROAD_ACCIDENTS_FINISHED_COLOR
 import com.thesis.arrivo.utilities.capitalize
-import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.utilities.preparePhoneCall
 import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
-
-class RoadAccidentsViewModel(
+abstract class RoadAccidentsViewModel(
     private val context: Context,
     private val loadingScreenManager: LoadingScreenManager
 ) : ViewModel(), LoadingScreenStatusChecker {
-    private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
+
+    protected val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
 
     companion object {
-        private var _selectedDate = mutableLongStateOf(getCurrentDateMillis())
-        private val selectedDate: Long
-            get() = _selectedDate.longValue
+        private val selectedDateManager: SelectedDateManager = SelectedDateManager()
 
         private val _activeFilters = mutableStateListOf(RoadAccidentStatus.ACTIVE)
         private val activeFilters: List<RoadAccidentStatus>
@@ -54,15 +50,11 @@ class RoadAccidentsViewModel(
      **/
 
 
-    private var selectedLocalDate: LocalDate = convertLongToLocalDate(selectedDate)
-
-
-    fun getSelectedDate(): Long = selectedDate
+    fun getSelectedDate(): Long = selectedDateManager.selectedDate
 
 
     fun onDateSelected(dateMillis: Long?) {
-        _selectedDate.longValue = dateMillis ?: getCurrentDateMillis()
-        selectedLocalDate = convertLongToLocalDate(selectedDate)
+        selectedDateManager.selectedDate = dateMillis ?: getCurrentDateMillis()
         filterList()
     }
 
@@ -71,7 +63,6 @@ class RoadAccidentsViewModel(
      * Filters
      **/
 
-    fun getActiveFilters() = activeFilters
 
     fun toggleFilterActive(filter: RoadAccidentStatus) {
         if (activeFilters.contains(filter)) _activeFilters.remove(filter)
@@ -90,7 +81,7 @@ class RoadAccidentsViewModel(
             val isDateMatching = if (accident.status == RoadAccidentStatus.ACTIVE) {
                 true
             } else {
-                accident.date.toEpochDay() == selectedLocalDate.toEpochDay()
+                accident.date.toEpochDay() == selectedDateManager.localDate.toEpochDay()
             }
             isDateMatching && isStatusMatching
         }
@@ -113,29 +104,20 @@ class RoadAccidentsViewModel(
      * Fetching and Sending Data
      **/
 
-    private val roadAccidentsRepository = RoadAccidentsRepository()
+    protected val roadAccidentsRepository = RoadAccidentsRepository()
 
     private val _accidentsToShow = mutableStateListOf<RoadAccident>()
     val accidentsToShow: List<RoadAccident>
         get() = _accidentsToShow
 
-    private val _allAccidents = mutableStateListOf<RoadAccident>()
-
-    private fun fetchRoadAccidents() {
-        viewModelScope.launch {
-            serverRequestManager.sendRequest(
-                actionToPerform = {
-                    _allAccidents.clear()
-                    _allAccidents.addAll(roadAccidentsRepository.getAllRoadAccidents())
-                },
-                onSuccess = { filterList() }
-            )
-        }
-    }
+    protected val _allAccidents = mutableStateListOf<RoadAccident>()
 
 
-    init {
-        fetchRoadAccidents()
+    abstract fun fetchRoadAccidents()
+
+
+    protected fun onFetchAccidentsSuccess() {
+        filterList()
     }
 
 
@@ -155,6 +137,8 @@ class RoadAccidentsViewModel(
     /**
      * Road Accident Details
      **/
+
+    protected var showMarkAsResolvedButton by mutableStateOf(true)
 
     var showAccidentDetailsDialog by mutableStateOf(false)
     private val _selectedAccident = mutableStateOf(RoadAccident.emptyRoadAccident())
@@ -249,6 +233,15 @@ class RoadAccidentsViewModel(
     fun onConfirmationDismiss() {
         toggleShowConfirmationDialog()
     }
+
+
+    fun showMainButtonDialog(): Boolean = showMarkAsResolvedButton
+
+
+    /**
+     * Interface
+     **/
+
 
     override fun isLoadingScreenEnabled(): Boolean {
         return loadingScreenManager.isLoadingScreenEnabled()

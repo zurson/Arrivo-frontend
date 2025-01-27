@@ -1,6 +1,9 @@
 package com.thesis.arrivo.view_models
 
 import android.content.Context
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.employee.Employee
@@ -17,12 +20,12 @@ class LoggedInUserDetailsViewModel(context: Context, loadingScreenManager: Loadi
     )
 
     private val employeeRepository = EmployeeRepository()
-    private var loggedUserDetails: Employee? = null
+    private var loggedInUser by mutableStateOf(Employee.emptyEmployee())
 
 
     suspend fun fetch(callback: (Boolean) -> Unit) {
         serverRequestManager.sendRequest(
-            actionToPerform = { loggedUserDetails = employeeRepository.getLoggedInUserDetails() },
+            actionToPerform = { loggedInUser = employeeRepository.getLoggedInUserDetails() },
             onFailure = { callback(false) },
             onSuccess = { callback(true) },
             showOnFailureDefaultInfoBox = false
@@ -31,13 +34,10 @@ class LoggedInUserDetailsViewModel(context: Context, loadingScreenManager: Loadi
 
 
     fun isAdmin(): Boolean {
-        if (loggedUserDetails == null)
-            return false
-
-        return loggedUserDetails!!.role == Role.ADMIN
+        return loggedInUser.role == Role.ADMIN
     }
 
 
-    fun getLoggedUserDetails(): Employee = loggedUserDetails ?: Employee.emptyEmployee()
+    fun getUser(): Employee = loggedInUser
 
 }

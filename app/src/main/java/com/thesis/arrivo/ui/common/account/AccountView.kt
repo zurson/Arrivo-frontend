@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.common
+package com.thesis.arrivo.ui.common.account
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -139,7 +139,7 @@ private fun AccountImageAndName(
 
 @Composable
 private fun UserName(modifier: Modifier = Modifier, loggedInUserAccessor: LoggedInUserAccessor) {
-    val user = loggedInUserAccessor.getLoggedInUserDetails()
+    val user = loggedInUserAccessor.getLoggedInUser()
 
     val name = when (loggedInUserAccessor.isAdmin()) {
         true -> stringResource(R.string.account_admin_account_name)
@@ -165,7 +165,7 @@ private fun DetailsSection(
     modifier: Modifier = Modifier,
     loggedInUserAccessor: LoggedInUserAccessor
 ) {
-    val user = loggedInUserAccessor.getLoggedInUserDetails()
+    val user = loggedInUserAccessor.getLoggedInUser()
     val isAdmin = loggedInUserAccessor.isAdmin()
 
     Column(

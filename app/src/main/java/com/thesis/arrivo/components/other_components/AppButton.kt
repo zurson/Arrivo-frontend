@@ -62,7 +62,7 @@ fun AppButton(
             color = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier
                 .weight(1f)
-                .padding(vertical = dimensionResource(R.dimen.app_button_padding))
+                .padding(vertical = dimensionResource(R.dimen.app_button_text_padding))
         )
 
         if (!iconStart) {

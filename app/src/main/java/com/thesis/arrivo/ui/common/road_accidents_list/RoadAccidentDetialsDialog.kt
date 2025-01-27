@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.admin.admin_accidents
+package com.thesis.arrivo.ui.common.road_accidents_list
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,10 +17,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.road_accidents.RoadAccident
-import com.thesis.arrivo.components.other_components.AppButton
 import com.thesis.arrivo.components.info_alert_dialog.AlertDialogSingleButton
 import com.thesis.arrivo.components.info_alert_dialog.DialogRecord
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
+import com.thesis.arrivo.components.other_components.AppButton
 import com.thesis.arrivo.view_models.RoadAccidentsViewModel
 
 @Composable
@@ -28,6 +28,7 @@ fun RoadAccidentDetailsDialog(
     accident: RoadAccident,
     onDismiss: () -> Unit,
     onButtonClick: () -> Unit,
+    showMainButton: Boolean,
     onMapButtonClick: () -> Unit,
     onCallButtonClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -104,7 +105,7 @@ fun RoadAccidentDetailsDialog(
                 }
             }
 
-            if (accident.status != RoadAccidentStatus.ENDED) {
+            if (accident.status != RoadAccidentStatus.ENDED && showMainButton) {
                 AlertDialogSingleButton(
                     text = stringResource(R.string.accidents_details_mark_as_resolved_button_text),
                     onEditButtonClick = { onButtonClick() },

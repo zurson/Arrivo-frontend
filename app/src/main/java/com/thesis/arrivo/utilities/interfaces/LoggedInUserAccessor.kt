@@ -4,7 +4,7 @@ import com.thesis.arrivo.communication.employee.Employee
 
 interface LoggedInUserAccessor {
 
-    fun getLoggedInUserDetails(): Employee
+    fun getLoggedInUser(): Employee
     fun isAdmin(): Boolean
 
 }

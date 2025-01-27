@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.admin.admin_accidents
+package com.thesis.arrivo.ui.common.road_accidents_list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -53,10 +53,10 @@ import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
 import com.thesis.arrivo.view_models.RoadAccidentsViewModel
-import com.thesis.arrivo.view_models.factory.RoadAccidentViewModelFactory
+import com.thesis.arrivo.view_models.factory.RoadAccidentAdminViewModelFactory
 
 @Composable
-fun AccidentsView(roadAccidentsViewModel: RoadAccidentsViewModel) {
+fun AccidentsListView(roadAccidentsViewModel: RoadAccidentsViewModel) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -147,7 +147,7 @@ private fun FiltersList(
             AppFilter(
                 modifier = Modifier.weight(1f),
                 filter = filter,
-                isActive = roadAccidentsViewModel.getActiveFilters().contains(filter),
+                isActive = roadAccidentsViewModel.isFilterActive(filter),
                 filterToString = { roadAccidentsViewModel.filterToString(it) },
                 onSelected = { roadAccidentsViewModel.toggleFilterActive(it) }
             )
@@ -272,7 +272,8 @@ private fun AccidentDetailsDialog(roadAccidentsViewModel: RoadAccidentsViewModel
             onDismiss = { roadAccidentsViewModel.onAccidentDialogDismiss() },
             onButtonClick = { roadAccidentsViewModel.onAccidentMarkAsResolvedButtonClick() },
             onMapButtonClick = { roadAccidentsViewModel.onMapButtonClick() },
-            onCallButtonClick = { roadAccidentsViewModel.onCallButtonClick() }
+            onCallButtonClick = { roadAccidentsViewModel.onCallButtonClick() },
+            showMainButton = roadAccidentsViewModel.showMainButtonDialog()
         )
     }
 }
@@ -284,8 +285,8 @@ private fun MarkAsResolvedConfirmationDialog(roadAccidentsViewModel: RoadAcciden
         return
 
     ConfirmationDialog(
-        dialogTitle = "Confirmation",
-        lineOne = "Mark accident as resolved?",
+        dialogTitle = stringResource(R.string.accidents_finish_confirmation_dialog_title),
+        lineOne = stringResource(R.string.accidents_finish_confirmation_dialog_line_one_text),
         lineTwo = null,
         onYesClick = { roadAccidentsViewModel.onConfirmationYesClick() },
         onNoClick = { roadAccidentsViewModel.onConfirmationNoClick() },
@@ -337,13 +338,13 @@ private fun Preview() {
     )
 
     val viewModel: RoadAccidentsViewModel = viewModel(
-        factory = RoadAccidentViewModelFactory(
+        factory = RoadAccidentAdminViewModelFactory(
             context = LocalContext.current,
             loadingScreenManager = mainVm
         )
     )
 
     Theme.ArrivoTheme {
-        AccidentsView(viewModel)
+        AccidentsListView(viewModel)
     }
 }
