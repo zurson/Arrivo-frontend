@@ -15,7 +15,6 @@ import androidx.navigation.compose.rememberNavController
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.components.other_components.LoadingScreen
-import com.thesis.arrivo.ui.admin.admin_accidents.AccidentsView
 import com.thesis.arrivo.ui.admin.admin_deliveries.DeliveriesListView
 import com.thesis.arrivo.ui.admin.admin_deliveries.DeliveryCreateView
 import com.thesis.arrivo.ui.admin.admin_deliveries.DeliveryTasksView
@@ -24,11 +23,11 @@ import com.thesis.arrivo.ui.admin.admin_employees.EmployeesListView
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskCreateOrEditView
 import com.thesis.arrivo.ui.admin.admin_tasks.tasks_list.TasksListView
 import com.thesis.arrivo.ui.authentication.LoginView
-import com.thesis.arrivo.ui.common.AccountView
+import com.thesis.arrivo.ui.common.account.AccountView
+import com.thesis.arrivo.ui.common.road_accidents_list.AccidentsListView
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.ui.user.user_delivery_view.DeliveryView
 import com.thesis.arrivo.ui.user.user_map_view.MapView
-import com.thesis.arrivo.ui.user.user_road_accident_view.RoadAccidentView
 import com.thesis.arrivo.ui.user.user_your_accidents_view.YourAccidentsView
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.view_models.AuthViewModel
@@ -38,7 +37,8 @@ import com.thesis.arrivo.view_models.DeliveryOptionsViewModel
 import com.thesis.arrivo.view_models.DeliverySharedViewModel
 import com.thesis.arrivo.view_models.EmployeeViewModel
 import com.thesis.arrivo.view_models.MainScaffoldViewModel
-import com.thesis.arrivo.view_models.RoadAccidentsViewModel
+import com.thesis.arrivo.view_models.RoadAccidentsAdminViewModel
+import com.thesis.arrivo.view_models.RoadAccidentsUserViewModel
 import com.thesis.arrivo.view_models.TaskManagerViewModel
 import com.thesis.arrivo.view_models.TasksListViewModel
 import com.thesis.arrivo.view_models.factory.AuthViewModelFactory
@@ -47,7 +47,8 @@ import com.thesis.arrivo.view_models.factory.DeliveryConfirmViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveryOptionsViewModelFactory
 import com.thesis.arrivo.view_models.factory.EmployeeViewModelFactory
 import com.thesis.arrivo.view_models.factory.MainScaffoldViewModelFactory
-import com.thesis.arrivo.view_models.factory.RoadAccidentViewModelFactory
+import com.thesis.arrivo.view_models.factory.RoadAccidentAdminViewModelFactory
+import com.thesis.arrivo.view_models.factory.RoadAccidentsUserViewModelFactory
 import com.thesis.arrivo.view_models.factory.TaskListViewModelFactory
 import com.thesis.arrivo.view_models.factory.TaskManagerViewModelFactory
 
@@ -124,7 +125,20 @@ private fun SetupMainScaffold(
 private fun NavGraphBuilder.setupUserViews(mainScaffoldViewModel: MainScaffoldViewModel) {
     composable(NavigationItem.TasksUser.route) { DeliveryView() }
     composable(NavigationItem.MapUser.route) { MapView() }
-    composable(NavigationItem.AccidentsUser.route) { RoadAccidentView() }
+
+    composable(NavigationItem.AccidentsUser.route) {
+        val viewModel: RoadAccidentsUserViewModel = viewModel(
+            factory = RoadAccidentsUserViewModelFactory(
+                loggedInUserAccessor = mainScaffoldViewModel,
+                context = LocalContext.current,
+                loadingScreenManager = mainScaffoldViewModel
+            )
+        )
+
+
+        AccidentsListView(viewModel)
+    }
+
     composable(NavigationItem.ReportsUser.route) { YourAccidentsView() }
     composable(NavigationItem.AccountManagement.route) { AccountView(mainScaffoldViewModel) }
 }
@@ -137,13 +151,14 @@ private fun NavGraphBuilder.setupAdminViews(
     deliverySharedViewModel: DeliverySharedViewModel
 ) {
     composable(NavigationItem.AccidentsAdmin.route) {
-        val viewModel: RoadAccidentsViewModel = viewModel(
-            factory = RoadAccidentViewModelFactory(
+        val viewModel: RoadAccidentsAdminViewModel = viewModel(
+            factory = RoadAccidentAdminViewModelFactory(
                 context = LocalContext.current,
                 loadingScreenManager = mainScaffoldViewModel
             )
         )
-        AccidentsView(roadAccidentsViewModel = viewModel)
+
+        AccidentsListView(roadAccidentsViewModel = viewModel)
     }
 
     composable(NavigationItem.TasksListAdmin.route) {

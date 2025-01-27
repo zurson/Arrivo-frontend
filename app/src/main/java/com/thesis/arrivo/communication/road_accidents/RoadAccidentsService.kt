@@ -12,6 +12,9 @@ interface RoadAccidentsService {
     @GET("road-accidents")
     suspend fun getAllRoadAccidents(): List<RoadAccident>
 
+    @GET("road-accidents/{id}")
+    suspend fun getAllRoadAccidents(@Path("id") id: Long): List<RoadAccident>
+
     @POST("road-accidents")
     suspend fun createRoadAccident(@Body roadAccidentCreateRequest: RoadAccidentCreateRequest)
 

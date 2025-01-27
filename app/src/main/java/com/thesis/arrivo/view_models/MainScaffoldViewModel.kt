@@ -262,8 +262,8 @@ class MainScaffoldViewModel(
      **/
 
 
-    override fun getLoggedInUserDetails(): Employee {
-        return loggedInUserDetailsViewModel.getLoggedUserDetails()
+    override fun getLoggedInUser(): Employee {
+        return loggedInUserDetailsViewModel.getUser()
     }
 
     override fun isAdmin(): Boolean {

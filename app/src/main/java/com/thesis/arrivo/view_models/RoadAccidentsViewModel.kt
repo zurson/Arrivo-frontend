@@ -13,8 +13,8 @@ import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.road_accidents.RoadAccident
 import com.thesis.arrivo.communication.road_accidents.RoadAccidentsRepository
-import com.thesis.arrivo.ui.admin.admin_accidents.RoadAccidentCategory
-import com.thesis.arrivo.ui.admin.admin_accidents.RoadAccidentStatus
+import com.thesis.arrivo.ui.common.road_accidents_list.RoadAccidentCategory
+import com.thesis.arrivo.ui.common.road_accidents_list.RoadAccidentStatus
 import com.thesis.arrivo.utilities.SelectedDateManager
 import com.thesis.arrivo.utilities.Settings.Companion.ROAD_ACCIDENTS_ACTIVE_COLOR
 import com.thesis.arrivo.utilities.Settings.Companion.ROAD_ACCIDENTS_FINISHED_COLOR
@@ -26,12 +26,12 @@ import com.thesis.arrivo.utilities.preparePhoneCall
 import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.launch
 
-
-class RoadAccidentsViewModel(
+abstract class RoadAccidentsViewModel(
     private val context: Context,
     private val loadingScreenManager: LoadingScreenManager
 ) : ViewModel(), LoadingScreenStatusChecker {
-    private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
+
+    protected val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
 
     companion object {
         private val selectedDateManager: SelectedDateManager = SelectedDateManager()
@@ -104,29 +104,20 @@ class RoadAccidentsViewModel(
      * Fetching and Sending Data
      **/
 
-    private val roadAccidentsRepository = RoadAccidentsRepository()
+    protected val roadAccidentsRepository = RoadAccidentsRepository()
 
     private val _accidentsToShow = mutableStateListOf<RoadAccident>()
     val accidentsToShow: List<RoadAccident>
         get() = _accidentsToShow
 
-    private val _allAccidents = mutableStateListOf<RoadAccident>()
-
-    private fun fetchRoadAccidents() {
-        viewModelScope.launch {
-            serverRequestManager.sendRequest(
-                actionToPerform = {
-                    _allAccidents.clear()
-                    _allAccidents.addAll(roadAccidentsRepository.getAllRoadAccidents())
-                },
-                onSuccess = { filterList() }
-            )
-        }
-    }
+    protected val _allAccidents = mutableStateListOf<RoadAccident>()
 
 
-    init {
-        fetchRoadAccidents()
+    abstract fun fetchRoadAccidents()
+
+
+    protected fun onFetchAccidentsSuccess() {
+        filterList()
     }
 
 
@@ -146,6 +137,8 @@ class RoadAccidentsViewModel(
     /**
      * Road Accident Details
      **/
+
+    protected var showMarkAsResolvedButton by mutableStateOf(true)
 
     var showAccidentDetailsDialog by mutableStateOf(false)
     private val _selectedAccident = mutableStateOf(RoadAccident.emptyRoadAccident())
@@ -240,6 +233,15 @@ class RoadAccidentsViewModel(
     fun onConfirmationDismiss() {
         toggleShowConfirmationDialog()
     }
+
+
+    fun showMainButtonDialog(): Boolean = showMarkAsResolvedButton
+
+
+    /**
+     * Interface
+     **/
+
 
     override fun isLoadingScreenEnabled(): Boolean {
         return loadingScreenManager.isLoadingScreenEnabled()

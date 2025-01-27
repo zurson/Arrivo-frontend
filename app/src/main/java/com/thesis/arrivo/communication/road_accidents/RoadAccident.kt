@@ -1,8 +1,8 @@
 package com.thesis.arrivo.communication.road_accidents
 
 import com.thesis.arrivo.communication.employee.Employee
-import com.thesis.arrivo.ui.admin.admin_accidents.RoadAccidentCategory
-import com.thesis.arrivo.ui.admin.admin_accidents.RoadAccidentStatus
+import com.thesis.arrivo.ui.common.road_accidents_list.RoadAccidentCategory
+import com.thesis.arrivo.ui.common.road_accidents_list.RoadAccidentStatus
 import com.thesis.arrivo.utilities.Location
 import java.time.LocalDate
 
