@@ -65,6 +65,7 @@ class MainScaffoldViewModel(
                     return@fetchLoggedInUserDetails
                 }
 
+                selectView(getNavbarElements().first())
                 setNavbarVisibility(true)
                 _appLoading.value = false
             }
@@ -212,6 +213,7 @@ class MainScaffoldViewModel(
                 showUserDetailsFetchFailAlertBox()
             }
 
+            selectView(getNavbarElements().first())
             navigationManager.navigateTo(getStartDestination(), true)
         }
     }
