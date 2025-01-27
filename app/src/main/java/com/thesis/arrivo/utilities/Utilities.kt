@@ -8,6 +8,7 @@ import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.widget.Toast
 import androidx.annotation.DimenRes
 import androidx.appcompat.app.AlertDialog
@@ -210,4 +211,13 @@ fun formatPhoneNumber(phoneNumber: String): String {
     } catch (e: Exception) {
         phoneNumber
     }
+}
+
+
+fun openAppSettings(context: Context) {
+    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+        data = Uri.fromParts("package", context.packageName, null)
+    }
+
+    context.startActivity(intent)
 }

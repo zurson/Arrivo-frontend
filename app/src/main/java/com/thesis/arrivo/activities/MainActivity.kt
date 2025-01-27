@@ -2,10 +2,7 @@ package com.thesis.arrivo.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +17,7 @@ import com.thesis.arrivo.components.permissions.LocationPermissionInfoScreen
 import com.thesis.arrivo.components.permissions.RequestLocationPermission
 import com.thesis.arrivo.ui.MainView
 import com.thesis.arrivo.ui.theme.Theme
+import com.thesis.arrivo.utilities.openAppSettings
 
 class MainActivity : AppCompatActivity() {
 
@@ -73,18 +71,13 @@ class MainActivity : AppCompatActivity() {
         if (permissionsGranted.value)
             MainView(placesClient)
         else
-            LocationPermissionScreen(context)
+            LocationPermissionScreen()
     }
 
     @Composable
-    fun LocationPermissionScreen(context: Context) {
+    fun LocationPermissionScreen() {
         LocationPermissionInfoScreen(
-            onOpenSettingsClick = {
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    data = Uri.fromParts("package", context.packageName, null)
-                }
-                context.startActivity(intent)
-            }
+            onOpenSettingsClick = { openAppSettings(this) }
         )
     }
 
