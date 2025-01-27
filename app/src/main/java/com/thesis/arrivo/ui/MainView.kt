@@ -12,7 +12,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.android.libraries.places.api.net.PlacesClient
 import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.components.other_components.LoadingScreen
 import com.thesis.arrivo.ui.admin.admin_deliveries.DeliveriesListView
@@ -26,9 +25,9 @@ import com.thesis.arrivo.ui.authentication.LoginView
 import com.thesis.arrivo.ui.common.account.AccountView
 import com.thesis.arrivo.ui.common.road_accidents_list.AccidentsListView
 import com.thesis.arrivo.ui.theme.Theme
+import com.thesis.arrivo.ui.user.user_accident_report_view.AccidentReportView
 import com.thesis.arrivo.ui.user.user_delivery_view.DeliveryView
 import com.thesis.arrivo.ui.user.user_map_view.MapView
-import com.thesis.arrivo.ui.user.user_your_accidents_view.AccidentReportView
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.view_models.AccidentReportViewModel
 import com.thesis.arrivo.view_models.AuthViewModel
@@ -103,7 +102,10 @@ private fun SetupMainScaffold(
                 startDestination = mainScaffoldViewModel.getStartDestination(),
                 modifier = Modifier.padding(contentPadding)
             ) {
-                setupUserViews(mainScaffoldViewModel = mainScaffoldViewModel)
+                setupUserViews(
+                    mainScaffoldViewModel = mainScaffoldViewModel,
+                    navigationManager = navigationManager
+                )
 
                 setupCommonViews(mainScaffoldViewModel = mainScaffoldViewModel)
 
@@ -121,7 +123,10 @@ private fun SetupMainScaffold(
 }
 
 @SuppressLint("ComposableDestinationInComposeScope")
-private fun NavGraphBuilder.setupUserViews(mainScaffoldViewModel: MainScaffoldViewModel) {
+private fun NavGraphBuilder.setupUserViews(
+    mainScaffoldViewModel: MainScaffoldViewModel,
+    navigationManager: NavigationManager
+) {
     composable(NavigationItem.TasksUser.route) { DeliveryView() }
     composable(NavigationItem.MapUser.route) { MapView() }
 
@@ -142,7 +147,9 @@ private fun NavGraphBuilder.setupUserViews(mainScaffoldViewModel: MainScaffoldVi
         val viewModel: AccidentReportViewModel = viewModel(
             factory = AccidentReportViewModelFactory(
                 context = LocalContext.current,
-                loadingScreenManager = mainScaffoldViewModel
+                loadingScreenManager = mainScaffoldViewModel,
+                loggedInUserAccessor = mainScaffoldViewModel,
+                navigationManager = navigationManager
             )
         )
 

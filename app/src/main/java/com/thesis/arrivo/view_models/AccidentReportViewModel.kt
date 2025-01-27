@@ -1,25 +1,35 @@
 package com.thesis.arrivo.view_models
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.ServerRequestManager
+import com.thesis.arrivo.communication.road_accidents.RoadAccidentCreateRequest
+import com.thesis.arrivo.communication.road_accidents.RoadAccidentsRepository
+import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.ui.common.road_accidents_list.RoadAccidentCategory
+import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.Settings.Companion.ACCIDENT_REPORT_MAX_DESCRIPTION_LEN
 import com.thesis.arrivo.utilities.getCurrentTimeText
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
+import com.thesis.arrivo.utilities.interfaces.LoggedInUserAccessor
 import com.thesis.arrivo.utilities.location.Location
 import com.thesis.arrivo.utilities.location.LocationHelper
 import com.thesis.arrivo.utilities.location.PlacesApiHelper
 import com.thesis.arrivo.utilities.showDefaultErrorDialog
+import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class AccidentReportViewModel(
     private val context: Context,
-    private val loadingScreenManager: LoadingScreenManager
+    private val navigationManager: NavigationManager,
+    private val loadingScreenManager: LoadingScreenManager,
+    private val loggedInUserAccessor: LoggedInUserAccessor
 ) : ViewModel() {
 
     private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
@@ -87,7 +97,8 @@ class AccidentReportViewModel(
             location = _currentLocation.value,
             callback = { address ->
                 if (address == null)
-                    _address.value = context.getString(R.string.accident_report_undefined_location_text)
+                    _address.value =
+                        context.getString(R.string.accident_report_undefined_location_text)
                 else
                     _address.value = removeCountryFromAddress(address)
 
@@ -210,12 +221,47 @@ class AccidentReportViewModel(
      * Confirm Button
      **/
 
+    private val roadAccidentsRepository = RoadAccidentsRepository()
 
     fun onConfirmButtonClick() {
         if (!validateCondition())
             return
 
+        sendCreateReportRequest()
+    }
 
+
+    private fun sendCreateReportRequest() {
+        viewModelScope.launch {
+            serverRequestManager.sendRequest(
+                actionToPerform = {
+                    roadAccidentsRepository.createRoadAccident(prepareAccidentReportCreateRequest())
+                },
+                onSuccess = { onSuccess() }
+            )
+        }
+    }
+
+
+    private fun prepareAccidentReportCreateRequest(): RoadAccidentCreateRequest {
+        return RoadAccidentCreateRequest(
+            location = currentLocation,
+            category = selectedCategory,
+            licensePlate = carId,
+            date = LocalDate.now(),
+            description = description,
+            employeeId = loggedInUserAccessor.getLoggedInUser().id
+        )
+    }
+
+
+    private fun onSuccess() {
+        navigationManager.navigateTo(NavigationItem.AccidentsUser, true)
+
+        showToast(
+            text = context.getString(R.string.accident_report_create_success_message),
+            toastLength = Toast.LENGTH_LONG
+        )
     }
 
 

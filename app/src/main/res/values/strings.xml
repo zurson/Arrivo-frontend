@@ -197,5 +197,7 @@
 
     <string name="accident_report_error_car_id">Car ID is too short</string>
     <string name="accident_report_error_description">Description is too short</string>
+
+    <string name="accident_report_create_success_message">Report sent successfully!</string>
     
 </resources>

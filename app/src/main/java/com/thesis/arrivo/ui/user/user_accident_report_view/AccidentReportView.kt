@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.user.user_your_accidents_view
+package com.thesis.arrivo.ui.user.user_accident_report_view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -227,7 +227,9 @@ private fun Preview() {
     val vm: AccidentReportViewModel = viewModel(
         factory = AccidentReportViewModelFactory(
             context = LocalContext.current,
-            loadingScreenManager = mainVm
+            loadingScreenManager = mainVm,
+            loggedInUserAccessor = mainVm,
+            navigationManager = NavigationManager(rememberNavController())
         )
     )
 
