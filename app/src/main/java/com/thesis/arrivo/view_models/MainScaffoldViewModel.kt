@@ -13,11 +13,11 @@ import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TaskToEdit
 import com.thesis.arrivo.components.navigation.NavigationItem
-import com.thesis.arrivo.utilities.location.Location
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.changeActivity
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoggedInUserAccessor
+import com.thesis.arrivo.utilities.location.Location
 import com.thesis.arrivo.utilities.showDefaultErrorDialog
 import kotlinx.coroutines.launch
 import java.util.concurrent.locks.ReentrantLock
@@ -66,7 +66,8 @@ class MainScaffoldViewModel(
                     return@fetchLoggedInUserDetails
                 }
 
-                selectView(getNavbarElements().first())
+                navigationManager.setRole(getLoggedInUser().role)
+                navigationManager.selectView(getNavbarElements().first())
                 setNavbarVisibility(true)
                 _appLoading.value = false
             }
@@ -90,7 +91,7 @@ class MainScaffoldViewModel(
 
 
     /**
-     * NavBar elements
+     * NavBar
      **/
 
 
@@ -102,24 +103,7 @@ class MainScaffoldViewModel(
     private var authenticated: Boolean = false
 
 
-    private val navbarElementUser = listOf(
-        NavigationItem.TasksUser,
-        NavigationItem.MapUser,
-        NavigationItem.AccidentsUser,
-        NavigationItem.ReportsUser,
-        NavigationItem.AccountManagement,
-    )
-
-    private val navbarElementsAdmin = listOf(
-        NavigationItem.AccidentsAdmin,
-        NavigationItem.TasksListAdmin,
-        NavigationItem.DeliveriesListAdmin,
-        NavigationItem.EmployeesListAdmin,
-        NavigationItem.AccountManagement
-    )
-
-    fun getNavbarElements(): List<NavigationItem> =
-        if (isAdmin()) navbarElementsAdmin else navbarElementUser
+    fun getNavbarElements(): List<NavigationItem> = navigationManager.getNavbarElements()
 
 
     fun getStartDestination(): String {
@@ -162,28 +146,25 @@ class MainScaffoldViewModel(
      * View selection
      **/
 
-    private val _selectedView = mutableStateOf(getNavbarElements()[0])
-    private val selectedView: NavigationItem
-        get() = _selectedView.value
-
-    private fun selectView(item: NavigationItem) {
-        _selectedView.value = item
-    }
-
-    fun isSelected(item: NavigationItem): Boolean {
-        return item.route == selectedView.route
-    }
 
     fun onNavItemClick(clickedItem: NavigationItem) {
         if (isLoadingScreenEnabled())
             return
 
-        if (clickedItem.route == selectedView.route)
+        if (clickedItem.route == navigationManager.selectedNavBarItem.route)
             return
 
         navigationManager.navigateTo(clickedItem, true)
-        selectView(clickedItem)
     }
+
+
+
+
+
+    fun isViewSelected(item: NavigationItem): Boolean {
+        return navigationManager.selectedNavBarItem.route == item.route
+    }
+
 
     /**
      * Navbar visibility status
@@ -214,7 +195,8 @@ class MainScaffoldViewModel(
                 showUserDetailsFetchFailAlertBox()
             }
 
-            selectView(getNavbarElements().first())
+            navigationManager.setRole(getLoggedInUser().role)
+            navigationManager.selectView(getNavbarElements().first())
             navigationManager.navigateTo(getStartDestination(), true)
         }
     }

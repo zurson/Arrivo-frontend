@@ -8,6 +8,9 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -33,11 +36,8 @@ fun AppNavigationBar(
     mainScaffoldViewModel: MainScaffoldViewModel,
     navItems: List<NavigationItem>
 ) {
-
     NavigationBar {
         navItems.forEach { item ->
-            val selected = mainScaffoldViewModel.isSelected(item)
-
             NavigationBarItem(modifier = Modifier
                 .wrapContentHeight()
                 .padding(top = dimensionResource(R.dimen.navbar_top_padding)),
@@ -52,7 +52,7 @@ fun AppNavigationBar(
                     }
                 },
                 alwaysShowLabel = true,
-                selected = selected,
+                selected = mainScaffoldViewModel.isViewSelected(item),
 
                 icon = {
                     item.icon?.let {
