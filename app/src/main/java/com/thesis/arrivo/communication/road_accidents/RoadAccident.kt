@@ -3,7 +3,7 @@ package com.thesis.arrivo.communication.road_accidents
 import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.ui.common.road_accidents_list.RoadAccidentCategory
 import com.thesis.arrivo.ui.common.road_accidents_list.RoadAccidentStatus
-import com.thesis.arrivo.utilities.Location
+import com.thesis.arrivo.utilities.location.Location
 import java.time.LocalDate
 
 class RoadAccident(

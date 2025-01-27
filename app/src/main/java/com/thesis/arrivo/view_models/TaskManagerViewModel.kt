@@ -25,7 +25,7 @@ import com.thesis.arrivo.communication.task.TaskUpdateRequest
 import com.thesis.arrivo.communication.task.TasksRepository
 import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.communication.task.Product
-import com.thesis.arrivo.utilities.Location
+import com.thesis.arrivo.utilities.location.Location
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings.Companion.DEFAULT_MAP_ZOOM
 import com.thesis.arrivo.utilities.capitalize

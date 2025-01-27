@@ -13,13 +13,14 @@ import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TaskToEdit
 import com.thesis.arrivo.components.navigation.NavigationItem
-import com.thesis.arrivo.utilities.Location
+import com.thesis.arrivo.utilities.location.Location
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.changeActivity
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoggedInUserAccessor
 import com.thesis.arrivo.utilities.showDefaultErrorDialog
 import kotlinx.coroutines.launch
+import java.util.concurrent.locks.ReentrantLock
 
 class MainScaffoldViewModel(
     private val context: Context,
@@ -243,15 +244,18 @@ class MainScaffoldViewModel(
      **/
 
     private var loadingScreenEnabled by mutableStateOf(false)
+    private val lock = ReentrantLock()
 
-    @Synchronized
+
     override fun showLoadingScreen() {
+        lock.lock()
         loadingScreenEnabled = true
     }
 
-    @Synchronized
+
     override fun hideLoadingScreen() {
         loadingScreenEnabled = false
+        lock.unlock()
     }
 
     override fun isLoadingScreenEnabled(): Boolean = loadingScreenEnabled

@@ -1,4 +1,4 @@
-package com.thesis.arrivo.utilities
+package com.thesis.arrivo.utilities.location
 
 import com.google.android.gms.maps.model.LatLng
 
