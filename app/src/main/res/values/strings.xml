@@ -18,7 +18,8 @@
         2. Go to Apps and notifications (or Apps).\n
         3. Find and select this app.\n
         4. Tap Permissions.\n
-        5. Enable "Location" permission.
+        5. Enable "Location" permission.\n
+        6. Restart application
     </string>
 
     <!-- NavBar - User -->

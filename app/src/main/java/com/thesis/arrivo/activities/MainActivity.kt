@@ -13,11 +13,10 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.firebase.FirebaseApp
 import com.thesis.arrivo.R
-import com.thesis.arrivo.components.permissions.LocationPermissionInfoScreen
+import com.thesis.arrivo.components.permissions.LocationPermissionScreen
 import com.thesis.arrivo.components.permissions.RequestLocationPermission
 import com.thesis.arrivo.ui.MainView
 import com.thesis.arrivo.ui.theme.Theme
-import com.thesis.arrivo.utilities.openAppSettings
 
 class MainActivity : AppCompatActivity() {
 
@@ -65,21 +64,11 @@ class MainActivity : AppCompatActivity() {
             permissionsGranted.value = isGranted
         }
 
-        if (!permissionsChecked.value)
-            return
-
-        if (permissionsGranted.value)
-            MainView(placesClient)
-        else
-            LocationPermissionScreen()
+        when {
+            !permissionsChecked.value -> {}
+            permissionsGranted.value -> MainView(placesClient)
+            else -> LocationPermissionScreen(this)
+        }
     }
-
-    @Composable
-    fun LocationPermissionScreen() {
-        LocationPermissionInfoScreen(
-            onOpenSettingsClick = { openAppSettings(this) }
-        )
-    }
-
 }
 
