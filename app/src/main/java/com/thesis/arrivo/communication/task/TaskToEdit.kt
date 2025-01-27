@@ -1,6 +1,6 @@
 package com.thesis.arrivo.communication.task
 
-import com.thesis.arrivo.utilities.Location
+import com.thesis.arrivo.utilities.location.Location
 
 data class TaskToEdit(
     val task: Task,

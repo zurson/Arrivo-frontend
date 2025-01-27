@@ -5,6 +5,6 @@ enum class RoadAccidentCategory {
     FLAT_TIRE,
     VEHICLE_BREAKDOWN,
     ANIMAL_COLLISION,
-    OTHER
+    OTHER;
 
 }

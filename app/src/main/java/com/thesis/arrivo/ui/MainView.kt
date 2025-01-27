@@ -12,7 +12,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.android.libraries.places.api.net.PlacesClient
 import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.components.other_components.LoadingScreen
 import com.thesis.arrivo.ui.admin.admin_deliveries.DeliveriesListView
@@ -26,10 +25,11 @@ import com.thesis.arrivo.ui.authentication.LoginView
 import com.thesis.arrivo.ui.common.account.AccountView
 import com.thesis.arrivo.ui.common.road_accidents_list.AccidentsListView
 import com.thesis.arrivo.ui.theme.Theme
+import com.thesis.arrivo.ui.user.user_accident_report_view.AccidentReportView
 import com.thesis.arrivo.ui.user.user_delivery_view.DeliveryView
 import com.thesis.arrivo.ui.user.user_map_view.MapView
-import com.thesis.arrivo.ui.user.user_your_accidents_view.YourAccidentsView
 import com.thesis.arrivo.utilities.NavigationManager
+import com.thesis.arrivo.view_models.AccidentReportViewModel
 import com.thesis.arrivo.view_models.AuthViewModel
 import com.thesis.arrivo.view_models.DeliveriesListViewModel
 import com.thesis.arrivo.view_models.DeliveryConfirmViewModel
@@ -41,6 +41,7 @@ import com.thesis.arrivo.view_models.RoadAccidentsAdminViewModel
 import com.thesis.arrivo.view_models.RoadAccidentsUserViewModel
 import com.thesis.arrivo.view_models.TaskManagerViewModel
 import com.thesis.arrivo.view_models.TasksListViewModel
+import com.thesis.arrivo.view_models.factory.AccidentReportViewModelFactory
 import com.thesis.arrivo.view_models.factory.AuthViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveriesListViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveryConfirmViewModelFactory
@@ -54,7 +55,7 @@ import com.thesis.arrivo.view_models.factory.TaskManagerViewModelFactory
 
 
 @Composable
-fun MainView(placesClient: PlacesClient) {
+fun MainView() {
     val navHostController = rememberNavController()
     val navigationManager = NavigationManager(navHostController)
 
@@ -77,7 +78,6 @@ fun MainView(placesClient: PlacesClient) {
     }
 
     SetupMainScaffold(
-        placesClient = placesClient,
         navHostController = navHostController,
         mainScaffoldViewModel = mainScaffoldViewModel,
         navigationManager = navigationManager,
@@ -88,7 +88,6 @@ fun MainView(placesClient: PlacesClient) {
 
 @Composable
 private fun SetupMainScaffold(
-    placesClient: PlacesClient,
     navHostController: NavHostController,
     mainScaffoldViewModel: MainScaffoldViewModel,
     navigationManager: NavigationManager,
@@ -103,12 +102,14 @@ private fun SetupMainScaffold(
                 startDestination = mainScaffoldViewModel.getStartDestination(),
                 modifier = Modifier.padding(contentPadding)
             ) {
-                setupUserViews(mainScaffoldViewModel = mainScaffoldViewModel)
+                setupUserViews(
+                    mainScaffoldViewModel = mainScaffoldViewModel,
+                    navigationManager = navigationManager
+                )
 
                 setupCommonViews(mainScaffoldViewModel = mainScaffoldViewModel)
 
                 setupAdminViews(
-                    placesClient = placesClient,
                     mainScaffoldViewModel = mainScaffoldViewModel,
                     navigationManager = navigationManager,
                     deliverySharedViewModel = deliverySharedViewModel
@@ -122,7 +123,10 @@ private fun SetupMainScaffold(
 }
 
 @SuppressLint("ComposableDestinationInComposeScope")
-private fun NavGraphBuilder.setupUserViews(mainScaffoldViewModel: MainScaffoldViewModel) {
+private fun NavGraphBuilder.setupUserViews(
+    mainScaffoldViewModel: MainScaffoldViewModel,
+    navigationManager: NavigationManager
+) {
     composable(NavigationItem.TasksUser.route) { DeliveryView() }
     composable(NavigationItem.MapUser.route) { MapView() }
 
@@ -139,13 +143,24 @@ private fun NavGraphBuilder.setupUserViews(mainScaffoldViewModel: MainScaffoldVi
         AccidentsListView(viewModel)
     }
 
-    composable(NavigationItem.ReportsUser.route) { YourAccidentsView() }
+    composable(NavigationItem.ReportsUser.route) {
+        val viewModel: AccidentReportViewModel = viewModel(
+            factory = AccidentReportViewModelFactory(
+                context = LocalContext.current,
+                loadingScreenManager = mainScaffoldViewModel,
+                loggedInUserAccessor = mainScaffoldViewModel,
+                navigationManager = navigationManager
+            )
+        )
+
+        AccidentReportView(viewModel)
+    }
+
     composable(NavigationItem.AccountManagement.route) { AccountView(mainScaffoldViewModel) }
 }
 
 @SuppressLint("ComposableDestinationInComposeScope")
 private fun NavGraphBuilder.setupAdminViews(
-    placesClient: PlacesClient,
     mainScaffoldViewModel: MainScaffoldViewModel,
     navigationManager: NavigationManager,
     deliverySharedViewModel: DeliverySharedViewModel
@@ -176,7 +191,6 @@ private fun NavGraphBuilder.setupAdminViews(
     composable(NavigationItem.TaskCreateAdmin.route) {
         val viewModel: TaskManagerViewModel = viewModel(
             factory = TaskManagerViewModelFactory(
-                placesClient = placesClient,
                 mainScaffoldViewModel = mainScaffoldViewModel,
                 navigationManager = navigationManager,
                 loadingScreenManager = mainScaffoldViewModel,
@@ -189,7 +203,6 @@ private fun NavGraphBuilder.setupAdminViews(
     composable(NavigationItem.TaskEditAdmin.route) {
         val viewModel: TaskManagerViewModel = viewModel(
             factory = TaskManagerViewModelFactory(
-                placesClient = placesClient,
                 mainScaffoldViewModel = mainScaffoldViewModel,
                 navigationManager = navigationManager,
                 loadingScreenManager = mainScaffoldViewModel,

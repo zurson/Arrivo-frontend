@@ -24,6 +24,7 @@ navigationComposeVersion = "2.8.5"
 navigationRuntimeKtx = "2.8.4"
 navigationCompose = "2.8.4"
 places = "4.1.0"
+playServicesLocation = "21.3.0"
 playServicesMaps = "19.0.0"
 reorderable = "0.9.6"
 retrofit = "2.11.0"
@@ -63,6 +64,7 @@ maps-compose-v2120 = { module = "com.google.maps.android:maps-compose", version.
 places = { module = "com.google.android.libraries.places:places", version.ref = "places" }
 places-v320 = { module = "com.google.android.libraries.places:places", version.ref = "googlePlacesVersion" }
 places-v330 = { module = "com.google.android.libraries.places:places", version.ref = "googlePlaces" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps" }
 reorderable = { module = "org.burnoutcrew.composereorderable:reorderable", version.ref = "reorderable" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }

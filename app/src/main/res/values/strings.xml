@@ -7,6 +7,21 @@
     <string name="error_title">Error</string>
     <string name="emp_name_error">Error</string>
 
+    <!-- PERMISSIONS -->
+    <string name="location_permission_required">Location Access Required</string>
+    <string name="location_permission_message">
+        To continue using this app, location access is required. Please enable it in your device settings.
+    </string>
+    <string name="open_settings">Open Settings</string>
+    <string name="grant_permissions_instructions">
+        1. Open the device Settings.\n
+        2. Go to Apps and notifications (or Apps).\n
+        3. Find and select this app.\n
+        4. Tap Permissions.\n
+        5. Enable "Location" permission.\n
+        6. Restart application
+    </string>
+
     <!-- NavBar - User -->
     <string name="nav_delivery_details_label_user">Tasks</string>
     <string name="nav_map_label_user">Map</string>
@@ -170,5 +185,19 @@
     <!-- USER ACCOUNT -->
     <string name="account_logout_button_text">Logout</string>
     <string name="account_admin_account_name">Admin Account</string>
+    
+    <!-- ACCIDENT REPORT -->
+    <string name="accident_report_undefined_location_text">---</string>
+    <string name="accident_report_address_label">Address</string>
+    <string name="accident_report_time_label">Time</string>
+    <string name="accident_report_car_id_label">Car ID</string>
+    <string name="accident_report_category_label">Category</string>
+    <string name="accident_report_description_label">Description</string>
+    <string name="accident_report_confirm_button_text">Send Report</string>
 
+    <string name="accident_report_error_car_id">Car ID is too short</string>
+    <string name="accident_report_error_description">Description is too short</string>
+
+    <string name="accident_report_create_success_message">Report sent successfully!</string>
+    
 </resources>

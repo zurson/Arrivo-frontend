@@ -11,31 +11,27 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.AutocompletePrediction
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.net.FetchPlaceRequest
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
-import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.maps.android.compose.CameraPositionState
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.available_products.AvailableProduct
 import com.thesis.arrivo.communication.available_products.AvailableProductsRepository
+import com.thesis.arrivo.communication.task.Product
 import com.thesis.arrivo.communication.task.TaskCreateRequest
 import com.thesis.arrivo.communication.task.TaskUpdateRequest
 import com.thesis.arrivo.communication.task.TasksRepository
 import com.thesis.arrivo.components.navigation.NavigationItem
-import com.thesis.arrivo.communication.task.Product
-import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings.Companion.DEFAULT_MAP_ZOOM
 import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
+import com.thesis.arrivo.utilities.location.Location
+import com.thesis.arrivo.utilities.location.PlacesApiHelper
 import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.launch
 
 class TaskManagerViewModel(
     private val context: Context,
-    private val placesClient: PlacesClient,
     private val mainScaffoldViewModel: MainScaffoldViewModel,
     loadingScreenManager: LoadingScreenManager,
     private val navigationManager: NavigationManager,
@@ -101,6 +97,10 @@ class TaskManagerViewModel(
     var isProductSpinnerError by mutableStateOf(false)
     var isProductAmountError by mutableStateOf(false)
 
+    private val _selectedProduct = mutableStateOf(AvailableProduct.emptyProduct())
+    val selectedProduct: AvailableProduct
+        get() = _selectedProduct.value
+
     fun onProductAddButtonClick() {
         if (selectedProductName.isEmpty()) {
             isProductSpinnerError = true
@@ -138,6 +138,7 @@ class TaskManagerViewModel(
 
     fun toggleShowAddProductDialog() {
         _showAddProductDialog.value = !_showAddProductDialog.value
+        _selectedProduct.value = AvailableProduct.emptyProduct()
     }
 
 
@@ -146,10 +147,15 @@ class TaskManagerViewModel(
     }
 
 
-    fun onProductSelected(item: String) {
-        selectedProductName = item
+    fun onProductSelected(product: AvailableProduct) {
+        selectedProductName = product.name
         isProductSpinnerError = false
+
+        _selectedProduct.value = product
     }
+
+
+    fun productToString(product: AvailableProduct): String = product.name
 
 
     fun onProductAmountValueChange(value: String) {
@@ -240,7 +246,8 @@ class TaskManagerViewModel(
     }
 
 
-    private fun getCameraPosition() = CameraPosition.fromLatLngZoom(selectedLocation, DEFAULT_MAP_ZOOM)
+    private fun getCameraPosition() =
+        CameraPosition.fromLatLngZoom(selectedLocation, DEFAULT_MAP_ZOOM)
 
 
     fun toggleLocationSearchDialog() {
@@ -254,28 +261,17 @@ class TaskManagerViewModel(
 
 
     private fun fetchPredictions(query: String) {
-        val request = FindAutocompletePredictionsRequest.builder().setQuery(query).build()
-
-        placesClient.findAutocompletePredictions(request).addOnSuccessListener { response ->
+        PlacesApiHelper.fetchPredictions(query = query, callback = { result ->
             clearPredictions()
-            predictions = response.autocompletePredictions
-        }.addOnFailureListener { exception ->
-            exception.printStackTrace()
-        }
+            predictions.addAll(result)
+        })
     }
 
 
-    private fun fetchLocationFromPlaceId(
-        placeId: String, callback: (LatLng?) -> Unit
-    ) {
-        val request = FetchPlaceRequest.newInstance(placeId, listOf(Place.Field.LAT_LNG))
-
-        placesClient.fetchPlace(request).addOnSuccessListener { response ->
-            callback(response.place.location)
-        }.addOnFailureListener { exception ->
-            exception.printStackTrace()
-            callback(null)
-        }
+    private fun fetchLocationFromPlaceId(placeId: String, callback: (LatLng?) -> Unit) {
+        PlacesApiHelper.fetchLocationFromPlaceId(placeId = placeId, callback = { result ->
+            callback(result)
+        })
     }
 
 

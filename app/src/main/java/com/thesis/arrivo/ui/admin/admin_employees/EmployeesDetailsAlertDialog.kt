@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -51,11 +52,7 @@ fun EmployeesDetailsAlertDialog(
             AlertDialogSingleButton(
                 text = stringResource(R.string.employees_list_edit_button_text),
                 onEditButtonClick = { onEditButtonClick() },
-                icon = Icons.Filled.Edit,
-                modifier = Modifier
-                    .padding(top = dimensionResource(R.dimen.alert_dialog_button_top_padding))
-                    .padding(horizontal = dimensionResource(R.dimen.alert_dialog_button_horizontal_padding))
-                    .height(dimensionResource(R.dimen.alert_dialog_button_height))
+                icon = Icons.Outlined.Edit
             )
 
         }

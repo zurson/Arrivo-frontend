@@ -8,6 +8,7 @@ import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.widget.Toast
 import androidx.annotation.DimenRes
 import androidx.appcompat.app.AlertDialog
@@ -27,7 +28,9 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 import kotlin.reflect.KClass
@@ -210,4 +213,20 @@ fun formatPhoneNumber(phoneNumber: String): String {
     } catch (e: Exception) {
         phoneNumber
     }
+}
+
+
+fun openAppSettings(context: Context) {
+    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+        data = Uri.fromParts("package", context.packageName, null)
+    }
+
+    context.startActivity(intent)
+}
+
+
+fun getCurrentTimeText(): String {
+    val currentTime = LocalTime.now()
+    val formatter = DateTimeFormatter.ofPattern("HH:mm")
+    return currentTime.format(formatter)
 }

@@ -2,6 +2,7 @@ package com.thesis.arrivo.components.other_components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
@@ -39,13 +40,15 @@ fun AppTextField(
     maxLength: Int? = null,
     readOnly: Boolean = false,
     maxLines: Int = 1,
+    singleLine: Boolean = true,
+    imeAction: ImeAction = ImeAction.Next
 ) {
 
     OutlinedTextField(
         visualTransformation = visualTransformation,
-        modifier = modifier,
+        modifier = modifier.heightIn(dimensionResource(R.dimen.text_field_height)),
         value = value,
-        singleLine = true,
+        singleLine = singleLine,
         readOnly = readOnly,
         maxLines = maxLines,
         textStyle = TextStyle.Default.copy(
@@ -53,7 +56,7 @@ fun AppTextField(
         ),
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType,
-            imeAction = ImeAction.Next
+            imeAction = imeAction
         ),
         colors = TextFieldDefaults.colors(
             unfocusedIndicatorColor = MaterialTheme.colorScheme.onBackground,
@@ -103,12 +106,14 @@ fun AppTextField(
             }
         },
         onValueChange = onValueChange,
-        label = { label?.let{
-            Text(
-                text = label,
-                fontSize = dpToSp(R.dimen.form_label_text_size)
-            )
-        } },
+        label = {
+            label?.let {
+                Text(
+                    text = label,
+                    fontSize = dpToSp(R.dimen.form_label_text_size)
+                )
+            }
+        },
         supportingText = {
             if (isError) {
                 Text(

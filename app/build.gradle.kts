@@ -99,4 +99,7 @@ dependencies {
 
     /** Lists drag and drop reorder **/
     implementation(libs.reorderable)
+
+    /** Google Services **/
+    implementation(libs.play.services.location)
 }

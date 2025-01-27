@@ -1,7 +1,7 @@
 package com.thesis.arrivo.communication.task
 
 import com.thesis.arrivo.communication.employee.Employee
-import com.thesis.arrivo.utilities.Location
+import com.thesis.arrivo.utilities.location.Location
 import java.time.LocalDate
 
 data class Task(

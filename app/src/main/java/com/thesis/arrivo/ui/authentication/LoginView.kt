@@ -75,7 +75,7 @@ fun LoginView(authViewModel: AuthViewModel) {
         /* FORMS SECTION */
         val (formsRef) = createRefs()
         val formsTopGuideLine = createGuidelineFromTop(0.30f)
-        val formsBottomGuideLine = createGuidelineFromTop(0.6f)
+        val formsBottomGuideLine = createGuidelineFromTop(0.7f)
 
         FormsSection(
             authViewModel = authViewModel,

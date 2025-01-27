@@ -80,10 +80,6 @@ fun TaskDetailsDialog(
                 text = buttonText,
                 onEditButtonClick = { onButtonClick() },
                 icon = buttonIcon,
-                modifier = Modifier
-                    .padding(top = dimensionResource(R.dimen.alert_dialog_button_top_padding))
-                    .padding(horizontal = dimensionResource(R.dimen.alert_dialog_button_horizontal_padding))
-                    .height(dimensionResource(R.dimen.alert_dialog_button_height))
             )
         }
     }
