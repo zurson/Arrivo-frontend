@@ -28,8 +28,9 @@ import com.thesis.arrivo.ui.common.road_accidents_list.AccidentsListView
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.ui.user.user_delivery_view.DeliveryView
 import com.thesis.arrivo.ui.user.user_map_view.MapView
-import com.thesis.arrivo.ui.user.user_your_accidents_view.YourAccidentsView
+import com.thesis.arrivo.ui.user.user_your_accidents_view.AccidentReportView
 import com.thesis.arrivo.utilities.NavigationManager
+import com.thesis.arrivo.view_models.AccidentReportViewModel
 import com.thesis.arrivo.view_models.AuthViewModel
 import com.thesis.arrivo.view_models.DeliveriesListViewModel
 import com.thesis.arrivo.view_models.DeliveryConfirmViewModel
@@ -41,6 +42,7 @@ import com.thesis.arrivo.view_models.RoadAccidentsAdminViewModel
 import com.thesis.arrivo.view_models.RoadAccidentsUserViewModel
 import com.thesis.arrivo.view_models.TaskManagerViewModel
 import com.thesis.arrivo.view_models.TasksListViewModel
+import com.thesis.arrivo.view_models.factory.AccidentReportViewModelFactory
 import com.thesis.arrivo.view_models.factory.AuthViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveriesListViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveryConfirmViewModelFactory
@@ -139,7 +141,17 @@ private fun NavGraphBuilder.setupUserViews(mainScaffoldViewModel: MainScaffoldVi
         AccidentsListView(viewModel)
     }
 
-    composable(NavigationItem.ReportsUser.route) { YourAccidentsView() }
+    composable(NavigationItem.ReportsUser.route) {
+        val viewModel: AccidentReportViewModel = viewModel(
+            factory = AccidentReportViewModelFactory(
+                context = LocalContext.current,
+                loadingScreenManager = mainScaffoldViewModel
+            )
+        )
+
+        AccidentReportView(viewModel)
+    }
+
     composable(NavigationItem.AccountManagement.route) { AccountView(mainScaffoldViewModel) }
 }
 
