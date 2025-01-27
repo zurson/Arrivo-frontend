@@ -56,7 +56,7 @@ import com.thesis.arrivo.view_models.factory.TaskManagerViewModelFactory
 
 
 @Composable
-fun MainView(placesClient: PlacesClient) {
+fun MainView() {
     val navHostController = rememberNavController()
     val navigationManager = NavigationManager(navHostController)
 
@@ -79,7 +79,6 @@ fun MainView(placesClient: PlacesClient) {
     }
 
     SetupMainScaffold(
-        placesClient = placesClient,
         navHostController = navHostController,
         mainScaffoldViewModel = mainScaffoldViewModel,
         navigationManager = navigationManager,
@@ -90,7 +89,6 @@ fun MainView(placesClient: PlacesClient) {
 
 @Composable
 private fun SetupMainScaffold(
-    placesClient: PlacesClient,
     navHostController: NavHostController,
     mainScaffoldViewModel: MainScaffoldViewModel,
     navigationManager: NavigationManager,
@@ -110,7 +108,6 @@ private fun SetupMainScaffold(
                 setupCommonViews(mainScaffoldViewModel = mainScaffoldViewModel)
 
                 setupAdminViews(
-                    placesClient = placesClient,
                     mainScaffoldViewModel = mainScaffoldViewModel,
                     navigationManager = navigationManager,
                     deliverySharedViewModel = deliverySharedViewModel
@@ -157,7 +154,6 @@ private fun NavGraphBuilder.setupUserViews(mainScaffoldViewModel: MainScaffoldVi
 
 @SuppressLint("ComposableDestinationInComposeScope")
 private fun NavGraphBuilder.setupAdminViews(
-    placesClient: PlacesClient,
     mainScaffoldViewModel: MainScaffoldViewModel,
     navigationManager: NavigationManager,
     deliverySharedViewModel: DeliverySharedViewModel
@@ -188,7 +184,6 @@ private fun NavGraphBuilder.setupAdminViews(
     composable(NavigationItem.TaskCreateAdmin.route) {
         val viewModel: TaskManagerViewModel = viewModel(
             factory = TaskManagerViewModelFactory(
-                placesClient = placesClient,
                 mainScaffoldViewModel = mainScaffoldViewModel,
                 navigationManager = navigationManager,
                 loadingScreenManager = mainScaffoldViewModel,
@@ -201,7 +196,6 @@ private fun NavGraphBuilder.setupAdminViews(
     composable(NavigationItem.TaskEditAdmin.route) {
         val viewModel: TaskManagerViewModel = viewModel(
             factory = TaskManagerViewModelFactory(
-                placesClient = placesClient,
                 mainScaffoldViewModel = mainScaffoldViewModel,
                 navigationManager = navigationManager,
                 loadingScreenManager = mainScaffoldViewModel,

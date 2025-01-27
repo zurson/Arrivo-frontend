@@ -28,7 +28,9 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 import kotlin.reflect.KClass
@@ -220,4 +222,11 @@ fun openAppSettings(context: Context) {
     }
 
     context.startActivity(intent)
+}
+
+
+fun getCurrentTimeText(): String {
+    val currentTime = LocalTime.now()
+    val formatter = DateTimeFormatter.ofPattern("HH:mm")
+    return currentTime.format(formatter)
 }

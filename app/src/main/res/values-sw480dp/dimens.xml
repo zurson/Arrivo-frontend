@@ -30,6 +30,7 @@
 
     <!-- TEXT FIELD -->
     <dimen name="text_filed_padding">50dp</dimen>
+    <dimen name="text_field_height">120dp</dimen>
 
     <!-- APP SPINNER -->
     <dimen name="app_spinner_item_text_size">24sp</dimen>
@@ -63,7 +64,7 @@
 
     <dimen name="alert_dialog_button_height">75dp</dimen>
     <dimen name="alert_dialog_button_horizontal_padding">75dp</dimen>
-    <dimen name="alert_dialog_button_top_padding">48dp</dimen>
+    <dimen name="alert_dialog_button_top_padding">0dp</dimen>
 
     <dimen name="dialog_lazy_column_icon_size">40dp</dimen>
     <dimen name="dialog_lazy_column_height">300dp</dimen>
@@ -160,5 +161,9 @@
     <dimen name="account_details_icon_size">50dp</dimen>
     <dimen name="account_details_text_size">24sp</dimen>
     <dimen name="account_user_name_text_size">30sp</dimen>
+
+    <!-- ACCIDENT REPORT -->
+    <dimen name="accident_report_map_border_width">2dp</dimen>
+    <dimen name="accident_report_description_default_height">200dp</dimen>
 
 </resources>

@@ -109,10 +109,7 @@ fun RoadAccidentDetailsDialog(
                 AlertDialogSingleButton(
                     text = stringResource(R.string.accidents_details_mark_as_resolved_button_text),
                     onEditButtonClick = { onButtonClick() },
-                    icon = Icons.Filled.Check,
-                    modifier = Modifier
-                        .padding(horizontal = dimensionResource(R.dimen.alert_dialog_button_horizontal_padding))
-                        .height(dimensionResource(R.dimen.alert_dialog_button_height))
+                    icon = Icons.Filled.Check
                 )
             }
         }

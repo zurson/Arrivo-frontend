@@ -11,7 +11,6 @@ import com.thesis.arrivo.view_models.TaskManagerViewModel
 
 class TaskManagerViewModelFactory(
     private val context: Context,
-    private val placesClient: PlacesClient,
     private val mainScaffoldViewModel: MainScaffoldViewModel,
     private val loadingScreenManager: LoadingScreenManager,
     private val navigationManager: NavigationManager,
@@ -21,7 +20,6 @@ class TaskManagerViewModelFactory(
         if (modelClass.isAssignableFrom(TaskManagerViewModel::class.java)) {
             return TaskManagerViewModel(
                 context = context,
-                placesClient = placesClient,
                 mainScaffoldViewModel = mainScaffoldViewModel,
                 loadingScreenManager = loadingScreenManager,
                 navigationManager = navigationManager

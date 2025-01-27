@@ -11,10 +11,10 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.thesis.arrivo.R
+import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
 import com.thesis.arrivo.components.other_components.AppButton
 import com.thesis.arrivo.components.other_components.AppSpinner
 import com.thesis.arrivo.components.other_components.AppTextField
-import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
 import com.thesis.arrivo.view_models.TaskManagerViewModel
 
 @Composable
@@ -31,10 +31,11 @@ fun AddProductAlertDialog(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         ) {
             AppSpinner(
-                items = taskManagerViewModel.getAvailableProducts().map { productResponse -> productResponse.name },
+                items = taskManagerViewModel.getAvailableProducts(),
                 label = stringResource(R.string.add_product_spinner_label),
                 onItemSelected = { taskManagerViewModel.onProductSelected(it) },
-                selectedItem = "",
+                selectedItem = taskManagerViewModel.selectedProduct,
+                itemToString = { taskManagerViewModel.productToString(it) },
                 modifier = Modifier.fillMaxWidth(),
                 isError = taskManagerViewModel.isProductSpinnerError,
                 errorMessage = stringResource(R.string.add_product_spinner_error_message)

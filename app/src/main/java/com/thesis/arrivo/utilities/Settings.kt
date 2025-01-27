@@ -38,6 +38,11 @@ class Settings {
 
         val DELIVERY_TIME_OK_COLOR = Color.Green
         val DELIVERY_TIME_EXCEEDED_COLOR = Color.Red
+
+        val ACCIDENT_REPORT_MAX_DESCRIPTION_LEN = 200
+        val ACCIDENT_REPORT_MIN_DESCRIPTION_LEN = 1
+        val ACCIDENT_REPORT_CAR_ID_MAX_LEN = 10
+        val ACCIDENT_REPORT_CAR_ID_MIN_LEN = 5
     }
 
 }

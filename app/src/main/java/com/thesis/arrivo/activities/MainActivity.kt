@@ -17,6 +17,7 @@ import com.thesis.arrivo.components.permissions.LocationPermissionScreen
 import com.thesis.arrivo.components.permissions.RequestLocationPermission
 import com.thesis.arrivo.ui.MainView
 import com.thesis.arrivo.ui.theme.Theme
+import com.thesis.arrivo.utilities.location.PlacesApiHelper
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,12 +31,12 @@ class MainActivity : AppCompatActivity() {
         context = this
 
         initializeFirebase()
-        val placesClient = initializePlacesClient()
+        initializePlacesClient()
 
         setContent {
             enableEdgeToEdge()
             Theme.ArrivoTheme {
-                MainContent(placesClient)
+                MainContent()
             }
         }
     }
@@ -44,18 +45,19 @@ class MainActivity : AppCompatActivity() {
         FirebaseApp.initializeApp(this)
     }
 
-    private fun initializePlacesClient(): PlacesClient {
+    private fun initializePlacesClient() {
         if (!Places.isInitialized()) {
             Places.initialize(
                 this,
                 this.getString(R.string.google_maps_api_key)
             )
         }
-        return Places.createClient(this)
+
+        PlacesApiHelper.init(Places.createClient(this))
     }
 
     @Composable
-    fun MainContent(placesClient: PlacesClient) {
+    fun MainContent() {
         val permissionsChecked = remember { mutableStateOf(false) }
         val permissionsGranted = remember { mutableStateOf(false) }
 
@@ -66,7 +68,7 @@ class MainActivity : AppCompatActivity() {
 
         when {
             !permissionsChecked.value -> {}
-            permissionsGranted.value -> MainView(placesClient)
+            permissionsGranted.value -> MainView()
             else -> LocationPermissionScreen(this)
         }
     }
