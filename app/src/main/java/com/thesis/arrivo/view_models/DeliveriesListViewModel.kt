@@ -2,7 +2,6 @@ package com.thesis.arrivo.view_models
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
@@ -16,16 +15,15 @@ import com.thesis.arrivo.communication.delivery.DeliveryStatus
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.utilities.NavigationManager
+import com.thesis.arrivo.utilities.SelectedDateManager
 import com.thesis.arrivo.utilities.Settings.Companion.DELIVERY_ASSIGNED_COLOR
 import com.thesis.arrivo.utilities.Settings.Companion.DELIVERY_COMPLETED_COLOR
 import com.thesis.arrivo.utilities.Settings.Companion.DELIVERY_IN_PROGRESS_COLOR
-import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 class DeliveriesListViewModel(
     private val context: Context,
@@ -54,9 +52,7 @@ class DeliveriesListViewModel(
             }
         }
 
-        private var _selectedDate = mutableLongStateOf(getCurrentDateMillis())
-        private val selectedDate: Long
-            get() = _selectedDate.longValue
+        private val selectedDateManager: SelectedDateManager = SelectedDateManager()
 
         private val _activeFilters = mutableStateListOf(DeliveryStatus.IN_PROGRESS)
         private val activeFilters: List<DeliveryStatus>
@@ -68,15 +64,12 @@ class DeliveriesListViewModel(
      * Date picker
      **/
 
-    private var selectedLocalDate: LocalDate = convertLongToLocalDate(selectedDate)
 
-
-    fun getSelectedDate(): Long = selectedDate
+    fun getSelectedDate(): Long = selectedDateManager.selectedDate
 
 
     fun onDateSelected(dateMillis: Long?) {
-        _selectedDate.longValue = dateMillis ?: getCurrentDateMillis()
-        selectedLocalDate = convertLongToLocalDate(selectedDate)
+        selectedDateManager.selectedDate = dateMillis ?: getCurrentDateMillis()
         filterDeliveries()
     }
 
@@ -118,7 +111,8 @@ class DeliveriesListViewModel(
         viewModelScope.launch {
             val filtered = _deliveriesList.filter { item ->
                 val matchesStatus = item.status in activeFilters || activeFilters.isEmpty()
-                val matchesDate = item.assignedDate.toEpochDay() == selectedLocalDate.toEpochDay()
+                val matchesDate =
+                    item.assignedDate.toEpochDay() == selectedDateManager.localDate.toEpochDay()
                 matchesStatus && matchesDate
             }
 
@@ -290,6 +284,7 @@ class DeliveriesListViewModel(
     /**
      * Initializer
      **/
+
 
     init {
         fetchDeliveries()

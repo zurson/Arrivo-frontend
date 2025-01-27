@@ -147,7 +147,7 @@ private fun FiltersList(
             AppFilter(
                 modifier = Modifier.weight(1f),
                 filter = filter,
-                isActive = roadAccidentsViewModel.getActiveFilters().contains(filter),
+                isActive = roadAccidentsViewModel.isFilterActive(filter),
                 filterToString = { roadAccidentsViewModel.filterToString(it) },
                 onSelected = { roadAccidentsViewModel.toggleFilterActive(it) }
             )

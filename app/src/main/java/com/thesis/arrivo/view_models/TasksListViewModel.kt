@@ -2,7 +2,6 @@ package com.thesis.arrivo.view_models
 
 import android.content.Context
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,18 +11,17 @@ import androidx.lifecycle.viewModelScope
 import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TaskStatus
+import com.thesis.arrivo.communication.task.TaskToEdit
 import com.thesis.arrivo.communication.task.TasksRepository
 import com.thesis.arrivo.components.navigation.NavigationItem
-import com.thesis.arrivo.communication.task.TaskToEdit
 import com.thesis.arrivo.utilities.Location
 import com.thesis.arrivo.utilities.NavigationManager
+import com.thesis.arrivo.utilities.SelectedDateManager
 import com.thesis.arrivo.utilities.Settings
-import com.thesis.arrivo.utilities.convertLongToLocalDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 class TasksListViewModel(
     context: Context,
@@ -34,9 +32,7 @@ class TasksListViewModel(
     private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
 
     companion object {
-        private var _selectedDate = mutableLongStateOf(getCurrentDateMillis())
-        private val selectedDate: Long
-            get() = _selectedDate.longValue
+        private val selectedDateManager: SelectedDateManager = SelectedDateManager()
 
         private val _activeFilters = mutableStateListOf(TaskStatus.UNASSIGNED)
         private val activeFilters: List<TaskStatus>
@@ -68,12 +64,11 @@ class TasksListViewModel(
      **/
 
 
-    fun getSelectedDate(): Long = selectedDate
+    fun getSelectedDate(): Long = selectedDateManager.selectedDate
 
 
     fun onDateSelected(dateMillis: Long?) {
-        _selectedDate.longValue = dateMillis ?: getCurrentDateMillis()
-        selectedLocalDate = convertLongToLocalDate(selectedDate)
+        selectedDateManager.selectedDate = dateMillis ?: getCurrentDateMillis()
         filterTasks()
     }
 
@@ -151,8 +146,6 @@ class TasksListViewModel(
 
     private val tasksRepository = TasksRepository()
 
-    private var selectedLocalDate: LocalDate = convertLongToLocalDate(selectedDate)
-
     private val _tasksToShow = mutableStateListOf<Task>()
     val tasksToShow: List<Task>
         get() = _tasksToShow
@@ -179,7 +172,7 @@ class TasksListViewModel(
                 val matchesStatus = task.status in activeFilters || activeFilters.isEmpty()
 
                 val matchesDate = task.assignedDate?.let {
-                    task.assignedDate.toEpochDay() == selectedLocalDate.toEpochDay()
+                    task.assignedDate.toEpochDay() == selectedDateManager.localDate.toEpochDay()
                 } ?: true
 
                 matchesStatus && matchesDate
