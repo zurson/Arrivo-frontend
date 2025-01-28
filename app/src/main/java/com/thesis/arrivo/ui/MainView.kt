@@ -26,7 +26,7 @@ import com.thesis.arrivo.ui.common.account.AccountView
 import com.thesis.arrivo.ui.common.road_accidents_list.AccidentsListView
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.ui.user.user_accident_report_view.AccidentReportView
-import com.thesis.arrivo.ui.user.user_delivery_schedule_view.DeliveryView
+import com.thesis.arrivo.ui.user.user_delivery_schedule_view.DeliveryScheduleView
 import com.thesis.arrivo.ui.user.user_map_view.MapView
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.view_models.AccidentReportViewModel
@@ -34,6 +34,7 @@ import com.thesis.arrivo.view_models.AuthViewModel
 import com.thesis.arrivo.view_models.DeliveriesListViewModel
 import com.thesis.arrivo.view_models.DeliveryConfirmViewModel
 import com.thesis.arrivo.view_models.DeliveryOptionsViewModel
+import com.thesis.arrivo.view_models.DeliveryScheduleViewModel
 import com.thesis.arrivo.view_models.DeliverySharedViewModel
 import com.thesis.arrivo.view_models.EmployeeViewModel
 import com.thesis.arrivo.view_models.MainViewModel
@@ -46,6 +47,7 @@ import com.thesis.arrivo.view_models.factory.AuthViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveriesListViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveryConfirmViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveryOptionsViewModelFactory
+import com.thesis.arrivo.view_models.factory.DeliveryScheduleViewModelFactory
 import com.thesis.arrivo.view_models.factory.EmployeeViewModelFactory
 import com.thesis.arrivo.view_models.factory.MainViewModelFactory
 import com.thesis.arrivo.view_models.factory.RoadAccidentAdminViewModelFactory
@@ -127,7 +129,17 @@ private fun NavGraphBuilder.setupUserViews(
     mainViewModel: MainViewModel,
     navigationManager: NavigationManager
 ) {
-    composable(NavigationItem.TasksUser.route) { DeliveryView() }
+    composable(NavigationItem.TasksUser.route) {
+        val vm: DeliveryScheduleViewModel = viewModel(
+            factory = DeliveryScheduleViewModelFactory(
+                context = LocalContext.current,
+                loadingScreenManager = mainViewModel
+            )
+        )
+
+        DeliveryScheduleView(vm)
+    }
+
     composable(NavigationItem.MapUser.route) { MapView() }
 
     composable(NavigationItem.RoadAccidentsUser.route) {
