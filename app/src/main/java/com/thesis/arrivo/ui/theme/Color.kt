@@ -2,40 +2,6 @@ package com.thesis.arrivo.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-///** LIGHT **/
-//val LIGHT_PRIMARY = Color(0xFFA75827)
-//val LIGHT_PRIMARY_ALT = Color(0xFF927F7F)
-//val LIGHT_INVERSE_PRIMARY = Color(0xFFB3A59D)
-//val LIGHT_ON_PRIMARY = Color(0xFFFEFDED)
-//val LIGHT_SECONDARY = Color(0xFFB78B63)
-//val LIGHT_SECONDARY_ALT = Color(0xFF9A907F)
-//val LIGHT_ON_SECONDARY = Color(0xFFEBEBDB)
-//val LIGHT_BACKGROUND = Color(0xFFFFFEED)
-//val LIGHT_ON_BACKGROUND = Color(0xFF6E7673)
-//val LIGHT_SURFACE = Color(0xFFBEBBB3)
-//val LIGHT_ON_SURFACE = Color(0xFF727876)
-//
-//
-///** Loading screen background **/
-//val LOADING_SCREEN_BG = Color(0x80D2D0CB)
-//
-///** Error **/
-//val ERROR = Color(0xFFF50000)
-//
-///** DARK **/
-//val DARK_PRIMARY = Color(0xFFA75827)
-//val DARK_PRIMARY_ALT = Color(0xFF927F7F)
-//val DARK_INVERSE_PRIMARY = Color(0xFF898481)
-//val DARK_ON_PRIMARY = Color(0xFFFEFDED)
-//val DARK_SECONDARY = Color(0xFFB78B63)
-//val DARK_SECONDARY_ALT = Color(0xFF9A907F)
-//val DARK_ON_SECONDARY = Color(0xFFEBEBDB)
-//val DARK_BACKGROUND = Color(0xFFFFFEED)
-//val DARK_ON_BACKGROUND = Color(0xFF6E7673)
-//val DARK_SURFACE = Color(0xFFBEBBB3)
-//val DARK_ON_SURFACE = Color(0xFF727876)
-
-
 val primaryLight = Color(0xFF904A49)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFFFDAD8)
@@ -69,8 +35,8 @@ val surfaceBrightLight = Color(0xFFFFF8F7)
 val surfaceContainerLowestLight = Color(0xFFFFFFFF)
 val surfaceContainerLowLight = Color(0xFFFFF0EF)
 val surfaceContainerLight = Color(0xFFFCEAE8)
-val surfaceContainerHighLight = Color(0xFFF6E4E3)
-val surfaceContainerHighestLight = Color(0xFFF0DEDD)
+val surfaceContainerHighLight = Color(0xFFFFE7E6)
+val surfaceContainerHighestLight = Color(0xFFBDB1AE)
 
 val primaryDark = Color(0xFFFFB3B0)
 val onPrimaryDark = Color(0xFF571D1E)

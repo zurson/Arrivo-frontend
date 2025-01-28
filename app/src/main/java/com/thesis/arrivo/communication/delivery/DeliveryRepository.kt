@@ -1,6 +1,7 @@
 package com.thesis.arrivo.communication.delivery
 
 import com.thesis.arrivo.communication.RetrofitInstance
+import retrofit2.Response
 import java.time.LocalDate
 
 class DeliveryRepository {
@@ -23,6 +24,13 @@ class DeliveryRepository {
         return deliveryService.updateDelivery(id, updateRequest)
     }
 
+    suspend fun updateDeliveryStatus(
+        id: Long,
+        statusUpdateRequest: DeliveryUpdateStatusRequest
+    ): Delivery {
+        return deliveryService.updateDeliveryStatus(id, statusUpdateRequest)
+    }
+
     suspend fun cancelDelivery(id: Long) {
         deliveryService.cancelDelivery(id)
     }
@@ -30,7 +38,7 @@ class DeliveryRepository {
     suspend fun getDeliveryByEmployeeIdAndDate(
         employeeId: Long,
         date: LocalDate? = null
-    ): Delivery? {
+    ): Response<Delivery> {
         return deliveryService.getDeliveryByEmployeeIdAndDate(employeeId, date)
     }
 }

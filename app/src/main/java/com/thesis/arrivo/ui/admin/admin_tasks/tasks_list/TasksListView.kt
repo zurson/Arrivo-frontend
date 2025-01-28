@@ -147,7 +147,7 @@ private fun TasksList(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         ) {
             items(tasksListViewModel.tasksToShow) { task ->
-                TaskContainer(task = task, tasksListViewModel = tasksListViewModel)
+                TaskContainer(task = task, onClick = { tasksListViewModel.onTaskSelected(it) })
             }
         }
     }
@@ -156,28 +156,28 @@ private fun TasksList(
 
 @Composable
 private fun TaskContainer(
-    tasksListViewModel: TasksListViewModel,
-    task: Task
+    task: Task,
+    onClick: (Task) -> Unit
 ) {
     when (task.status) {
         TaskStatus.COMPLETED -> TaskCompletedOrFreeContainer(
             task = task,
-            tasksListViewModel = tasksListViewModel
+            onClick = { onClick(it) }
         )
 
         TaskStatus.UNASSIGNED -> TaskCompletedOrFreeContainer(
             task = task,
-            tasksListViewModel = tasksListViewModel
+            onClick = { onClick(it) }
         )
 
         TaskStatus.IN_PROGRESS -> TaskAssignedOrInProgressContainer(
             task = task,
-            tasksListViewModel = tasksListViewModel
+            onClick = { onClick(it) }
         )
 
         TaskStatus.ASSIGNED -> TaskAssignedOrInProgressContainer(
             task = task,
-            tasksListViewModel = tasksListViewModel
+            onClick = { onClick(it) }
         )
     }
 }
@@ -185,8 +185,8 @@ private fun TaskContainer(
 
 @Composable
 private fun TaskCompletedOrFreeContainer(
-    tasksListViewModel: TasksListViewModel,
-    task: Task
+    task: Task,
+    onClick: (Task) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -197,7 +197,7 @@ private fun TaskCompletedOrFreeContainer(
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .wrapContentHeight()
             .fillMaxWidth()
-            .clickable { tasksListViewModel.onTaskSelected(task) }
+            .clickable { onClick(task) }
             .padding(dimensionResource(R.dimen.tasks_list_container_padding))
     ) {
         Circle(
@@ -221,8 +221,8 @@ private fun TaskCompletedOrFreeContainer(
 
 @Composable
 private fun TaskAssignedOrInProgressContainer(
-    tasksListViewModel: TasksListViewModel,
-    task: Task
+    task: Task,
+    onClick: (Task) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -233,7 +233,7 @@ private fun TaskAssignedOrInProgressContainer(
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .wrapContentHeight()
             .fillMaxWidth()
-            .clickable { tasksListViewModel.onTaskSelected(task) }
+            .clickable { onClick(task) }
             .padding(dimensionResource(R.dimen.tasks_list_container_padding))
     ) {
         Circle(
@@ -260,7 +260,7 @@ private fun TaskAssignedOrInProgressContainer(
 
 
 @Composable
-private fun TaskTitle(
+fun TaskTitle(
     title: String
 ) {
     Text(
@@ -276,7 +276,7 @@ private fun TaskTitle(
 
 
 @Composable
-private fun TaskAddress(
+fun TaskAddress(
     address: String
 ) {
     Text(

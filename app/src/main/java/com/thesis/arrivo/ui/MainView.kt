@@ -133,7 +133,8 @@ private fun NavGraphBuilder.setupUserViews(
         val vm: DeliveryScheduleViewModel = viewModel(
             factory = DeliveryScheduleViewModelFactory(
                 context = LocalContext.current,
-                loadingScreenManager = mainViewModel
+                loadingScreenManager = mainViewModel,
+                loggedInUserAccessor = mainViewModel
             )
         )
 

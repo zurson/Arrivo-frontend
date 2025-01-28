@@ -199,5 +199,17 @@
     <string name="accident_report_error_description">Description is too short</string>
 
     <string name="accident_report_create_success_message">Report sent successfully!</string>
+
+    <!-- DELIVERY SCHEDULE -->
+    <string name="delivery_schedule_no_content_message">Your manager hasn’t assigned\nyou any task yet!</string>
+    <string name="delivery_schedule_finish_toast_message">Delivery finished!</string>
+    <string name="delivery_schedule_finished_main_message">Today\'s delivery has been finished!</string>
+    <string name="delivery_schedule_start_button_text">Start</string>
+    <string name="delivery_schedule_confirmation_title">Confirmation</string>
+    <string name="delivery_schedule_confirmation_delivery_start_text">Start the delivery?</string>
+    <string name="delivery_schedule_confirmation_mark_as_finished_text">Mark as finished?</string>
+
+    <string name="delivery_schedule_details_dialog_finish_button_text">Mark as Finished</string>
+    <string name="delivery_schedule_details_dialog_dismiss_button_text">OK</string>
     
 </resources>

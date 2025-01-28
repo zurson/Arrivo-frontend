@@ -88,6 +88,7 @@ dependencies {
     /** Retrofit + Gson **/
     implementation(libs.retrofit)
     implementation(libs.retrofit2.converter.gson)
+    implementation(libs.converter.scalars)
 
     /** Coroutines **/
     implementation(libs.kotlinx.coroutines.core)

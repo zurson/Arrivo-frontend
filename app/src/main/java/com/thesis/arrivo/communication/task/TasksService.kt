@@ -14,11 +14,17 @@ interface TasksService {
     @POST("tasks")
     suspend fun createTask(@Body taskCreateRequest: TaskCreateRequest)
 
-    @PATCH("tasks/{id}")
+    @POST("tasks/{id}")
     suspend fun updateTask(
         @Path("id") id: Long,
         @Body taskUpdateRequest: TaskUpdateRequest
     )
+
+    @PATCH("tasks/{id}")
+    suspend fun updateTaskStatus(
+        @Path("id") id: Long,
+        @Body statusUpdateRequest: TaskStatusUpdateRequest
+    ): Task
 
     @GET("tasks/free-tasks")
     suspend fun getFreeTasks(): List<Task>
