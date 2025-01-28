@@ -51,7 +51,7 @@ import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
-import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.MainViewModel
 import com.thesis.arrivo.view_models.RoadAccidentsViewModel
 import com.thesis.arrivo.view_models.factory.RoadAccidentAdminViewModelFactory
 
@@ -332,7 +332,7 @@ private fun AccidentLocationOnMap(roadAccidentsViewModel: RoadAccidentsViewModel
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Preview() {
-    val mainVm = MainScaffoldViewModel(
+    val mainVm = MainViewModel(
         context = LocalContext.current,
         navigationManager = NavigationManager(rememberNavController())
     )

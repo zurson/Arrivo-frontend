@@ -5,12 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
-import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.MainViewModel
 import com.thesis.arrivo.view_models.TasksListViewModel
 
 class TaskListViewModelFactory(
     private val context: Context,
-    private val mainScaffoldViewModel: MainScaffoldViewModel,
+    private val mainViewModel: MainViewModel,
     private val loadingScreenManager: LoadingScreenManager,
     private val navigationManager: NavigationManager,
 ) : ViewModelProvider.Factory {
@@ -19,7 +19,7 @@ class TaskListViewModelFactory(
         if (modelClass.isAssignableFrom(TasksListViewModel::class.java)) {
             return TasksListViewModel(
                 context = context,
-                mainScaffoldViewModel = mainScaffoldViewModel,
+                mainViewModel = mainViewModel,
                 loadingScreenManager = loadingScreenManager,
                 navigationManager = navigationManager
             ) as T

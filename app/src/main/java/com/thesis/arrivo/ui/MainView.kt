@@ -26,7 +26,7 @@ import com.thesis.arrivo.ui.common.account.AccountView
 import com.thesis.arrivo.ui.common.road_accidents_list.AccidentsListView
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.ui.user.user_accident_report_view.AccidentReportView
-import com.thesis.arrivo.ui.user.user_delivery_view.DeliveryView
+import com.thesis.arrivo.ui.user.user_delivery_schedule_view.DeliveryScheduleView
 import com.thesis.arrivo.ui.user.user_map_view.MapView
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.view_models.AccidentReportViewModel
@@ -34,9 +34,10 @@ import com.thesis.arrivo.view_models.AuthViewModel
 import com.thesis.arrivo.view_models.DeliveriesListViewModel
 import com.thesis.arrivo.view_models.DeliveryConfirmViewModel
 import com.thesis.arrivo.view_models.DeliveryOptionsViewModel
+import com.thesis.arrivo.view_models.DeliveryScheduleViewModel
 import com.thesis.arrivo.view_models.DeliverySharedViewModel
 import com.thesis.arrivo.view_models.EmployeeViewModel
-import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.MainViewModel
 import com.thesis.arrivo.view_models.RoadAccidentsAdminViewModel
 import com.thesis.arrivo.view_models.RoadAccidentsUserViewModel
 import com.thesis.arrivo.view_models.TaskManagerViewModel
@@ -46,8 +47,9 @@ import com.thesis.arrivo.view_models.factory.AuthViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveriesListViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveryConfirmViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveryOptionsViewModelFactory
+import com.thesis.arrivo.view_models.factory.DeliveryScheduleViewModelFactory
 import com.thesis.arrivo.view_models.factory.EmployeeViewModelFactory
-import com.thesis.arrivo.view_models.factory.MainScaffoldViewModelFactory
+import com.thesis.arrivo.view_models.factory.MainViewModelFactory
 import com.thesis.arrivo.view_models.factory.RoadAccidentAdminViewModelFactory
 import com.thesis.arrivo.view_models.factory.RoadAccidentsUserViewModelFactory
 import com.thesis.arrivo.view_models.factory.TaskListViewModelFactory
@@ -61,25 +63,25 @@ fun MainView() {
 
     val deliverySharedViewModel: DeliverySharedViewModel = viewModel()
 
-    val mainScaffoldViewModel: MainScaffoldViewModel = viewModel(
-        factory = MainScaffoldViewModelFactory(
+    val mainViewModel: MainViewModel = viewModel(
+        factory = MainViewModelFactory(
             context = LocalContext.current,
             navigationManager = navigationManager
         )
     )
 
     LaunchedEffect(key1 = true) {
-        mainScaffoldViewModel.startApp()
+        mainViewModel.startApp()
     }
 
-    if (mainScaffoldViewModel.appLoading) {
+    if (mainViewModel.appLoading) {
         LoadingScreen(true)
         return
     }
 
     SetupMainScaffold(
         navHostController = navHostController,
-        mainScaffoldViewModel = mainScaffoldViewModel,
+        mainViewModel = mainViewModel,
         navigationManager = navigationManager,
         deliverySharedViewModel = deliverySharedViewModel
     )
@@ -89,53 +91,64 @@ fun MainView() {
 @Composable
 private fun SetupMainScaffold(
     navHostController: NavHostController,
-    mainScaffoldViewModel: MainScaffoldViewModel,
+    mainViewModel: MainViewModel,
     navigationManager: NavigationManager,
     deliverySharedViewModel: DeliverySharedViewModel
 ) {
     Theme.ArrivoTheme {
         MainScaffold(
-            mainScaffoldViewModel = mainScaffoldViewModel
+            mainViewModel = mainViewModel
         ) { contentPadding ->
             NavHost(
                 navController = navHostController,
-                startDestination = mainScaffoldViewModel.getStartDestination(),
+                startDestination = mainViewModel.getStartDestination(),
                 modifier = Modifier.padding(contentPadding)
             ) {
                 setupUserViews(
-                    mainScaffoldViewModel = mainScaffoldViewModel,
+                    mainViewModel = mainViewModel,
                     navigationManager = navigationManager
                 )
 
-                setupCommonViews(mainScaffoldViewModel = mainScaffoldViewModel)
+                setupCommonViews(mainViewModel = mainViewModel)
 
                 setupAdminViews(
-                    mainScaffoldViewModel = mainScaffoldViewModel,
+                    mainViewModel = mainViewModel,
                     navigationManager = navigationManager,
                     deliverySharedViewModel = deliverySharedViewModel
                 )
 
-                setupAuthenticationViews(mainScaffoldViewModel = mainScaffoldViewModel)
+                setupAuthenticationViews(mainViewModel = mainViewModel)
             }
         }
-        LoadingScreen(mainScaffoldViewModel.isLoadingScreenEnabled())
+        LoadingScreen(mainViewModel.isLoadingScreenEnabled())
     }
 }
 
 @SuppressLint("ComposableDestinationInComposeScope")
 private fun NavGraphBuilder.setupUserViews(
-    mainScaffoldViewModel: MainScaffoldViewModel,
+    mainViewModel: MainViewModel,
     navigationManager: NavigationManager
 ) {
-    composable(NavigationItem.TasksUser.route) { DeliveryView() }
+    composable(NavigationItem.TasksUser.route) {
+        val vm: DeliveryScheduleViewModel = viewModel(
+            factory = DeliveryScheduleViewModelFactory(
+                context = LocalContext.current,
+                loadingScreenManager = mainViewModel,
+                loggedInUserAccessor = mainViewModel
+            )
+        )
+
+        DeliveryScheduleView(vm)
+    }
+
     composable(NavigationItem.MapUser.route) { MapView() }
 
-    composable(NavigationItem.AccidentsUser.route) {
+    composable(NavigationItem.RoadAccidentsUser.route) {
         val viewModel: RoadAccidentsUserViewModel = viewModel(
             factory = RoadAccidentsUserViewModelFactory(
-                loggedInUserAccessor = mainScaffoldViewModel,
+                loggedInUserAccessor = mainViewModel,
                 context = LocalContext.current,
-                loadingScreenManager = mainScaffoldViewModel
+                loadingScreenManager = mainViewModel
             )
         )
 
@@ -143,12 +156,12 @@ private fun NavGraphBuilder.setupUserViews(
         AccidentsListView(viewModel)
     }
 
-    composable(NavigationItem.ReportsUser.route) {
+    composable(NavigationItem.AccidentsReportsUser.route) {
         val viewModel: AccidentReportViewModel = viewModel(
             factory = AccidentReportViewModelFactory(
                 context = LocalContext.current,
-                loadingScreenManager = mainScaffoldViewModel,
-                loggedInUserAccessor = mainScaffoldViewModel,
+                loadingScreenManager = mainViewModel,
+                loggedInUserAccessor = mainViewModel,
                 navigationManager = navigationManager
             )
         )
@@ -156,12 +169,12 @@ private fun NavGraphBuilder.setupUserViews(
         AccidentReportView(viewModel)
     }
 
-    composable(NavigationItem.AccountManagement.route) { AccountView(mainScaffoldViewModel) }
+    composable(NavigationItem.AccountManagement.route) { AccountView(mainViewModel) }
 }
 
 @SuppressLint("ComposableDestinationInComposeScope")
 private fun NavGraphBuilder.setupAdminViews(
-    mainScaffoldViewModel: MainScaffoldViewModel,
+    mainViewModel: MainViewModel,
     navigationManager: NavigationManager,
     deliverySharedViewModel: DeliverySharedViewModel
 ) {
@@ -169,7 +182,7 @@ private fun NavGraphBuilder.setupAdminViews(
         val viewModel: RoadAccidentsAdminViewModel = viewModel(
             factory = RoadAccidentAdminViewModelFactory(
                 context = LocalContext.current,
-                loadingScreenManager = mainScaffoldViewModel
+                loadingScreenManager = mainViewModel
             )
         )
 
@@ -180,8 +193,8 @@ private fun NavGraphBuilder.setupAdminViews(
         val viewModel: TasksListViewModel = viewModel(
             factory = TaskListViewModelFactory(
                 context = LocalContext.current,
-                mainScaffoldViewModel = mainScaffoldViewModel,
-                loadingScreenManager = mainScaffoldViewModel,
+                mainViewModel = mainViewModel,
+                loadingScreenManager = mainViewModel,
                 navigationManager = navigationManager,
             )
         )
@@ -191,9 +204,9 @@ private fun NavGraphBuilder.setupAdminViews(
     composable(NavigationItem.TaskCreateAdmin.route) {
         val viewModel: TaskManagerViewModel = viewModel(
             factory = TaskManagerViewModelFactory(
-                mainScaffoldViewModel = mainScaffoldViewModel,
+                mainViewModel = mainViewModel,
                 navigationManager = navigationManager,
-                loadingScreenManager = mainScaffoldViewModel,
+                loadingScreenManager = mainViewModel,
                 context = LocalContext.current
             )
         )
@@ -203,9 +216,9 @@ private fun NavGraphBuilder.setupAdminViews(
     composable(NavigationItem.TaskEditAdmin.route) {
         val viewModel: TaskManagerViewModel = viewModel(
             factory = TaskManagerViewModelFactory(
-                mainScaffoldViewModel = mainScaffoldViewModel,
+                mainViewModel = mainViewModel,
                 navigationManager = navigationManager,
-                loadingScreenManager = mainScaffoldViewModel,
+                loadingScreenManager = mainViewModel,
                 context = LocalContext.current
             )
         )
@@ -216,13 +229,13 @@ private fun NavGraphBuilder.setupAdminViews(
         val viewModel: EmployeeViewModel = viewModel(
             factory = EmployeeViewModelFactory(
                 navigationManager = navigationManager,
-                loadingScreenManager = mainScaffoldViewModel,
-                mainScaffoldViewModel = mainScaffoldViewModel,
+                loadingScreenManager = mainViewModel,
+                mainViewModel = mainViewModel,
                 context = LocalContext.current
             )
         )
         EmployeesListView(
-            mainScaffoldViewModel = mainScaffoldViewModel,
+            mainViewModel = mainViewModel,
             employeeViewModel = viewModel
         )
     }
@@ -231,15 +244,15 @@ private fun NavGraphBuilder.setupAdminViews(
         val viewModel: EmployeeViewModel = viewModel(
             factory = EmployeeViewModelFactory(
                 navigationManager = navigationManager,
-                loadingScreenManager = mainScaffoldViewModel,
-                mainScaffoldViewModel = mainScaffoldViewModel,
+                loadingScreenManager = mainViewModel,
+                mainViewModel = mainViewModel,
                 context = LocalContext.current
             )
         )
         val authVm: AuthViewModel = viewModel(
             factory = AuthViewModelFactory(
-                loadingScreenManager = mainScaffoldViewModel,
-                mainScaffoldViewModel = mainScaffoldViewModel,
+                loadingScreenManager = mainViewModel,
+                mainViewModel = mainViewModel,
             )
         )
         CreateEditEmployeeView(viewModel, authVm, editMode = false)
@@ -249,15 +262,15 @@ private fun NavGraphBuilder.setupAdminViews(
         val viewModel: EmployeeViewModel = viewModel(
             factory = EmployeeViewModelFactory(
                 navigationManager = navigationManager,
-                loadingScreenManager = mainScaffoldViewModel,
-                mainScaffoldViewModel = mainScaffoldViewModel,
+                loadingScreenManager = mainViewModel,
+                mainViewModel = mainViewModel,
                 context = LocalContext.current
             )
         )
         val authVm: AuthViewModel = viewModel(
             factory = AuthViewModelFactory(
-                loadingScreenManager = mainScaffoldViewModel,
-                mainScaffoldViewModel = mainScaffoldViewModel,
+                loadingScreenManager = mainViewModel,
+                mainViewModel = mainViewModel,
             )
         )
         CreateEditEmployeeView(viewModel, authVm, editMode = true)
@@ -268,7 +281,7 @@ private fun NavGraphBuilder.setupAdminViews(
             factory = DeliveryOptionsViewModelFactory(
                 editMode = false,
                 context = LocalContext.current,
-                loadingScreenManager = mainScaffoldViewModel,
+                loadingScreenManager = mainViewModel,
                 navigationManager = navigationManager,
                 deliverySharedViewModel = deliverySharedViewModel
             )
@@ -281,7 +294,7 @@ private fun NavGraphBuilder.setupAdminViews(
             factory = DeliveryOptionsViewModelFactory(
                 editMode = true,
                 context = LocalContext.current,
-                loadingScreenManager = mainScaffoldViewModel,
+                loadingScreenManager = mainViewModel,
                 navigationManager = navigationManager,
                 deliverySharedViewModel = deliverySharedViewModel
             )
@@ -293,7 +306,7 @@ private fun NavGraphBuilder.setupAdminViews(
         val viewModel: DeliveryConfirmViewModel = viewModel(
             factory = DeliveryConfirmViewModelFactory(
                 context = LocalContext.current,
-                loadingScreenManager = mainScaffoldViewModel,
+                loadingScreenManager = mainViewModel,
                 navigationManager = navigationManager,
                 deliverySharedViewModel = deliverySharedViewModel
             )
@@ -305,7 +318,7 @@ private fun NavGraphBuilder.setupAdminViews(
         val viewModel: DeliveriesListViewModel = viewModel(
             factory = DeliveriesListViewModelFactory(
                 context = LocalContext.current,
-                loadingScreenManager = mainScaffoldViewModel,
+                loadingScreenManager = mainViewModel,
                 navigationManager = navigationManager,
                 deliverySharedViewModel = deliverySharedViewModel
             )
@@ -315,12 +328,12 @@ private fun NavGraphBuilder.setupAdminViews(
 }
 
 @SuppressLint("ComposableDestinationInComposeScope")
-private fun NavGraphBuilder.setupAuthenticationViews(mainScaffoldViewModel: MainScaffoldViewModel) {
+private fun NavGraphBuilder.setupAuthenticationViews(mainViewModel: MainViewModel) {
     composable(NavigationItem.Login.route) {
         val viewModel: AuthViewModel = viewModel(
             factory = AuthViewModelFactory(
-                mainScaffoldViewModel = mainScaffoldViewModel,
-                loadingScreenManager = mainScaffoldViewModel
+                mainViewModel = mainViewModel,
+                loadingScreenManager = mainViewModel
             )
         )
         LoginView(viewModel)
@@ -328,8 +341,8 @@ private fun NavGraphBuilder.setupAuthenticationViews(mainScaffoldViewModel: Main
 }
 
 @SuppressLint("ComposableDestinationInComposeScope")
-private fun NavGraphBuilder.setupCommonViews(mainScaffoldViewModel: MainScaffoldViewModel) {
+private fun NavGraphBuilder.setupCommonViews(mainViewModel: MainViewModel) {
     composable(NavigationItem.AccountManagement.route) {
-        AccountView(mainScaffoldViewModel)
+        AccountView(mainViewModel)
     }
 }

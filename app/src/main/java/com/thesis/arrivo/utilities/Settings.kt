@@ -43,6 +43,8 @@ class Settings {
         val ACCIDENT_REPORT_MIN_DESCRIPTION_LEN = 1
         val ACCIDENT_REPORT_CAR_ID_MAX_LEN = 10
         val ACCIDENT_REPORT_CAR_ID_MIN_LEN = 5
+
+        val DELIVERY_SCHEDULE_CURRENT_TASK_COLOR = Color(0xFF9EEFA0)
     }
 
 }

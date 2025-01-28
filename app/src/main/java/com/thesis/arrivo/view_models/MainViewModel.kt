@@ -22,7 +22,7 @@ import com.thesis.arrivo.utilities.showDefaultErrorDialog
 import kotlinx.coroutines.launch
 import java.util.concurrent.locks.ReentrantLock
 
-class MainScaffoldViewModel(
+class MainViewModel(
     private val context: Context,
     private val navigationManager: NavigationManager
 ) : ViewModel(),

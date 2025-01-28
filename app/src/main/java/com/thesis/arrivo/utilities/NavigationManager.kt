@@ -30,8 +30,8 @@ class NavigationManager(private val navController: NavHostController) {
     private val navbarElementUser = listOf(
         NavigationItem.TasksUser,
         NavigationItem.MapUser,
-        NavigationItem.AccidentsUser,
-        NavigationItem.ReportsUser,
+        NavigationItem.RoadAccidentsUser,
+        NavigationItem.AccidentsReportsUser,
         NavigationItem.AccountManagement,
     )
 

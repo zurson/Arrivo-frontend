@@ -41,7 +41,7 @@ import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.DeliveryConfirmViewModel
 import com.thesis.arrivo.view_models.DeliverySharedViewModel
-import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.MainViewModel
 import com.thesis.arrivo.view_models.factory.DeliveryConfirmViewModelFactory
 
 @Composable
@@ -320,7 +320,7 @@ private fun ButtonsSection(
 @Preview
 @Composable
 private fun Preview() {
-    val mainVm = MainScaffoldViewModel(
+    val mainVm = MainViewModel(
         context = LocalContext.current,
         navigationManager = NavigationManager(rememberNavController())
     )

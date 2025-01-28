@@ -24,7 +24,7 @@ import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.showToast
 
 class AuthViewModel(
-    private val mainScaffoldViewModel: MainScaffoldViewModel,
+    private val mainViewModel: MainViewModel,
     private val loadingScreenManager: LoadingScreenManager
 ) : ViewModel() {
 
@@ -104,7 +104,7 @@ class AuthViewModel(
             loadingScreenManager.showLoadingScreen()
 
             if (authStatus.success) {
-                mainScaffoldViewModel.onAuthenticationSuccess()
+                mainViewModel.onAuthenticationSuccess()
             } else {
                 authStatus.exception?.let {
                     showToast(
@@ -211,7 +211,7 @@ class AuthViewModel(
      **/
 
     fun prepareToEdit() {
-        val emp = mainScaffoldViewModel.employeeToEdit
+        val emp = mainViewModel.employeeToEdit
 
         firstName = emp.firstName
         lastName = emp.lastName

@@ -6,18 +6,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.thesis.arrivo.components.navigation.NavBar
-import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.MainViewModel
 
 @Composable
 fun MainScaffold(
-    mainScaffoldViewModel: MainScaffoldViewModel,
+    mainViewModel: MainViewModel,
     content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            if (mainScaffoldViewModel.showNavbar)
-                NavBar(mainScaffoldViewModel)
+            if (mainViewModel.showNavbar)
+                NavBar(mainViewModel)
         }
     ) { contentPadding ->
         content(contentPadding)

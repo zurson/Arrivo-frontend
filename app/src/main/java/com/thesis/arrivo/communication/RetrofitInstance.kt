@@ -12,6 +12,7 @@ import com.thesis.arrivo.communication.task.TasksService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -32,6 +33,7 @@ object RetrofitInstance {
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okHttpClient)
             .build()

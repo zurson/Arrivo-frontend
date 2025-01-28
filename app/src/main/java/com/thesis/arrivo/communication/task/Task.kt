@@ -9,7 +9,7 @@ data class Task(
     val title: String,
     val location: Location,
     val addressText: String,
-    val status: TaskStatus,
+    var status: TaskStatus,
     val assignedDate: LocalDate?,
     val employee: Employee?,
     val products: List<Product> = listOf()

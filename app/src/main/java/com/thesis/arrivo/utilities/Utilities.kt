@@ -22,7 +22,7 @@ import com.thesis.arrivo.activities.MainActivity
 import com.thesis.arrivo.communication.ErrorResponse
 import com.thesis.arrivo.utilities.exceptions.DataCorruptedException
 import com.thesis.arrivo.utilities.exceptions.OptimizationFailedException
-import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.MainViewModel
 import retrofit2.HttpException
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -80,7 +80,7 @@ fun mapError(e: Exception, context: Context): ErrorResponse? {
         is HttpException -> {
             val code = e.code()
             if (code == 401 || code == 500 || code == 403) {
-                MainScaffoldViewModel.reset()
+                MainViewModel.reset()
                 return null
             }
 

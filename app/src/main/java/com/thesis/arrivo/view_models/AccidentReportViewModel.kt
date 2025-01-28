@@ -256,7 +256,7 @@ class AccidentReportViewModel(
 
 
     private fun onSuccess() {
-        navigationManager.navigateTo(NavigationItem.AccidentsUser, true)
+        navigationManager.navigateTo(NavigationItem.RoadAccidentsUser, true)
 
         showToast(
             text = context.getString(R.string.accident_report_create_success_message),

@@ -167,4 +167,8 @@
     <dimen name="accident_report_map_border_width">1dp</dimen>
     <dimen name="accident_report_description_default_height">120dp</dimen>
 
+    <dimen name="accident_report_container_padding">8dp</dimen>
+    <dimen name="accident_report_container_position_text_size">30sp</dimen>
+    <dimen name="accident_report_container_arrow_icon_size">40dp</dimen>
+
 </resources>

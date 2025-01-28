@@ -21,6 +21,11 @@ class TasksRepository {
         taskService.updateTask(id, taskUpdateRequest)
     }
 
+    suspend fun updateTaskStatus(id: Long, statusUpdateRequest: TaskStatusUpdateRequest): Task {
+        return taskService.updateTaskStatus(id, statusUpdateRequest)
+    }
+
+
     suspend fun getFreeTasks(): List<Task> {
         return taskService.getFreeTasks()
     }

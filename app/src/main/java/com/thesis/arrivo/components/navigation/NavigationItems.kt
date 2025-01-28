@@ -22,8 +22,8 @@ sealed class NavigationItem(
     /** User **/
 
     data object TasksUser : NavigationItem(
-        route = "tasks_user",
-        title = R.string.nav_delivery_details_label_user,
+        route = "delivery_schedule_user",
+        title = R.string.nav_delivery_schedule_label_user,
         icon = Icons.Outlined.DirectionsCar
     )
 
@@ -33,13 +33,13 @@ sealed class NavigationItem(
         icon = Icons.Outlined.LocationOn
     )
 
-    data object AccidentsUser : NavigationItem(
+    data object RoadAccidentsUser : NavigationItem(
         route = "accidents_user",
         title = R.string.nav_road_accident_label_user,
         icon = Icons.Outlined.ReportProblem
     )
 
-    data object ReportsUser : NavigationItem(
+    data object AccidentsReportsUser : NavigationItem(
         route = "reports_user",
         title = R.string.nav_your_reports_label_user,
         icon = Icons.Outlined.FormatListNumberedRtl

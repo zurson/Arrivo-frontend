@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class TasksListViewModel(
     context: Context,
-    private val mainScaffoldViewModel: MainScaffoldViewModel,
+    private val mainViewModel: MainViewModel,
     private val loadingScreenManager: LoadingScreenManager,
     private val navigationManager: NavigationManager,
 ) : ViewModel(), LoadingScreenStatusChecker {
@@ -122,7 +122,7 @@ class TasksListViewModel(
 
 
     private fun setTaskToEdit(task: Task) {
-        mainScaffoldViewModel.taskToEdit = TaskToEdit(
+        mainViewModel.taskToEdit = TaskToEdit(
             task = task,
             address = task.addressText,
             location = Location(task.location.latitude, task.location.longitude)

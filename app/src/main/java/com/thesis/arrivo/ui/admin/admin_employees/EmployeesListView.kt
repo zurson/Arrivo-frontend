@@ -50,13 +50,13 @@ import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.view_models.EmployeeViewModel
-import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.MainViewModel
 import com.thesis.arrivo.view_models.factory.EmployeeViewModelFactory
 
 @Composable
 fun EmployeesListView(
     employeeViewModel: EmployeeViewModel,
-    mainScaffoldViewModel: MainScaffoldViewModel
+    mainViewModel: MainViewModel
 ) {
     val employees by employeeViewModel.employees.collectAsState()
 
@@ -80,7 +80,7 @@ fun EmployeesListView(
         EmployeesList(
             employees = employees,
             employeeViewModel = employeeViewModel,
-            loadingScreenStatusChecker = mainScaffoldViewModel,
+            loadingScreenStatusChecker = mainViewModel,
             modifier = Modifier.constrainAs(headerImageRef) {
                 top.linkTo(employeesListTopGuideline)
                 bottom.linkTo(employeesListBottomGuideline)
@@ -244,7 +244,7 @@ private fun ButtonsSection(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Preview() {
-    val mainVm = MainScaffoldViewModel(
+    val mainVm = MainViewModel(
         context = LocalContext.current,
         navigationManager = NavigationManager(rememberNavController())
     )
@@ -253,14 +253,14 @@ private fun Preview() {
         factory = EmployeeViewModelFactory(
             navigationManager = NavigationManager(rememberNavController()),
             loadingScreenManager = mainVm,
-            mainScaffoldViewModel = mainVm,
+            mainViewModel = mainVm,
             context = LocalContext.current
         )
     )
 
     Theme.ArrivoTheme {
         EmployeesListView(
-            mainScaffoldViewModel = mainVm,
+            mainViewModel = mainVm,
             employeeViewModel = viewModel
         )
     }
