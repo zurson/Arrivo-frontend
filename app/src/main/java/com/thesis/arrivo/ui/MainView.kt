@@ -26,7 +26,7 @@ import com.thesis.arrivo.ui.common.account.AccountView
 import com.thesis.arrivo.ui.common.road_accidents_list.AccidentsListView
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.ui.user.user_accident_report_view.AccidentReportView
-import com.thesis.arrivo.ui.user.user_delivery_view.DeliveryView
+import com.thesis.arrivo.ui.user.user_delivery_schedule_view.DeliveryView
 import com.thesis.arrivo.ui.user.user_map_view.MapView
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.view_models.AccidentReportViewModel
@@ -130,7 +130,7 @@ private fun NavGraphBuilder.setupUserViews(
     composable(NavigationItem.TasksUser.route) { DeliveryView() }
     composable(NavigationItem.MapUser.route) { MapView() }
 
-    composable(NavigationItem.AccidentsUser.route) {
+    composable(NavigationItem.RoadAccidentsUser.route) {
         val viewModel: RoadAccidentsUserViewModel = viewModel(
             factory = RoadAccidentsUserViewModelFactory(
                 loggedInUserAccessor = mainViewModel,
@@ -143,7 +143,7 @@ private fun NavGraphBuilder.setupUserViews(
         AccidentsListView(viewModel)
     }
 
-    composable(NavigationItem.ReportsUser.route) {
+    composable(NavigationItem.AccidentsReportsUser.route) {
         val viewModel: AccidentReportViewModel = viewModel(
             factory = AccidentReportViewModelFactory(
                 context = LocalContext.current,

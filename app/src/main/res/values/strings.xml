@@ -23,7 +23,7 @@
     </string>
 
     <!-- NavBar - User -->
-    <string name="nav_delivery_details_label_user">Tasks</string>
+    <string name="nav_delivery_schedule_label_user">Schedule</string>
     <string name="nav_map_label_user">Map</string>
     <string name="nav_road_accident_label_user">Accidents</string>
     <string name="nav_your_reports_label_user">Reports</string>

@@ -1,4 +1,4 @@
-package com.thesis.arrivo.ui.user.user_delivery_view
+package com.thesis.arrivo.ui.user.user_delivery_schedule_view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
