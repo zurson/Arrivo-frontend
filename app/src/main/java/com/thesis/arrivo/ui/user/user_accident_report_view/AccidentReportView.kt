@@ -35,7 +35,7 @@ import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.view_models.AccidentReportViewModel
-import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.MainViewModel
 import com.thesis.arrivo.view_models.factory.AccidentReportViewModelFactory
 
 @Composable
@@ -219,7 +219,7 @@ private fun ConfirmButton(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Preview() {
-    val mainVm = MainScaffoldViewModel(
+    val mainVm = MainViewModel(
         context = LocalContext.current,
         navigationManager = NavigationManager(rememberNavController())
     )

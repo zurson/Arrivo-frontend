@@ -52,7 +52,7 @@ import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.DeliveriesListViewModel
 import com.thesis.arrivo.view_models.DeliverySharedViewModel
-import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.MainViewModel
 import com.thesis.arrivo.view_models.factory.DeliveriesListViewModelFactory
 
 @Composable
@@ -363,7 +363,7 @@ private fun ShowDeliveryCancelConfirmationDialog(deliveriesListViewModel: Delive
 @Preview
 @Composable
 private fun Preview() {
-    val mainVm = MainScaffoldViewModel(
+    val mainVm = MainViewModel(
         context = LocalContext.current,
         navigationManager = NavigationManager(rememberNavController())
     )

@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 
 class TaskManagerViewModel(
     private val context: Context,
-    private val mainScaffoldViewModel: MainScaffoldViewModel,
+    private val mainViewModel: MainViewModel,
     loadingScreenManager: LoadingScreenManager,
     private val navigationManager: NavigationManager,
 ) : ViewModel() {
@@ -377,7 +377,7 @@ class TaskManagerViewModel(
             serverRequestManager.sendRequest(
                 actionToPerform = {
                     tasksRepository.updateTask(
-                        id = mainScaffoldViewModel.taskToEdit.task.id,
+                        id = mainViewModel.taskToEdit.task.id,
                         taskUpdateRequest = createTaskUpdateRequest()
                     )
                 },
@@ -438,7 +438,7 @@ class TaskManagerViewModel(
 
 
     fun prepareToEdit() {
-        val taskToEdit = mainScaffoldViewModel.taskToEdit
+        val taskToEdit = mainViewModel.taskToEdit
         val task = taskToEdit.task
 
         taskTitle = task.title

@@ -42,8 +42,8 @@ import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.utilities.formatPhoneNumber
 import com.thesis.arrivo.utilities.interfaces.LoggedInUserAccessor
-import com.thesis.arrivo.view_models.MainScaffoldViewModel
-import com.thesis.arrivo.view_models.factory.MainScaffoldViewModelFactory
+import com.thesis.arrivo.view_models.MainViewModel
+import com.thesis.arrivo.view_models.factory.MainViewModelFactory
 
 
 @Composable
@@ -233,7 +233,7 @@ private fun LogoutButton(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxSize()
     ) {
         AppButton(
-            onClick = { MainScaffoldViewModel.reset() },
+            onClick = { MainViewModel.reset() },
             text = stringResource(R.string.account_logout_button_text)
         )
     }
@@ -243,8 +243,8 @@ private fun LogoutButton(modifier: Modifier = Modifier) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Preview() {
-    val mainVm: MainScaffoldViewModel = viewModel(
-        factory = MainScaffoldViewModelFactory(
+    val mainVm: MainViewModel = viewModel(
+        factory = MainViewModelFactory(
             context = LocalContext.current,
             navigationManager = NavigationManager(rememberNavController())
         )

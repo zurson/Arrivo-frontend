@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.view_models.EmployeeViewModel
-import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.MainViewModel
 
 
 class EmployeeViewModelFactory(
     private val context: Context,
     private val loadingScreenManager: LoadingScreenManager,
     private val navigationManager: NavigationManager,
-    private val mainScaffoldViewModel: MainScaffoldViewModel
+    private val mainViewModel: MainViewModel
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -22,7 +22,7 @@ class EmployeeViewModelFactory(
                 context = context,
                 loadingScreenManager = loadingScreenManager,
                 navigationManager = navigationManager,
-                mainScaffoldViewModel = mainScaffoldViewModel
+                mainViewModel = mainViewModel
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

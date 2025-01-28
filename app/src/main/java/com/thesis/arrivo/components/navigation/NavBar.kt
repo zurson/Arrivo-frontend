@@ -8,24 +8,21 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
-import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.thesis.arrivo.R
 import com.thesis.arrivo.utilities.dpToSp
-import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.MainViewModel
 
 
 @Composable
-fun NavBar(mainScaffoldViewModel: MainScaffoldViewModel) {
-    val navItems = mainScaffoldViewModel.getNavbarElements()
+fun NavBar(mainViewModel: MainViewModel) {
+    val navItems = mainViewModel.getNavbarElements()
 
     AppNavigationBar(
-        mainScaffoldViewModel = mainScaffoldViewModel,
+        mainViewModel = mainViewModel,
         navItems = navItems
     )
 }
@@ -33,7 +30,7 @@ fun NavBar(mainScaffoldViewModel: MainScaffoldViewModel) {
 
 @Composable
 fun AppNavigationBar(
-    mainScaffoldViewModel: MainScaffoldViewModel,
+    mainViewModel: MainViewModel,
     navItems: List<NavigationItem>
 ) {
     NavigationBar {
@@ -52,7 +49,7 @@ fun AppNavigationBar(
                     }
                 },
                 alwaysShowLabel = true,
-                selected = mainScaffoldViewModel.isViewSelected(item),
+                selected = mainViewModel.isViewSelected(item),
 
                 icon = {
                     item.icon?.let {
@@ -65,7 +62,7 @@ fun AppNavigationBar(
 
                 },
 
-                onClick = { mainScaffoldViewModel.onNavItemClick(item) })
+                onClick = { mainViewModel.onNavItemClick(item) })
 
         }
     }

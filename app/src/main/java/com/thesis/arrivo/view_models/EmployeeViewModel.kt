@@ -25,7 +25,7 @@ class EmployeeViewModel(
     private val context: Context,
     loadingScreenManager: LoadingScreenManager,
     private val navigationManager: NavigationManager,
-    private val mainScaffoldViewModel: MainScaffoldViewModel,
+    private val mainViewModel: MainViewModel,
 ) : ViewModel() {
     private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
 
@@ -68,7 +68,7 @@ class EmployeeViewModel(
     ) {
         val request = if (editMode) {
             EmployeeAccountOperation.Update(
-                id = mainScaffoldViewModel.employeeToEdit.id,
+                id = mainViewModel.employeeToEdit.id,
                 data = authViewModel.prepareEmployeeUpdateRequest()
             )
         } else {
@@ -130,7 +130,7 @@ class EmployeeViewModel(
 
 
     fun onEmployeeEditButtonClick() {
-        mainScaffoldViewModel.employeeToEdit = clickedEmployee
+        mainViewModel.employeeToEdit = clickedEmployee
         toggleShowEmployeeDetails()
 
         navigationManager.navigateTo(routeOrItem = NavigationItem.EditEmployeeAdmin)
@@ -143,7 +143,7 @@ class EmployeeViewModel(
 
 
     fun getEmployeeToEditStatus(): EmployeeStatus {
-        return mainScaffoldViewModel.employeeToEdit.status
+        return mainViewModel.employeeToEdit.status
     }
 
 }

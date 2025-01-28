@@ -36,7 +36,7 @@ import com.thesis.arrivo.utilities.PhoneVisualTransformation
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.view_models.AuthViewModel
 import com.thesis.arrivo.view_models.EmployeeViewModel
-import com.thesis.arrivo.view_models.MainScaffoldViewModel
+import com.thesis.arrivo.view_models.MainViewModel
 import com.thesis.arrivo.view_models.factory.AuthViewModelFactory
 import com.thesis.arrivo.view_models.factory.EmployeeViewModelFactory
 
@@ -246,7 +246,7 @@ fun BasicTextField(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Preview() {
-    val mainVm = MainScaffoldViewModel(
+    val mainVm = MainViewModel(
         context = LocalContext.current,
         navigationManager = NavigationManager(rememberNavController())
     )
@@ -255,7 +255,7 @@ private fun Preview() {
         factory = EmployeeViewModelFactory(
             navigationManager = NavigationManager(rememberNavController()),
             loadingScreenManager = mainVm,
-            mainScaffoldViewModel = mainVm,
+            mainViewModel = mainVm,
             context = LocalContext.current
         )
     )
@@ -263,7 +263,7 @@ private fun Preview() {
     val authVm: AuthViewModel = viewModel(
         factory = AuthViewModelFactory(
             loadingScreenManager = mainVm,
-            mainScaffoldViewModel = mainVm,
+            mainViewModel = mainVm,
         )
     )
 
