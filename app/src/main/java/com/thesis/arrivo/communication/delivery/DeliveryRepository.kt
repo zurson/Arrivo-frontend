@@ -1,6 +1,7 @@
 package com.thesis.arrivo.communication.delivery
 
 import com.thesis.arrivo.communication.RetrofitInstance
+import java.time.LocalDate
 
 class DeliveryRepository {
 
@@ -24,5 +25,12 @@ class DeliveryRepository {
 
     suspend fun cancelDelivery(id: Long) {
         deliveryService.cancelDelivery(id)
+    }
+
+    suspend fun getDeliveryByEmployeeIdAndDate(
+        employeeId: Long,
+        date: LocalDate? = null
+    ): Delivery? {
+        return deliveryService.getDeliveryByEmployeeIdAndDate(employeeId, date)
     }
 }
