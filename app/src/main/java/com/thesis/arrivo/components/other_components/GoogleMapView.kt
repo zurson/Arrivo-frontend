@@ -22,8 +22,8 @@ fun GoogleMapView(
 ) {
     val usingPositionState = cameraPositionState ?: createCameraPositionState(selectedLocation)
 
-    LaunchedEffect(selectedLocation) {
-        usingPositionState.animate(
+    LaunchedEffect(selectedLocation.latitude, selectedLocation.longitude) {
+        usingPositionState.move(
             CameraUpdateFactory.newLatLngZoom(selectedLocation, DEFAULT_MAP_ZOOM)
         )
     }
