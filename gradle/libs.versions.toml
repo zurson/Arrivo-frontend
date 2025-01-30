@@ -5,6 +5,7 @@ converterGson = "2.9.0"
 converterScalars = "2.11.0"
 coreKtxVersion = "1.13.1"
 firebaseBom = "33.7.0"
+googleMapsCompose = "6.0.0"
 googlePlaces = "3.3.0"
 googlePlacesVersion = "3.2.0"
 gson = "2.11.0"
@@ -21,6 +22,7 @@ appcompat = "1.7.0"
 mapsCompose = "6.2.1"
 mapsComposeVersion = "2.12.0"
 materialIconsExtended = "1.7.6"
+navigation = "6.0.1"
 navigationComposeVersion = "2.8.5"
 navigationRuntimeKtx = "2.8.4"
 navigationCompose = "2.8.4"
@@ -63,6 +65,8 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 maps-compose = { module = "com.google.maps.android:maps-compose" }
 maps-compose-v2120 = { module = "com.google.maps.android:maps-compose", version.ref = "mapsComposeVersion" }
+maps-compose-v600 = { module = "com.google.maps.android:maps-compose", version.ref = "googleMapsCompose" }
+navigation = { module = "com.google.android.libraries.navigation:navigation", version.ref = "navigation" }
 places = { module = "com.google.android.libraries.places:places", version.ref = "places" }
 places-v320 = { module = "com.google.android.libraries.places:places", version.ref = "googlePlacesVersion" }
 places-v330 = { module = "com.google.android.libraries.places:places", version.ref = "googlePlaces" }
