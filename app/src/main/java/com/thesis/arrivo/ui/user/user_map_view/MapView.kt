@@ -15,8 +15,6 @@ import com.thesis.arrivo.view_models.MapViewModel
 
 @Composable
 fun MapView(mapViewModel: MapViewModel) {
-    mapViewModel.startNavigation()
-
     Column(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -46,7 +44,9 @@ private fun NavigationView() {
 
 @Composable
 private fun NoDestinationView(mapViewModel: MapViewModel) {
-    Text(text = "No Destination!")
+//    EmptyList(
+//
+//    )
 }
 
 

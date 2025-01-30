@@ -118,7 +118,6 @@ object NavigationApiManager {
 
     fun stopNavigation() {
         mNavigator?.stopGuidance()
-        mNavigator = null
     }
 
 
