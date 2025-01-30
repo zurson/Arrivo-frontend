@@ -19,6 +19,7 @@ import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.PermissionManager
 import com.thesis.arrivo.utilities.changeActivity
 import com.thesis.arrivo.utilities.location.PlacesApiHelper
+import com.thesis.arrivo.utilities.navigation_api.NavigationApiManager
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,8 +35,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         context = this
 
-        initializeFirebase()
-        initializePlacesClient()
+        initializeApp()
 
         setContent {
             enableEdgeToEdge()
@@ -70,22 +70,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun initializeFirebase() {
-        FirebaseApp.initializeApp(this)
-    }
-
-    private fun initializePlacesClient() {
-        if (!Places.isInitialized()) {
-            Places.initialize(
-                this,
-                this.getString(R.string.google_maps_api_key)
-            )
-        }
-
-        PlacesApiHelper.init(Places.createClient(this))
-    }
-
-
     @Composable
     fun MainContent() {
         val permissionsChecked = remember { mutableStateOf(false) }
@@ -106,5 +90,35 @@ class MainActivity : AppCompatActivity() {
             else -> LocationPermissionScreen(this)
         }
     }
+
+
+    private fun initializeApp() {
+        initializeFirebase()
+        initializePlacesClient()
+        initializeNavigationApi()
+    }
+
+
+    private fun initializeFirebase() {
+        FirebaseApp.initializeApp(this)
+    }
+
+
+    private fun initializePlacesClient() {
+        if (!Places.isInitialized()) {
+            Places.initialize(
+                this,
+                this.getString(R.string.google_maps_api_key)
+            )
+        }
+
+        PlacesApiHelper.init(Places.createClient(this))
+    }
+
+
+    private fun initializeNavigationApi() {
+        NavigationApiManager.initialize(this)
+    }
+
 }
 
