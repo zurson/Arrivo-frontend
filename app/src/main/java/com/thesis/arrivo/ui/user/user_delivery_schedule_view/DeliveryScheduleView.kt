@@ -48,6 +48,7 @@ import com.thesis.arrivo.utilities.Settings.Companion.DELIVERY_SCHEDULE_CURRENT_
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.DeliveryScheduleViewModel
 import com.thesis.arrivo.view_models.MainViewModel
+import com.thesis.arrivo.view_models.MapSharedViewModel
 import com.thesis.arrivo.view_models.factory.DeliveryScheduleViewModelFactory
 
 @Composable
@@ -144,6 +145,7 @@ private fun ScheduleSection(
             TaskContainer(
                 task = task,
                 position = tasks.indexOf(task) + 1,
+                active = deliveryScheduleViewModel.activeTask?.id == task.id,
                 onClick = { deliveryScheduleViewModel.onTaskSelected(it) }
             )
         }
@@ -155,10 +157,11 @@ private fun ScheduleSection(
 private fun TaskContainer(
     task: Task,
     position: Int,
+    active: Boolean,
     onClick: (Task) -> Unit
 ) {
     val containerColor =
-        if (task.status == TaskStatus.IN_PROGRESS)
+        if (active)
             DELIVERY_SCHEDULE_CURRENT_TASK_COLOR
         else
             MaterialTheme.colorScheme.surfaceContainerHigh
@@ -260,7 +263,8 @@ private fun Preview() {
         factory = DeliveryScheduleViewModelFactory(
             context = LocalContext.current,
             loadingScreenManager = mainVm,
-            loggedInUserAccessor = mainVm
+            loggedInUserAccessor = mainVm,
+            mapSharedViewModel = MapSharedViewModel()
         )
     )
 
