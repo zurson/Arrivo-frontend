@@ -1,5 +1,6 @@
 package com.thesis.arrivo.activities
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
@@ -10,13 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.firebase.FirebaseApp
 import com.thesis.arrivo.R
 import com.thesis.arrivo.components.permissions.LocationPermissionScreen
-import com.thesis.arrivo.components.permissions.RequestLocationPermission
 import com.thesis.arrivo.ui.MainView
 import com.thesis.arrivo.ui.theme.Theme
+import com.thesis.arrivo.utilities.PermissionManager
+import com.thesis.arrivo.utilities.changeActivity
 import com.thesis.arrivo.utilities.location.PlacesApiHelper
 
 class MainActivity : AppCompatActivity() {
@@ -24,7 +25,10 @@ class MainActivity : AppCompatActivity() {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
+        private var wasRestarted = false
     }
+
+    private val permissionManager = PermissionManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +45,31 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+    override fun onResume() {
+        super.onResume()
+
+        if (wasRestarted) return
+
+        val granted =
+            permissionManager.isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)
+        if (granted) return
+
+        restartApp()
+    }
+
+
+    private fun restartApp() {
+        changeActivity(
+            this,
+            MainActivity::class,
+            true
+        )
+
+        wasRestarted = true
+    }
+
+
     private fun initializeFirebase() {
         FirebaseApp.initializeApp(this)
     }
@@ -56,19 +85,24 @@ class MainActivity : AppCompatActivity() {
         PlacesApiHelper.init(Places.createClient(this))
     }
 
+
     @Composable
     fun MainContent() {
         val permissionsChecked = remember { mutableStateOf(false) }
-        val permissionsGranted = remember { mutableStateOf(false) }
+        val locationPermissionGranted = remember { mutableStateOf(false) }
 
-        RequestLocationPermission { isGranted ->
+        PermissionManager().RequestPermission(Manifest.permission.ACCESS_FINE_LOCATION) { granted ->
             permissionsChecked.value = true
-            permissionsGranted.value = isGranted
+            locationPermissionGranted.value = granted
         }
 
         when {
             !permissionsChecked.value -> {}
-            permissionsGranted.value -> MainView()
+            locationPermissionGranted.value -> {
+                MainView()
+                wasRestarted = false
+            }
+
             else -> LocationPermissionScreen(this)
         }
     }
