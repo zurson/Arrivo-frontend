@@ -22,6 +22,9 @@ interface DeliveryService {
     @POST("delivery/create")
     suspend fun createDelivery(@Body createRequest: DeliveryCreateRequest): Delivery
 
+    @PATCH("delivery/break/{id}")
+    suspend fun notifyBreakStart(@Path("id") id: Long)
+
     @PATCH("delivery/{id}")
     suspend fun updateDeliveryStatus(
         @Path("id") id: Long,
