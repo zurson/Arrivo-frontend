@@ -8,6 +8,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+
     <application
             android:enableOnBackInvokedCallback="true"
             android:networkSecurityConfig="@xml/network_security_config"
@@ -20,6 +23,9 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.Arrivo"
             tools:targetApi="34">
+
+        <receiver android:name=".utilities.notifications.NotificationReceiver" />
+
         <activity
                 android:name=".activities.MainActivity"
                 android:exported="true"
