@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import com.thesis.arrivo.utilities.openAppSettings
 
 @Composable
-fun LocationPermissionScreen(context: Context) {
+fun RequiredPermissionsScreen(context: Context) {
     LocationPermissionInfoScreen(
         onOpenSettingsClick = { openAppSettings(context) }
     )

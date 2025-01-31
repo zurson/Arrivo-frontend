@@ -1,18 +1,25 @@
 package com.thesis.arrivo.utilities
 
+import android.content.Context
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.core.content.ContextCompat
-import com.thesis.arrivo.activities.MainActivity
 
-class PermissionManager() {
+object PermissionManager {
+
+    private lateinit var appContext: Context
+
+    fun initialize(context: Context) {
+        appContext = context
+    }
+
 
     fun isPermissionGranted(permission: String): Boolean {
         return ContextCompat.checkSelfPermission(
-            MainActivity.context,
+            appContext,
             permission
         ) == PackageManager.PERMISSION_GRANTED
 
@@ -42,7 +49,7 @@ class PermissionManager() {
 
     @Composable
     fun RequestMultiplePermissions(
-        permissions: Array<String>,
+        permissions: List<String>,
         onPermissionsResult: (Map<String, Boolean>) -> Unit
     ) {
         val permissionLauncher = rememberLauncherForActivityResult(
@@ -55,7 +62,7 @@ class PermissionManager() {
 
         if (shouldRequestPermissions) {
             LaunchedEffect(Unit) {
-                permissionLauncher.launch(permissions)
+                permissionLauncher.launch(permissions.toTypedArray())
             }
         } else {
             onPermissionsResult(permissions.associateWith { true })

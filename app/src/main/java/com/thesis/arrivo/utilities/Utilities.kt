@@ -26,8 +26,10 @@ import com.thesis.arrivo.view_models.MainViewModel
 import retrofit2.HttpException
 import java.io.IOException
 import java.text.SimpleDateFormat
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -229,4 +231,27 @@ fun getCurrentTimeText(): String {
     val currentTime = LocalTime.now()
     val formatter = DateTimeFormatter.ofPattern("HH:mm")
     return currentTime.format(formatter)
+}
+
+
+fun formatTime(time: LocalDateTime): String {
+    return time.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"))
+}
+
+
+// BREAK
+
+fun getBreakTime(startTime: LocalDateTime): LocalDateTime {
+    return startTime.plusSeconds(30)
+}
+
+
+fun isDuringBreak(breakStartTime: LocalDateTime?): Boolean {
+    return breakStartTime != null && Duration.between(breakStartTime, LocalDateTime.now())
+        .toSeconds() < 10
+}
+
+
+fun getDurationBetweenNowAndBreakTime(breakStartTime: LocalDateTime): Duration {
+    return Duration.between(LocalDateTime.now(), breakStartTime)
 }

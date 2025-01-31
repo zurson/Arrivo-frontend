@@ -211,5 +211,8 @@
 
     <string name="delivery_schedule_details_dialog_finish_button_text">Mark as Finished</string>
     <string name="delivery_schedule_details_dialog_dismiss_button_text">OK</string>
-    
+
+    <!-- NAVIGATION -->
+    <string name="navigation_no_destination_message">It looks like you have\nno active tasks</string>
+
 </resources>

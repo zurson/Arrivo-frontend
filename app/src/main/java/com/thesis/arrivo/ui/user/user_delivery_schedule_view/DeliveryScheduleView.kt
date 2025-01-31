@@ -105,7 +105,7 @@ private fun BottomSector(
     modifier: Modifier = Modifier,
     deliveryScheduleViewModel: DeliveryScheduleViewModel
 ) {
-    if (!deliveryScheduleViewModel.showStartButton())
+    if (!deliveryScheduleViewModel.isStartButtonActive())
         return
 
     Box(

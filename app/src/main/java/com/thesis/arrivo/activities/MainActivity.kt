@@ -13,13 +13,16 @@ import androidx.compose.runtime.remember
 import com.google.android.libraries.places.api.Places
 import com.google.firebase.FirebaseApp
 import com.thesis.arrivo.R
-import com.thesis.arrivo.components.permissions.LocationPermissionScreen
+import com.thesis.arrivo.components.permissions.RequiredPermissionsScreen
 import com.thesis.arrivo.ui.MainView
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.PermissionManager
+import com.thesis.arrivo.utilities.Settings
+import com.thesis.arrivo.utilities.Settings.Companion.REQUIRED_PERMISSION
 import com.thesis.arrivo.utilities.changeActivity
 import com.thesis.arrivo.utilities.location.PlacesApiHelper
 import com.thesis.arrivo.utilities.navigation_api.NavigationApiManager
+import com.thesis.arrivo.utilities.notifications.Notifier
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,8 +31,6 @@ class MainActivity : AppCompatActivity() {
         lateinit var context: Context
         private var wasRestarted = false
     }
-
-    private val permissionManager = PermissionManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         if (wasRestarted) return
 
         val granted =
-            permissionManager.isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)
+            PermissionManager.isPermissionGranted(REQUIRED_PERMISSION)
         if (granted) return
 
         restartApp()
@@ -75,9 +76,9 @@ class MainActivity : AppCompatActivity() {
         val permissionsChecked = remember { mutableStateOf(false) }
         val locationPermissionGranted = remember { mutableStateOf(false) }
 
-        PermissionManager().RequestPermission(Manifest.permission.ACCESS_FINE_LOCATION) { granted ->
+        PermissionManager.RequestMultiplePermissions(Settings.getAskDuringStartPermissions()) {
             permissionsChecked.value = true
-            locationPermissionGranted.value = granted
+            locationPermissionGranted.value = it[REQUIRED_PERMISSION] == true
         }
 
         when {
@@ -87,7 +88,7 @@ class MainActivity : AppCompatActivity() {
                 wasRestarted = false
             }
 
-            else -> LocationPermissionScreen(this)
+            else -> RequiredPermissionsScreen(this)
         }
     }
 
@@ -96,6 +97,18 @@ class MainActivity : AppCompatActivity() {
         initializeFirebase()
         initializePlacesClient()
         initializeNavigationApi()
+        initializePermissionsManager()
+        initializeNotifier()
+    }
+
+
+    private fun initializeNotifier() {
+        Notifier.init(this)
+    }
+
+
+    private fun initializePermissionsManager() {
+        PermissionManager.initialize(this)
     }
 
 

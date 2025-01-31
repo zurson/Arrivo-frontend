@@ -1,6 +1,7 @@
 package com.thesis.arrivo.view_models
 
 import android.content.Context
+import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,10 +14,14 @@ import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TaskStatus
 import com.thesis.arrivo.communication.task.TaskStatusUpdateRequest
 import com.thesis.arrivo.communication.task.TasksRepository
+import com.thesis.arrivo.utilities.formatTime
+import com.thesis.arrivo.utilities.getBreakTime
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.utilities.interfaces.LoggedInUserAccessor
+import com.thesis.arrivo.utilities.notifications.Notifier
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 class DeliveryScheduleViewModel(
     private val context: Context,
@@ -134,6 +139,13 @@ class DeliveryScheduleViewModel(
 
 
     private fun onDeliveryScheduleFetchSuccess() {
+        if (delivery == null)
+            return
+
+        mapSharedViewModel.startTime = delivery!!.startDate
+        mapSharedViewModel.breakTime = delivery!!.breakDate
+        mapSharedViewModel.deliveryId = delivery!!.id
+
         val started = delivery!!.status == DeliveryStatus.IN_PROGRESS
         if (!started)
             return
@@ -147,13 +159,15 @@ class DeliveryScheduleViewModel(
 
 
     private fun onDeliveryScheduleFetchFailure() {
-
+        mapSharedViewModel.startTime = null
+        mapSharedViewModel.breakTime = null
     }
 
 
     /**
      * Start Button
      **/
+
 
     private val taskRepository = TasksRepository()
 
@@ -170,6 +184,9 @@ class DeliveryScheduleViewModel(
 
 
     fun onStartButtonClick() {
+        if (!isStartButtonActive())
+            return
+
         toggleShowStartConfirmationDialog()
     }
 
@@ -190,7 +207,7 @@ class DeliveryScheduleViewModel(
     }
 
 
-    fun showStartButton(): Boolean {
+    fun isStartButtonActive(): Boolean {
         if (delivery == null)
             return false
 
@@ -252,6 +269,26 @@ class DeliveryScheduleViewModel(
             mapSharedViewModel.destination = task.location
             firstUpdateProceeded = true
             _activeTask.value = task
+
+            val startTime = LocalDateTime.now()
+
+            mapSharedViewModel.startTime = startTime
+            mapSharedViewModel.breakTime = null
+
+            val breakTime = getBreakTime(startTime)
+
+            Notifier.scheduleNotificationAt(
+                title = "Break",
+                message = "Break in 15 seconds!",
+                dateTime = breakTime.minusSeconds(10)
+            )
+
+            Notifier.scheduleNotificationAt(
+                title = "Break",
+                message = "Time for break!",
+                dateTime = breakTime
+            )
+
             return
         }
 
@@ -261,8 +298,9 @@ class DeliveryScheduleViewModel(
         if (nextTask != null) {
             updateTaskStatus(nextTask, TaskStatus.IN_PROGRESS)
             mapSharedViewModel.destination = nextTask.location
-        } else
+        } else {
             mapSharedViewModel.destination = null
+        }
     }
 
 

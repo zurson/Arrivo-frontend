@@ -59,14 +59,14 @@ fun TaskDetailsDialog(
             task.assignedDate?.let {
                 DialogRecord(
                     label = stringResource(R.string.tasks_list_details_dialog_date),
-                    value = task.assignedDate
+                    value = it
                 )
             }
 
             task.employee?.let {
                 DialogRecord(
                     label = stringResource(R.string.tasks_list_details_dialog_employee),
-                    value = "${task.employee.firstName} ${task.employee.lastName}"
+                    value = "${it.firstName} ${it.lastName}"
                 )
             }
 

@@ -172,7 +172,7 @@ class TasksListViewModel(
                 val matchesStatus = task.status in activeFilters || activeFilters.isEmpty()
 
                 val matchesDate = task.assignedDate?.let {
-                    task.assignedDate.toEpochDay() == selectedDateManager.localDate.toEpochDay()
+                    it.toEpochDay() == selectedDateManager.localDate.toEpochDay()
                 } ?: true
 
                 matchesStatus && matchesDate
