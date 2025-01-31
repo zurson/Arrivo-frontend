@@ -3,15 +3,18 @@ package com.thesis.arrivo.communication.task
 import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.utilities.location.Location
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class Task(
     val id: Long,
-    val title: String,
-    val location: Location,
-    val addressText: String,
+    var title: String,
+    var location: Location,
+    var addressText: String,
     var status: TaskStatus,
-    val assignedDate: LocalDate?,
-    val employee: Employee?,
+    var assignedDate: LocalDate?,
+    var startDate: LocalDateTime?,
+    var endDate: LocalDateTime?,
+    var employee: Employee?,
     val products: List<Product> = listOf()
 ) {
     companion object {
@@ -23,6 +26,8 @@ data class Task(
                 addressText = "",
                 status = TaskStatus.UNASSIGNED,
                 assignedDate = null,
+                startDate = null,
+                endDate = null,
                 employee = null,
                 products = emptyList()
             )
