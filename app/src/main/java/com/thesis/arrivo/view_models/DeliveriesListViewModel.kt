@@ -176,9 +176,7 @@ class DeliveriesListViewModel(
 
 
     fun onDeliveryCancelConfirmationYesClick() {
-        toggleShowDeliveryDetails()
         toggleShowDeliveryCancelConfirmationDialog()
-
         cancelDelivery()
     }
 
