@@ -6,6 +6,7 @@
     <string name="io_error">Network error. Please check your connection.</string>
     <string name="error_title">Error</string>
     <string name="emp_name_error">Error</string>
+    <string name="server_not_responding">The server is not responding</string>
 
     <!-- PERMISSIONS -->
     <string name="location_permission_required">Location Access Required</string>
