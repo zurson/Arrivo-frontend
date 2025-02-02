@@ -15,7 +15,7 @@ class Settings {
         // Server Communication
         private const val SERVER_LOCAL_HOST = "http://10.0.2.2:8080/"
         private const val SERVER_REMOTE_HOST = "https://arrivo-server-latest.onrender.com/"
-        const val SERVER_USING_HOST = SERVER_REMOTE_HOST
+        const val SERVER_USING_HOST = SERVER_LOCAL_HOST
 
         // Layouts
         const val START_END_PERCENTAGE: Float = 0.05f
