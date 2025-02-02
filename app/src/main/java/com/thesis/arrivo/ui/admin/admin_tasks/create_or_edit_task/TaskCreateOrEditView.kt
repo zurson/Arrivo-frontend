@@ -249,7 +249,7 @@ private fun ProductContainer(
                     .padding(end = dimensionResource(R.dimen.new_task_product_details_name_end_padding))
             )
             Text(
-                text = "$amount $PRODUCT_PIECES_UNIT",
+                text = "$amount$PRODUCT_PIECES_UNIT",
                 fontWeight = FontWeight.Bold,
                 fontSize = dpToSp(R.dimen.new_task_product_details_text_size),
                 color = MaterialTheme.colorScheme.onBackground
