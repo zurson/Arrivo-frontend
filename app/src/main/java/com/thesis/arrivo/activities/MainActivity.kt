@@ -47,6 +47,12 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    override fun onDestroy() {
+        super.onDestroy()
+        NavigationApiManager.stopNavigation()
+    }
+
+
     override fun onResume() {
         super.onResume()
 
