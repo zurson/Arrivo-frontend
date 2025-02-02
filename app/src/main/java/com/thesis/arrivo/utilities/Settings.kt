@@ -12,6 +12,11 @@ class Settings {
 
     companion object {
 
+        // Server Communication
+        private const val SERVER_LOCAL_HOST = "http://10.0.2.2:8080/"
+        private const val SERVER_REMOTE_HOST = "https://arrivo-server-latest.onrender.com/"
+        const val SERVER_USING_HOST = SERVER_REMOTE_HOST
+
         // Layouts
         const val START_END_PERCENTAGE: Float = 0.05f
         val LOADING_SCREEN_BG = Color(0x80CECCC8)
@@ -36,6 +41,9 @@ class Settings {
         val TASK_IN_PROGRESS_COLOR = Color(0xFFFFC107)
         val TASK_ASSIGNED_COLOR = Color(0xFF03A9F4)
         val TASK_FINISHED_COLOR = Color(0xFFCC3333)
+
+        // Products
+        const val PRODUCT_PIECES_UNIT: String = "x"
 
         // Deliveries
         val DELIVERY_COMPLETED_COLOR = Color(0xFFCC3333)

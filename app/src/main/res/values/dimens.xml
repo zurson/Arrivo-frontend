@@ -4,7 +4,7 @@
 
     <!-- Navigation Bar -->
     <dimen name="navbar_icon_size">24dp</dimen>
-    <dimen name="navbar_text_size">12sp</dimen>
+    <dimen name="navbar_text_size">10sp</dimen>
     <dimen name="navbar_top_padding">2dp</dimen>
 
     <!-- AUTH -->
