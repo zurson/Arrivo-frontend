@@ -176,17 +176,22 @@ abstract class RoadAccidentsViewModel(
 
 
     fun onAccidentMarkAsResolvedButtonClick() {
+        toggleShowAccidentDetailsDialog()
         toggleShowConfirmationDialog()
     }
 
 
     fun onCallButtonClick() {
+        toggleShowAccidentDetailsDialog()
+
         val phoneNumber = selectedAccident.employee.phoneNumber
         preparePhoneCall(context, phoneNumber)
     }
 
 
     fun onMapButtonClick() {
+        toggleShowAccidentDetailsDialog()
+
         toggleShowAccidentLocationOnMap()
     }
 

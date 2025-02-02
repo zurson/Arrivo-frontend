@@ -251,6 +251,7 @@ class DeliveriesListViewModel(
 
 
     fun onDeliveryDetailsCancelButtonClick() {
+        toggleShowDeliveryDetails()
         toggleShowDeliveryCancelConfirmationDialog()
     }
 
