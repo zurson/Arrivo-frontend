@@ -44,7 +44,6 @@ import com.thesis.arrivo.ui.admin.admin_tasks.tasks_list.TaskTitle
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
-import com.thesis.arrivo.utilities.Settings.Companion.DELIVERY_SCHEDULE_CURRENT_TASK_COLOR
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.DeliveryScheduleViewModel
 import com.thesis.arrivo.view_models.MainViewModel
@@ -162,7 +161,7 @@ private fun TaskContainer(
 ) {
     val containerColor =
         if (active)
-            DELIVERY_SCHEDULE_CURRENT_TASK_COLOR
+            Settings.getCurrentTaskContainerColor()
         else
             MaterialTheme.colorScheme.surfaceContainerHigh
 
