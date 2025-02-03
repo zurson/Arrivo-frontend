@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowRight
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Analytics
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -231,6 +232,13 @@ private fun ButtonsSection(
         modifier = modifier
             .fillMaxSize()
     ) {
+        AppButton(
+            onClick = { employeeViewModel.onWorkTimeAnalysisButtonClick() },
+            text = stringResource(R.string.work_time_employees_list_button_text),
+            icon = Icons.Outlined.Analytics,
+            modifier = Modifier.weight(1f)
+        )
+
         AppButton(
             onClick = { employeeViewModel.onCreateEmployeeAccountButtonClick() },
             text = stringResource(R.string.create_account_redirect_button_text),

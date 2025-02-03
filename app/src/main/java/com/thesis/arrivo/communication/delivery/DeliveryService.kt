@@ -45,4 +45,12 @@ interface DeliveryService {
         @Path("employeeId") employeeId: Long,
         @Query("date") date: LocalDate? = null
     ): Response<Delivery>
+
+
+    @POST("delivery/tracking")
+    suspend fun addRoutePoints(@Body request: TrackPointInsertRequest)
+
+
+    @GET("delivery/tracking/{deliveryId}")
+    suspend fun getRoutePoints(@Path("deliveryId") deliveryId: Long): List<RoutePoint>
 }

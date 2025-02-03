@@ -36,7 +36,7 @@ import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.delivery.Delivery
 import com.thesis.arrivo.communication.delivery.DeliveryStatus
 import com.thesis.arrivo.components.animations.bounceClick
-import com.thesis.arrivo.components.date_picker.DatePickerField
+import com.thesis.arrivo.components.date_picker.DefaultDatePickerField
 import com.thesis.arrivo.components.other_components.AppButton
 import com.thesis.arrivo.components.other_components.AppFilter
 import com.thesis.arrivo.components.other_components.AppHorizontalDivider
@@ -65,6 +65,7 @@ fun DeliveriesListView(deliveriesListViewModel: DeliveriesListViewModel) {
         ShowDeliveryDetailsDialog(deliveriesListViewModel)
         ShowDeliveryTaskDetailsDialog(deliveriesListViewModel)
         ShowDeliveryCancelConfirmationDialog(deliveriesListViewModel)
+        ShowTrackDialog(deliveriesListViewModel)
 
         /* CONFIGURATION */
         val startGuideline = createGuidelineFromStart(Settings.START_END_PERCENTAGE)
@@ -207,9 +208,7 @@ private fun DeliveryEmployeeData(
 
 
 @Composable
-private fun DeliveryStartDate(
-    date: String
-) {
+private fun DeliveryStartDate(date: String) {
     Text(
         text = date,
         fontWeight = FontWeight.Bold,
@@ -233,7 +232,7 @@ private fun DatePickerAndFilters(
         modifier = modifier
             .fillMaxSize()
     ) {
-        DatePickerField(
+        DefaultDatePickerField(
             selectedDate = deliveriesListViewModel.getSelectedDate(),
             onDateSelected = { deliveriesListViewModel.onDateSelected(it) },
         )
@@ -326,6 +325,7 @@ private fun ShowDeliveryDetailsDialog(deliveryListViewModel: DeliveriesListViewM
         onTaskSelected = { deliveryListViewModel.onDeliveryDetailsTaskSelected(it) },
         showEditButton = { deliveryListViewModel.showDeliveryDetailsEditButton(it) },
         showCancelButton = { deliveryListViewModel.showDeliveryDetailsCancelButton(it) },
+        onTrackButtonClick = { deliveryListViewModel.onTrackButtonClick() }
     )
 }
 
@@ -356,6 +356,18 @@ private fun ShowDeliveryCancelConfirmationDialog(deliveriesListViewModel: Delive
         onYesClick = { deliveriesListViewModel.onDeliveryCancelConfirmationYesClick() },
         onNoClick = { deliveriesListViewModel.onDeliveryCancelConfirmationNoClick() },
         onDismiss = { deliveriesListViewModel.onDeliveryCancelConfirmationDismiss() },
+    )
+}
+
+
+@Composable
+private fun ShowTrackDialog(deliveryListViewModel: DeliveriesListViewModel) {
+    if (!deliveryListViewModel.showTrackDialog)
+        return
+
+    DeliveryTrackDialog(
+        onDismiss = { deliveryListViewModel.onTrackDialogDismiss() },
+        waypoints = deliveryListViewModel.waypoints,
     )
 }
 

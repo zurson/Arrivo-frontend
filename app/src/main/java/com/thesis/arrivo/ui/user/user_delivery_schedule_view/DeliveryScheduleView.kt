@@ -263,7 +263,10 @@ private fun Preview() {
             context = LocalContext.current,
             loadingScreenManager = mainVm,
             loggedInUserAccessor = mainVm,
-            mapSharedViewModel = MapSharedViewModel()
+            mapSharedViewModel = MapSharedViewModel(
+                LocalContext.current,
+                loadingScreenManager = mainVm
+            )
         )
     )
 

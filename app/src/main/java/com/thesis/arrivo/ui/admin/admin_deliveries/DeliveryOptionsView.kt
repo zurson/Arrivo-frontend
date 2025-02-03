@@ -35,7 +35,7 @@ import androidx.navigation.compose.rememberNavController
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.components.animations.bounceClick
-import com.thesis.arrivo.components.date_picker.DatePickerField
+import com.thesis.arrivo.components.date_picker.DefaultDatePickerField
 import com.thesis.arrivo.components.other_components.AppButton
 import com.thesis.arrivo.components.other_components.AppCheckbox
 import com.thesis.arrivo.components.other_components.AppSpinner
@@ -137,7 +137,7 @@ private fun EmployeeSelectorAndDatePicker(
             errorMessage = stringResource(R.string.delivery_employee_selector_error_message),
         )
 
-        DatePickerField(
+        DefaultDatePickerField(
             selectedDate = deliveryOptionsViewModel.getSelectedDate(),
             onDateSelected = { deliveryOptionsViewModel.onDateSelected(it) },
             isError = deliveryOptionsViewModel.isDatePickerError,

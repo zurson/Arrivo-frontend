@@ -107,6 +107,10 @@ sealed class NavigationItem(
         route = "delivery_confirm_admin"
     )
 
+    data object WorkTimeAdmin : NavigationItem(
+        route = "work_time_admin"
+    )
+
     /** Login **/
 
     data object Login : NavigationItem(

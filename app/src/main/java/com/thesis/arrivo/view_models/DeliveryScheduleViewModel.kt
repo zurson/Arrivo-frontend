@@ -150,7 +150,7 @@ class DeliveryScheduleViewModel(
             return
 
         val taskInProgress = delivery!!.tasks.first { it.status == TaskStatus.IN_PROGRESS }
-        mapSharedViewModel.destination = taskInProgress.location
+        mapSharedViewModel.setDestination(taskInProgress.location)
         firstUpdateProceeded = true
 
         _activeTask.value = taskInProgress
@@ -273,7 +273,7 @@ class DeliveryScheduleViewModel(
 
 
     private fun onTaskStatusUpdateFailure() {
-        mapSharedViewModel.destination = null
+        mapSharedViewModel.setDestination(null)
     }
 
 
@@ -281,7 +281,7 @@ class DeliveryScheduleViewModel(
         task.status = newStatus
 
         if (isFirstTask(task) && !firstUpdateProceeded) {
-            mapSharedViewModel.destination = task.location
+            mapSharedViewModel.setDestination(task.location)
             firstUpdateProceeded = true
             _activeTask.value = task
 
@@ -301,9 +301,9 @@ class DeliveryScheduleViewModel(
 
         if (nextTask != null) {
             updateTaskStatus(nextTask, TaskStatus.IN_PROGRESS)
-            mapSharedViewModel.destination = nextTask.location
+            mapSharedViewModel.setDestination(nextTask.location)
         } else {
-            mapSharedViewModel.destination = null
+            mapSharedViewModel.setDestination(null)
         }
     }
 

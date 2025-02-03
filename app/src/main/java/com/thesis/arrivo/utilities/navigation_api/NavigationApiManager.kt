@@ -15,6 +15,8 @@ import com.google.android.libraries.navigation.RoutingOptions
 import com.google.android.libraries.navigation.SupportNavigationFragment
 import com.google.android.libraries.navigation.Waypoint
 import com.thesis.arrivo.R
+import com.thesis.arrivo.utilities.Settings.Companion.NAVIGATION_API_INIT_ERROR_MESSAGE
+import com.thesis.arrivo.utilities.Settings.Companion.NAVIGATION_API_NOT_INITIALIZED_MESSAGE
 import com.thesis.arrivo.utilities.location.Location
 
 object NavigationApiManager {
@@ -42,8 +44,10 @@ object NavigationApiManager {
     }
 
 
-
-    fun startNavigation(location: Location, navigationStartStatus: (Boolean, Navigator.RouteStatus) -> Unit) {
+    fun startNavigation(
+        location: Location,
+        navigationStartStatus: (Boolean, Navigator.RouteStatus) -> Unit
+    ) {
         validate()
 
         val destination = createWaypoint(location)
@@ -53,6 +57,7 @@ object NavigationApiManager {
         pendingRoute?.setOnResultListener { routeStatus ->
             handleRouteResult(routeStatus, location, navigationStartStatus)
         }
+
     }
 
 
@@ -66,16 +71,27 @@ object NavigationApiManager {
     }
 
 
-    private fun handleRouteResult(routeStatus: Navigator.RouteStatus, location: Location, navigationStartStatus: (Boolean, Navigator.RouteStatus) -> Unit) {
+    private fun handleRouteResult(
+        routeStatus: Navigator.RouteStatus,
+        location: Location,
+        navigationStartStatus: (Boolean, Navigator.RouteStatus) -> Unit
+    ) {
         when (routeStatus) {
             Navigator.RouteStatus.OK -> handleSuccessfulRoute(navigationStartStatus, routeStatus)
-            Navigator.RouteStatus.NO_ROUTE_FOUND -> handleNoRouteFound(location, navigationStartStatus)
+            Navigator.RouteStatus.NO_ROUTE_FOUND -> handleNoRouteFound(
+                location,
+                navigationStartStatus
+            )
+
             else -> handleRouteError(routeStatus, navigationStartStatus)
         }
     }
 
 
-    private fun handleSuccessfulRoute(navigationStartStatus: (Boolean, Navigator.RouteStatus) -> Unit, routeStatus: Navigator.RouteStatus) {
+    private fun handleSuccessfulRoute(
+        navigationStartStatus: (Boolean, Navigator.RouteStatus) -> Unit,
+        routeStatus: Navigator.RouteStatus
+    ) {
         mNavigator?.apply {
             setAudioGuidance(Navigator.AudioGuidance.VOICE_ALERTS_AND_GUIDANCE)
             startGuidance()
@@ -85,7 +101,10 @@ object NavigationApiManager {
     }
 
 
-    private fun handleNoRouteFound(location: Location, navigationStartStatus: (Boolean, Navigator.RouteStatus) -> Unit) {
+    private fun handleNoRouteFound(
+        location: Location,
+        navigationStartStatus: (Boolean, Navigator.RouteStatus) -> Unit
+    ) {
         if (noRouteReload >= noRouteReloadLimit) {
             navigationStartStatus(false, Navigator.RouteStatus.NO_ROUTE_FOUND)
             resetNoRouteReloadCounter()
@@ -95,7 +114,10 @@ object NavigationApiManager {
     }
 
 
-    private fun retryNavigation(location: Location, navigationStartStatus: (Boolean, Navigator.RouteStatus) -> Unit) {
+    private fun retryNavigation(
+        location: Location,
+        navigationStartStatus: (Boolean, Navigator.RouteStatus) -> Unit
+    ) {
         noRouteReload++
         activity?.let { activity ->
             Handler(activity.mainLooper).postDelayed({
@@ -105,7 +127,10 @@ object NavigationApiManager {
     }
 
 
-    private fun handleRouteError(routeStatus: Navigator.RouteStatus, navigationStartStatus: (Boolean, Navigator.RouteStatus) -> Unit) {
+    private fun handleRouteError(
+        routeStatus: Navigator.RouteStatus,
+        navigationStartStatus: (Boolean, Navigator.RouteStatus) -> Unit
+    ) {
         Log.e("Navigation API", routeStatus.name)
         navigationStartStatus(false, routeStatus)
     }
@@ -123,10 +148,10 @@ object NavigationApiManager {
 
     private fun validate() {
         if (activity == null)
-            throw NavigationApiException("Navigation Api is not initialized")
+            throw NavigationApiException(NAVIGATION_API_NOT_INITIALIZED_MESSAGE)
 
         if (mNavigator == null)
-            throw NavigationApiException("Navigation Api was not initialized successfully")
+            throw NavigationApiException(NAVIGATION_API_INIT_ERROR_MESSAGE)
     }
 
 

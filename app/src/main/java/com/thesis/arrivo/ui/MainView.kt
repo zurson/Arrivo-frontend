@@ -21,6 +21,7 @@ import com.thesis.arrivo.ui.admin.admin_employees.CreateEditEmployeeView
 import com.thesis.arrivo.ui.admin.admin_employees.EmployeesListView
 import com.thesis.arrivo.ui.admin.admin_tasks.create_or_edit_task.TaskCreateOrEditView
 import com.thesis.arrivo.ui.admin.admin_tasks.tasks_list.TasksListView
+import com.thesis.arrivo.ui.admin.admin_work_time.WorkTimeView
 import com.thesis.arrivo.ui.authentication.LoginView
 import com.thesis.arrivo.ui.common.account.AccountView
 import com.thesis.arrivo.ui.common.road_accidents_list.AccidentsListView
@@ -44,6 +45,7 @@ import com.thesis.arrivo.view_models.RoadAccidentsAdminViewModel
 import com.thesis.arrivo.view_models.RoadAccidentsUserViewModel
 import com.thesis.arrivo.view_models.TaskManagerViewModel
 import com.thesis.arrivo.view_models.TasksListViewModel
+import com.thesis.arrivo.view_models.WorkTimeViewModel
 import com.thesis.arrivo.view_models.factory.AccidentReportViewModelFactory
 import com.thesis.arrivo.view_models.factory.AuthViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveriesListViewModelFactory
@@ -52,11 +54,13 @@ import com.thesis.arrivo.view_models.factory.DeliveryOptionsViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveryScheduleViewModelFactory
 import com.thesis.arrivo.view_models.factory.EmployeeViewModelFactory
 import com.thesis.arrivo.view_models.factory.MainViewModelFactory
+import com.thesis.arrivo.view_models.factory.MapSharedViewModelFactory
 import com.thesis.arrivo.view_models.factory.MapViewModelFactory
 import com.thesis.arrivo.view_models.factory.RoadAccidentAdminViewModelFactory
 import com.thesis.arrivo.view_models.factory.RoadAccidentsUserViewModelFactory
 import com.thesis.arrivo.view_models.factory.TaskListViewModelFactory
 import com.thesis.arrivo.view_models.factory.TaskManagerViewModelFactory
+import com.thesis.arrivo.view_models.factory.WorkTimeViewModelFactory
 
 
 @Composable
@@ -64,13 +68,18 @@ fun MainView() {
     val navHostController = rememberNavController()
     val navigationManager = NavigationManager(navHostController)
 
-    val deliverySharedViewModel: DeliverySharedViewModel = viewModel()
-    val mapSharedViewModel: MapSharedViewModel = viewModel()
-
     val mainViewModel: MainViewModel = viewModel(
         factory = MainViewModelFactory(
             context = LocalContext.current,
             navigationManager = navigationManager
+        )
+    )
+
+    val deliverySharedViewModel: DeliverySharedViewModel = viewModel()
+    val mapSharedViewModel: MapSharedViewModel = viewModel(
+        factory = MapSharedViewModelFactory(
+            context = LocalContext.current,
+            loadingScreenManager = mainViewModel
         )
     )
 
@@ -347,6 +356,17 @@ private fun NavGraphBuilder.setupAdminViews(
         )
         DeliveriesListView(deliveriesListViewModel = viewModel)
     }
+
+    composable(NavigationItem.WorkTimeAdmin.route) {
+        val viewModel: WorkTimeViewModel = viewModel(
+            factory = WorkTimeViewModelFactory(
+                context = LocalContext.current,
+                loadingScreenManager = mainViewModel
+            )
+        )
+        WorkTimeView(viewModel)
+    }
+
 }
 
 @SuppressLint("ComposableDestinationInComposeScope")

@@ -12,6 +12,7 @@ import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.delivery.Delivery
 import com.thesis.arrivo.communication.delivery.DeliveryRepository
 import com.thesis.arrivo.communication.delivery.DeliveryStatus
+import com.thesis.arrivo.communication.delivery.RoutePoint
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.components.navigation.NavigationItem
 import com.thesis.arrivo.utilities.NavigationManager
@@ -277,6 +278,56 @@ class DeliveriesListViewModel(
 
     fun onDeliveryDetailsTaskDialogButtonClick() {
         toggleShowTaskDetails()
+    }
+
+
+    /**
+     * Track
+     **/
+
+
+    private val _showTrackDialog = mutableStateOf(false)
+    val showTrackDialog: Boolean
+        get() = _showTrackDialog.value
+
+
+    private val _waypoints = mutableStateListOf<RoutePoint>()
+    val waypoints: List<RoutePoint>
+        get() = _waypoints
+
+
+    private fun toggleShowTrackDialog() {
+        _showTrackDialog.value = !_showTrackDialog.value
+    }
+
+
+    fun onTrackButtonClick() {
+        toggleShowDeliveryDetails()
+        fetchTrack()
+    }
+
+
+    fun onTrackDialogDismiss() {
+        toggleShowTrackDialog()
+    }
+
+
+    private fun fetchTrack() {
+        viewModelScope.launch {
+            serverRequestManager.sendRequest(
+                actionToPerform = {
+                    _waypoints.clear()
+                    val routePoints = deliveryRepository.getRoutePoints(selectedDelivery.id)
+                    _waypoints.addAll(routePoints)
+                },
+                onSuccess = { onTrackFetchSuccess() }
+            )
+        }
+    }
+
+
+    private fun onTrackFetchSuccess() {
+        toggleShowTrackDialog()
     }
 
 

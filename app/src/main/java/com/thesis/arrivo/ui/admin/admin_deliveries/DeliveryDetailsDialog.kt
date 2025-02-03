@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +28,7 @@ fun DeliveryDetailsDialog(
     onDismiss: () -> Unit,
     onEditButtonClick: () -> Unit,
     onDeliveryCancelButtonClick: () -> Unit,
+    onTrackButtonClick: () -> Unit,
     onTaskSelected: (Task) -> Unit,
     showEditButton: (Delivery) -> Boolean,
     showCancelButton: (Delivery) -> Boolean
@@ -81,10 +83,43 @@ fun DeliveryDetailsDialog(
             val cancelButtonVisible = showCancelButton(delivery)
             val editButtonVisible = showEditButton(delivery)
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.alert_dialog_button_horizontal_padding))
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lists_elements_vertical_space)),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.alert_dialog_button_horizontal_padding))
+                ) {
+
+                    // Edit button
+                    if (editButtonVisible) {
+                        AppButton(
+                            onClick = { onEditButtonClick() },
+                            text = stringResource(R.string.delivery_details_dialog_edit_button_text),
+                            icon = Icons.Outlined.Edit,
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+
+                    // Track button
+                    AppButton(
+                        onClick = { onTrackButtonClick() },
+                        icon = Icons.Outlined.LocationOn,
+                        text = stringResource(R.string.delivery_details_dialog_track_button_text),
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    // Dismiss button
+                    if (!cancelButtonVisible && !editButtonVisible) {
+                        AppButton(
+                            onClick = { onDismiss() },
+                            text = stringResource(R.string.delivery_details_dialog_task_dismiss_button_text),
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                }
 
                 // Cancel button
                 if (cancelButtonVisible) {
@@ -92,26 +127,6 @@ fun DeliveryDetailsDialog(
                         onClick = { onDeliveryCancelButtonClick() },
                         text = stringResource(R.string.delivery_details_dialog_delivery_cancel_button_text),
                         icon = Icons.Outlined.Cancel,
-                        modifier = Modifier.weight(1f),
-                    )
-                }
-
-                // Edit button
-                if (editButtonVisible) {
-                    AppButton(
-                        onClick = { onEditButtonClick() },
-                        text = stringResource(R.string.delivery_details_dialog_edit_button_text),
-                        icon = Icons.Outlined.Edit,
-                        modifier = Modifier.weight(1f),
-                    )
-                }
-
-                // Dismiss button
-                if (!cancelButtonVisible && !editButtonVisible) {
-                    AppButton(
-                        onClick = { onDismiss() },
-                        text = stringResource(R.string.delivery_details_dialog_task_dismiss_button_text),
-                        modifier = Modifier.weight(1f),
                     )
                 }
             }

@@ -98,9 +98,15 @@
     <string name="delivery_details_dialog_tasks_list_title">Assigned Tasks</string>
     <string name="delivery_details_dialog_edit_button_text">Edit</string>
     <string name="delivery_details_dialog_task_dismiss_button_text">OK</string>
+    <string name="delivery_details_dialog_track_button_text">Track</string>
     <string name="delivery_details_dialog_delivery_cancel_button_text">Cancel Delivery</string>
     <string name="delivery_details_dialog__delivery_cancel_confirmation_dialog_title">Cancel Delivery</string>
     <string name="delivery_details_dialog__delivery_confirmation_dialog_text">Cancel delivery?</string>
+
+    <string name="delivery_track_dialog_window_title">Track</string>
+    <string name="delivery_track_dialog_no_waypoints_message">No waypoints!</string>
+    <string name="delivery_track_start_point_marker_title">Start point</string>
+    <string name="delivery_track_end_point_marker_title">End point</string>
 
     <string name="delivery_list_create_delivery_button_text">Create Delivery</string>
 
@@ -225,5 +231,10 @@
     <string name="break_notification_title">Break</string>
     <string name="break_notification_before_message">Break is coming soon!</string>
     <string name="break_notification_now_message">Time for break!</string>
+
+    <!-- WORK TIME - Working Time -->
+    <string name="work_time_employees_list_button_text">Analysis</string>
+    <string name="work_time_fetch_success_toast_message">Data updated</string>
+    <string name="working_time_data_section_title_text">Working Time</string>
 
 </resources>

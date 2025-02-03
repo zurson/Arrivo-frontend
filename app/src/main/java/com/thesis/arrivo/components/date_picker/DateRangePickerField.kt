@@ -22,20 +22,23 @@ import com.thesis.arrivo.utilities.convertMillisToDate
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 
 @Composable
-fun DatePickerField(
+fun DateRangePickerField(
     modifier: Modifier = Modifier,
-    selectedDate: Long,
-    onDateSelected: (Long) -> Unit,
+    selectedDates: Pair<Long, Long>,
+    onDateRangeSelected: (Pair<Long, Long>) -> Unit,
     isError: Boolean = false,
     errorMessage: String = ""
 ) {
     var showModal by remember { mutableStateOf(false) }
 
+    val firstDate = convertMillisToDate(selectedDates.first)
+    val secondDate = convertMillisToDate(selectedDates.second)
+
     Box(
         modifier = modifier
     ) {
         AppTextField(
-            value = convertMillisToDate(selectedDate),
+            value = "$firstDate - $secondDate",
             onValueChange = { },
             label = stringResource(R.string.date_picker_label),
             readOnly = true,
@@ -44,7 +47,7 @@ fun DatePickerField(
             errorMessage = errorMessage,
             modifier = Modifier
                 .fillMaxWidth()
-                .pointerInput(selectedDate) {
+                .pointerInput(selectedDates) {
                     awaitEachGesture {
                         awaitFirstDown(pass = PointerEventPass.Initial)
                         val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
@@ -54,11 +57,13 @@ fun DatePickerField(
         )
     }
 
-
-
     if (showModal) {
-        DatePickerModal(
-            onDateSelected = { onDateSelected(it ?: getCurrentDateMillis()) },
+        DatePickerModals.Range(
+            onDateRangeSelected = {
+                val first = it.first ?: getCurrentDateMillis()
+                val second = it.second ?: getCurrentDateMillis()
+                onDateRangeSelected(Pair(first, second))
+            },
             onDismiss = { showModal = false }
         )
     }

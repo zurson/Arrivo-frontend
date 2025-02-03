@@ -2,6 +2,8 @@ package com.thesis.arrivo.communication.delivery
 
 import com.thesis.arrivo.communication.RetrofitInstance
 import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.Path
 import java.time.LocalDate
 
 class DeliveryRepository {
@@ -44,5 +46,14 @@ class DeliveryRepository {
         date: LocalDate? = null
     ): Response<Delivery> {
         return deliveryService.getDeliveryByEmployeeIdAndDate(employeeId, date)
+    }
+
+    suspend fun addRoutePoints(@Body request: TrackPointInsertRequest) {
+        deliveryService.addRoutePoints(request)
+    }
+
+
+    suspend fun getRoutePoints(@Path("deliveryId") deliveryId: Long): List<RoutePoint> {
+        return deliveryService.getRoutePoints(deliveryId)
     }
 }
