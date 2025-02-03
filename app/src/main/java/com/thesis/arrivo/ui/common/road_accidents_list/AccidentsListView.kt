@@ -37,7 +37,7 @@ import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.employee.Employee
 import com.thesis.arrivo.communication.road_accidents.RoadAccident
 import com.thesis.arrivo.components.animations.bounceClick
-import com.thesis.arrivo.components.date_picker.DatePickerField
+import com.thesis.arrivo.components.date_picker.DefaultDatePickerField
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
 import com.thesis.arrivo.components.other_components.AppButton
 import com.thesis.arrivo.components.other_components.AppFilter
@@ -120,7 +120,7 @@ private fun DatePickerAndFilters(
         modifier = modifier
             .fillMaxSize()
     ) {
-        DatePickerField(
+        DefaultDatePickerField(
             selectedDate = roadAccidentsViewModel.getSelectedDate(),
             onDateSelected = { roadAccidentsViewModel.onDateSelected(it) },
         )

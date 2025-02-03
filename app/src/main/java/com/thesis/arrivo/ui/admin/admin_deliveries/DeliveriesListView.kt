@@ -36,7 +36,7 @@ import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.delivery.Delivery
 import com.thesis.arrivo.communication.delivery.DeliveryStatus
 import com.thesis.arrivo.components.animations.bounceClick
-import com.thesis.arrivo.components.date_picker.DatePickerField
+import com.thesis.arrivo.components.date_picker.DefaultDatePickerField
 import com.thesis.arrivo.components.other_components.AppButton
 import com.thesis.arrivo.components.other_components.AppFilter
 import com.thesis.arrivo.components.other_components.AppHorizontalDivider
@@ -233,7 +233,7 @@ private fun DatePickerAndFilters(
         modifier = modifier
             .fillMaxSize()
     ) {
-        DatePickerField(
+        DefaultDatePickerField(
             selectedDate = deliveriesListViewModel.getSelectedDate(),
             onDateSelected = { deliveriesListViewModel.onDateSelected(it) },
         )
