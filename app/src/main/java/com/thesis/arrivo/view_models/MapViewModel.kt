@@ -8,16 +8,15 @@ import com.google.android.libraries.navigation.Navigator.RouteStatus
 import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.delivery.DeliveryRepository
+import com.thesis.arrivo.utilities.BreakManager
 import com.thesis.arrivo.utilities.formatTime
-import com.thesis.arrivo.utilities.getBreakTime
-import com.thesis.arrivo.utilities.getDurationBetweenNowAndBreakTime
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
-import com.thesis.arrivo.utilities.isDuringBreak
 import com.thesis.arrivo.utilities.location.Location
 import com.thesis.arrivo.utilities.navigation_api.NavigationApiManager
 import com.thesis.arrivo.utilities.showDefaultErrorDialog
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -93,9 +92,12 @@ class MapViewModel(
     val breakInTime: String
         get() = _breakInTime.value
 
+    private var timeUpdater: Job? = null
 
     private fun startUpdatingTime() {
-        viewModelScope.launch(Dispatchers.Main) {
+        timeUpdater?.cancel()
+
+        timeUpdater = viewModelScope.launch(Dispatchers.Main) {
             while (isActive) {
                 _driveTime.value = getDriveTimeString()
                 _breakInTime.value = getBreakInTimeString()
@@ -115,8 +117,8 @@ class MapViewModel(
             return false
         }
 
-        val breakStartTime = getBreakTime(startTime)
-        val duration = getDurationBetweenNowAndBreakTime(breakStartTime)
+        val breakStartTime = BreakManager.getBreakStartTime(startTime)
+        val duration = BreakManager.getDurationBetweenNowAndBreakTime(breakStartTime)
 
         return duration.isNegative
     }
@@ -128,7 +130,7 @@ class MapViewModel(
 
         var now = LocalDateTime.now()
 
-        if (isDuringBreak(breakStart))
+        if (BreakManager.isDuringBreak(breakStart))
             now = breakStart
 
         val duration = Duration.between(startTime, now)
@@ -149,8 +151,8 @@ class MapViewModel(
     private fun getBreakInTimeString(): String {
         val startTime = mapSharedViewModel.startTime ?: return "---"
 
-        val breakStartTime = getBreakTime(startTime)
-        val duration = getDurationBetweenNowAndBreakTime(breakStartTime)
+        val breakStartTime = BreakManager.getBreakStartTime(startTime)
+        val duration = BreakManager.getDurationBetweenNowAndBreakTime(breakStartTime)
 
         if (duration.isNegative) {
             if (mapSharedViewModel.breakTime != null)
@@ -229,9 +231,15 @@ class MapViewModel(
      **/
 
 
-    init {
+    fun load() {
         startUpdatingTime()
         startNavigation()
+    }
+
+
+
+    init {
+        load()
     }
 
 

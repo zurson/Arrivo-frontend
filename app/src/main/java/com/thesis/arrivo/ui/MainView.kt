@@ -201,7 +201,8 @@ private fun NavGraphBuilder.setupAdminViews(
         val viewModel: RoadAccidentsAdminViewModel = viewModel(
             factory = RoadAccidentAdminViewModelFactory(
                 context = LocalContext.current,
-                loadingScreenManager = mainViewModel
+                loadingScreenManager = mainViewModel,
+                loggedInUserAccessor = mainViewModel
             )
         )
 

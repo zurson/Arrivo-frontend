@@ -1,7 +1,6 @@
 package com.thesis.arrivo.view_models
 
 import android.content.Context
-import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,8 +13,8 @@ import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TaskStatus
 import com.thesis.arrivo.communication.task.TaskStatusUpdateRequest
 import com.thesis.arrivo.communication.task.TasksRepository
-import com.thesis.arrivo.utilities.formatTime
-import com.thesis.arrivo.utilities.getBreakTime
+import com.thesis.arrivo.utilities.BreakManager
+import com.thesis.arrivo.utilities.Settings.Companion.BREAK_BEFORE_NOTIFICATION_IN_SECONDS
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.utilities.interfaces.LoggedInUserAccessor
@@ -168,7 +167,6 @@ class DeliveryScheduleViewModel(
      * Start Button
      **/
 
-
     private val taskRepository = TasksRepository()
 
     private val _showStartConfirmationDialog = mutableStateOf(false)
@@ -257,6 +255,23 @@ class DeliveryScheduleViewModel(
     }
 
 
+    private fun scheduleBreakNotifications(breakStartTime: LocalDateTime) {
+        val title = context.getString(R.string.break_notification_title)
+
+        Notifier.scheduleNotificationAt(
+            title = title,
+            message = context.getString(R.string.break_notification_before_message),
+            dateTime = breakStartTime.minusSeconds(BREAK_BEFORE_NOTIFICATION_IN_SECONDS)
+        )
+
+        Notifier.scheduleNotificationAt(
+            title = title,
+            message = context.getString(R.string.break_notification_now_message),
+            dateTime = breakStartTime
+        )
+    }
+
+
     private fun onTaskStatusUpdateFailure() {
         mapSharedViewModel.destination = null
     }
@@ -275,19 +290,8 @@ class DeliveryScheduleViewModel(
             mapSharedViewModel.startTime = startTime
             mapSharedViewModel.breakTime = null
 
-            val breakTime = getBreakTime(startTime)
-
-            Notifier.scheduleNotificationAt(
-                title = "Break",
-                message = "Break in 15 seconds!",
-                dateTime = breakTime.minusSeconds(10)
-            )
-
-            Notifier.scheduleNotificationAt(
-                title = "Break",
-                message = "Time for break!",
-                dateTime = breakTime
-            )
+            val breakStartTime = BreakManager.getBreakStartTime(startTime)
+            scheduleBreakNotifications(breakStartTime)
 
             return
         }

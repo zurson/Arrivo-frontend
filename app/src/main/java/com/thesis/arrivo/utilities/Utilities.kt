@@ -242,21 +242,3 @@ fun getCurrentTimeText(): String {
 fun formatTime(time: LocalDateTime): String {
     return time.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"))
 }
-
-
-// BREAK
-
-fun getBreakTime(startTime: LocalDateTime): LocalDateTime {
-    return startTime.plusSeconds(30)
-}
-
-
-fun isDuringBreak(breakStartTime: LocalDateTime?): Boolean {
-    return breakStartTime != null && Duration.between(breakStartTime, LocalDateTime.now())
-        .toSeconds() < 10
-}
-
-
-fun getDurationBetweenNowAndBreakTime(breakStartTime: LocalDateTime): Duration {
-    return Duration.between(LocalDateTime.now(), breakStartTime)
-}

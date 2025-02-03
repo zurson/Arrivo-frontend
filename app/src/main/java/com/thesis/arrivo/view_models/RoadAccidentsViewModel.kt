@@ -22,13 +22,15 @@ import com.thesis.arrivo.utilities.capitalize
 import com.thesis.arrivo.utilities.getCurrentDateMillis
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
+import com.thesis.arrivo.utilities.interfaces.LoggedInUserAccessor
 import com.thesis.arrivo.utilities.preparePhoneCall
 import com.thesis.arrivo.utilities.showToast
 import kotlinx.coroutines.launch
 
 abstract class RoadAccidentsViewModel(
     private val context: Context,
-    private val loadingScreenManager: LoadingScreenManager
+    private val loadingScreenManager: LoadingScreenManager,
+    private val loggedInUserAccessor: LoggedInUserAccessor
 ) : ViewModel(), LoadingScreenStatusChecker {
 
     protected val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
@@ -184,7 +186,7 @@ abstract class RoadAccidentsViewModel(
     fun onCallButtonClick() {
         toggleShowAccidentDetailsDialog()
 
-        val phoneNumber = selectedAccident.employee.phoneNumber
+        val phoneNumber = loggedInUserAccessor.getLoggedInUser().company.phoneNumber
         preparePhoneCall(context, phoneNumber)
     }
 
@@ -225,7 +227,6 @@ abstract class RoadAccidentsViewModel(
 
     fun onConfirmationYesClick() {
         toggleShowConfirmationDialog()
-        toggleShowAccidentDetailsDialog()
         markAccidentAsResolved()
     }
 

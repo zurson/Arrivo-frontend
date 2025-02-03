@@ -340,7 +340,8 @@ private fun Preview() {
     val viewModel: RoadAccidentsViewModel = viewModel(
         factory = RoadAccidentAdminViewModelFactory(
             context = LocalContext.current,
-            loadingScreenManager = mainVm
+            loadingScreenManager = mainVm,
+            loggedInUserAccessor = mainVm
         )
     )
 

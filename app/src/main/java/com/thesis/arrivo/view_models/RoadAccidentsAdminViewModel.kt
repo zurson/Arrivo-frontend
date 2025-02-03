@@ -3,12 +3,14 @@ package com.thesis.arrivo.view_models
 import android.content.Context
 import androidx.lifecycle.viewModelScope
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
+import com.thesis.arrivo.utilities.interfaces.LoggedInUserAccessor
 import kotlinx.coroutines.launch
 
 class RoadAccidentsAdminViewModel(
     context: Context,
-    loadingScreenManager: LoadingScreenManager
-) : RoadAccidentsViewModel(context, loadingScreenManager) {
+    loadingScreenManager: LoadingScreenManager,
+    loggedInUserAccessor: LoggedInUserAccessor
+) : RoadAccidentsViewModel(context, loadingScreenManager, loggedInUserAccessor) {
 
     init {
         fetchRoadAccidents()

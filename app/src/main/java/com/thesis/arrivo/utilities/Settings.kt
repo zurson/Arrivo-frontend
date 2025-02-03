@@ -62,10 +62,15 @@ class Settings {
         val ROAD_ACCIDENTS_FINISHED_COLOR = Color(0xFFCC3333)
 
         // Road Accidents - Reports
-        val ACCIDENT_REPORT_MAX_DESCRIPTION_LEN = 200
-        val ACCIDENT_REPORT_MIN_DESCRIPTION_LEN = 1
-        val ACCIDENT_REPORT_CAR_ID_MAX_LEN = 10
-        val ACCIDENT_REPORT_CAR_ID_MIN_LEN = 5
+        const val ACCIDENT_REPORT_MAX_DESCRIPTION_LEN = 200
+        const val ACCIDENT_REPORT_MIN_DESCRIPTION_LEN = 1
+        const val ACCIDENT_REPORT_CAR_ID_MAX_LEN = 10
+        const val ACCIDENT_REPORT_CAR_ID_MIN_LEN = 5
+
+        // Break
+        const val BREAK_TIME_FROM_START_IN_SECONDS: Long = 30L
+        const val BREAK_TIME_IN_SECONDS: Long = 15L
+        const val BREAK_BEFORE_NOTIFICATION_IN_SECONDS: Long = 10
 
         // PERMISSIONS
         const val REQUIRED_PERMISSION: String = Manifest.permission.ACCESS_FINE_LOCATION
