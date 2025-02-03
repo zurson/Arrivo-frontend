@@ -23,10 +23,21 @@ class Settings {
 
         // Maps
         const val DEFAULT_MAP_ZOOM: Float = 17f
+        const val POLYLINE_WIDTH: Float = 30f
+        val POLYLINE_COLOR = Color.Blue
 
         // Navigation
         const val NAVIGATION_API_NOT_INITIALIZED_MESSAGE = "Navigation Api is not initialized"
-        const val NAVIGATION_API_INIT_ERROR_MESSAGE = "Navigation Api was not initialized successfully"
+        const val NAVIGATION_API_INIT_ERROR_MESSAGE =
+            "Navigation Api was not initialized successfully"
+
+        // Location Tracker
+        const val TRACKER_MIN_DISTANCE_METERS: Float = 50f
+        const val TRACKER_MIN_BEARING_CHANGE: Float = 25f
+        const val TRACKER_UPDATE_INTERVAL: Long = 5_000
+        const val TRACKER_FASTEST_UPDATE_INTERVAL: Long = 5_000
+        const val TRACKER_MAX_LIST_CAPACITY = 50
+        const val TRACK_SENDING_INTERVAL_MS: Long = 60_000
 
         // Analysis
         const val ANALYSIS_HOURS_UNIT: String = "h"

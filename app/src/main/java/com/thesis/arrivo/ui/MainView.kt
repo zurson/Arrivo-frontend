@@ -54,6 +54,7 @@ import com.thesis.arrivo.view_models.factory.DeliveryOptionsViewModelFactory
 import com.thesis.arrivo.view_models.factory.DeliveryScheduleViewModelFactory
 import com.thesis.arrivo.view_models.factory.EmployeeViewModelFactory
 import com.thesis.arrivo.view_models.factory.MainViewModelFactory
+import com.thesis.arrivo.view_models.factory.MapSharedViewModelFactory
 import com.thesis.arrivo.view_models.factory.MapViewModelFactory
 import com.thesis.arrivo.view_models.factory.RoadAccidentAdminViewModelFactory
 import com.thesis.arrivo.view_models.factory.RoadAccidentsUserViewModelFactory
@@ -67,13 +68,18 @@ fun MainView() {
     val navHostController = rememberNavController()
     val navigationManager = NavigationManager(navHostController)
 
-    val deliverySharedViewModel: DeliverySharedViewModel = viewModel()
-    val mapSharedViewModel: MapSharedViewModel = viewModel()
-
     val mainViewModel: MainViewModel = viewModel(
         factory = MainViewModelFactory(
             context = LocalContext.current,
             navigationManager = navigationManager
+        )
+    )
+
+    val deliverySharedViewModel: DeliverySharedViewModel = viewModel()
+    val mapSharedViewModel: MapSharedViewModel = viewModel(
+        factory = MapSharedViewModelFactory(
+            context = LocalContext.current,
+            loadingScreenManager = mainViewModel
         )
     )
 
