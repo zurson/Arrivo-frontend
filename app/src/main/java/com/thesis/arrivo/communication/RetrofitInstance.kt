@@ -9,6 +9,7 @@ import com.thesis.arrivo.communication.gson.LocalDateAdapter
 import com.thesis.arrivo.communication.gson.LocalDateTimeAdapter
 import com.thesis.arrivo.communication.road_accidents.RoadAccidentsService
 import com.thesis.arrivo.communication.task.TasksService
+import com.thesis.arrivo.communication.work_time.WorkTimeService
 import com.thesis.arrivo.utilities.Settings.Companion.SERVER_USING_HOST
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -57,6 +58,10 @@ object RetrofitInstance {
 
     val deliveryService: DeliveryService by lazy {
         retrofit.create(DeliveryService::class.java)
+    }
+
+    val workTimeService: WorkTimeService by lazy {
+        retrofit.create(WorkTimeService::class.java)
     }
 }
 

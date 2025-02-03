@@ -4,7 +4,7 @@
 
     <!-- Navigation Bar -->
     <dimen name="navbar_icon_size">24dp</dimen>
-    <dimen name="navbar_text_size">10sp</dimen>
+    <dimen name="navbar_text_size">9sp</dimen>
     <dimen name="navbar_top_padding">2dp</dimen>
 
     <!-- AUTH -->
@@ -178,5 +178,8 @@
     <dimen name="navigation_error_padding">32dp</dimen>
     <dimen name="navigation_error_title_text_size">20sp</dimen>
     <dimen name="navigation_error_code_text_size">16sp</dimen>
+
+    <!-- Analysis - Working Time -->
+    <dimen name="working_time_data_section_title_text_size">20sp</dimen>
 
 </resources>

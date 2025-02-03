@@ -24,6 +24,9 @@ class Settings {
         // Maps
         const val DEFAULT_MAP_ZOOM: Float = 17f
 
+        // Analysis
+        const val ANALYSIS_HOURS_UNIT: String = "h"
+
         // AppButton
         const val APP_BUTTON_DEFAULT_MAX_LINES = 2
         const val APP_BUTTON_DISABLE_ALPHA: Float = 0.4f

@@ -178,4 +178,7 @@
     <dimen name="navigation_error_title_text_size">30sp</dimen>
     <dimen name="navigation_error_code_text_size">24sp</dimen>
 
+    <!-- Analysis - Working Time -->
+    <dimen name="working_time_data_section_title_text_size">30sp</dimen>
+
 </resources>

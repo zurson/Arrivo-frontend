@@ -226,7 +226,9 @@
     <string name="break_notification_before_message">Break is coming soon!</string>
     <string name="break_notification_now_message">Time for break!</string>
 
-    <!-- WORK TIME -->
+    <!-- WORK TIME - Working Time -->
     <string name="work_time_employees_list_button_text">Analysis</string>
+    <string name="work_time_fetch_success_toast_message">Data updated</string>
+    <string name="working_time_data_section_title_text">Working Time</string>
 
 </resources>
