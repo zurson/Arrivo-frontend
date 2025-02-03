@@ -272,6 +272,7 @@ private fun NavGraphBuilder.setupAdminViews(
             factory = AuthViewModelFactory(
                 loadingScreenManager = mainViewModel,
                 mainViewModel = mainViewModel,
+                loggedInUserAccessor = mainViewModel
             )
         )
         CreateEditEmployeeView(viewModel, authVm, editMode = false)
@@ -290,6 +291,7 @@ private fun NavGraphBuilder.setupAdminViews(
             factory = AuthViewModelFactory(
                 loadingScreenManager = mainViewModel,
                 mainViewModel = mainViewModel,
+                loggedInUserAccessor = mainViewModel
             )
         )
         CreateEditEmployeeView(viewModel, authVm, editMode = true)
@@ -352,7 +354,8 @@ private fun NavGraphBuilder.setupAuthenticationViews(mainViewModel: MainViewMode
         val viewModel: AuthViewModel = viewModel(
             factory = AuthViewModelFactory(
                 mainViewModel = mainViewModel,
-                loadingScreenManager = mainViewModel
+                loadingScreenManager = mainViewModel,
+                loggedInUserAccessor = mainViewModel
             )
         )
         LoginView(viewModel)

@@ -21,11 +21,13 @@ import com.thesis.arrivo.ui.authentication.FirebaseAuthManager
 import com.thesis.arrivo.utilities.FormType
 import com.thesis.arrivo.utilities.Settings
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
+import com.thesis.arrivo.utilities.interfaces.LoggedInUserAccessor
 import com.thesis.arrivo.utilities.showToast
 
 class AuthViewModel(
     private val mainViewModel: MainViewModel,
-    private val loadingScreenManager: LoadingScreenManager
+    private val loadingScreenManager: LoadingScreenManager,
+    private val loggedInUserAccessor: LoggedInUserAccessor
 ) : ViewModel() {
 
     var firstName by mutableStateOf("")
@@ -83,7 +85,8 @@ class AuthViewModel(
             firstName = firstName,
             lastName = lastName,
             email = email,
-            phoneNumber = phoneNumber
+            phoneNumber = phoneNumber,
+            companyId = loggedInUserAccessor.getLoggedInUser().company.id
         )
     }
 

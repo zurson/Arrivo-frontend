@@ -219,7 +219,8 @@ private fun Preview() {
     val viewModel: AuthViewModel = viewModel(
         factory = AuthViewModelFactory(
             mainViewModel = mainVm,
-            loadingScreenManager = mainVm
+            loadingScreenManager = mainVm,
+            loggedInUserAccessor = mainVm
         )
     )
 
