@@ -24,6 +24,10 @@ class Settings {
         // Maps
         const val DEFAULT_MAP_ZOOM: Float = 17f
 
+        // Navigation
+        const val NAVIGATION_API_NOT_INITIALIZED_MESSAGE = "Navigation Api is not initialized"
+        const val NAVIGATION_API_INIT_ERROR_MESSAGE = "Navigation Api was not initialized successfully"
+
         // Analysis
         const val ANALYSIS_HOURS_UNIT: String = "h"
 

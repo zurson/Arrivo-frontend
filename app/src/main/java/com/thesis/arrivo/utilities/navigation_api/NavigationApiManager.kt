@@ -15,6 +15,8 @@ import com.google.android.libraries.navigation.RoutingOptions
 import com.google.android.libraries.navigation.SupportNavigationFragment
 import com.google.android.libraries.navigation.Waypoint
 import com.thesis.arrivo.R
+import com.thesis.arrivo.utilities.Settings.Companion.NAVIGATION_API_INIT_ERROR_MESSAGE
+import com.thesis.arrivo.utilities.Settings.Companion.NAVIGATION_API_NOT_INITIALIZED_MESSAGE
 import com.thesis.arrivo.utilities.location.Location
 
 object NavigationApiManager {
@@ -123,10 +125,10 @@ object NavigationApiManager {
 
     private fun validate() {
         if (activity == null)
-            throw NavigationApiException("Navigation Api is not initialized")
+            throw NavigationApiException(NAVIGATION_API_NOT_INITIALIZED_MESSAGE)
 
         if (mNavigator == null)
-            throw NavigationApiException("Navigation Api was not initialized successfully")
+            throw NavigationApiException(NAVIGATION_API_INIT_ERROR_MESSAGE)
     }
 
 
