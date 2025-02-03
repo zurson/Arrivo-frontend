@@ -1,5 +1,7 @@
 package com.thesis.arrivo.communication.employee
 
+import com.thesis.arrivo.utilities.location.Location
+
 data class Employee(
     val id: Long,
     val firstName: String,
@@ -7,7 +9,8 @@ data class Employee(
     val email: String,
     val phoneNumber: String,
     val status: EmployeeStatus,
-    val role: Role
+    val role: Role,
+    val company: Company
 ) {
 
     companion object {
@@ -19,7 +22,13 @@ data class Employee(
                 email = "",
                 phoneNumber = "",
                 status = EmployeeStatus.DELETED,
-                role = Role.USER
+                role = Role.USER,
+                company = Company(
+                    id = -1,
+                    location = Location(),
+                    name = "",
+                    phoneNumber = ""
+                )
             )
         }
     }

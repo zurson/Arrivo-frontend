@@ -13,14 +13,14 @@ import com.thesis.arrivo.view_models.AuthViewModel
 fun PasswordTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    aurhViewModel: AuthViewModel,
+    authViewModel: AuthViewModel,
     label: String,
-    showVisualityToggleIcon: Boolean,
+    showVisibilityToggleIcon: Boolean,
     modifier: Modifier = Modifier,
     isError: Boolean = false,
     errorMessage: String
 ) {
-    val trailingIcon = if (showVisualityToggleIcon) aurhViewModel.visibilityIcon else null
+    val trailingIcon = if (showVisibilityToggleIcon) authViewModel.visibilityIcon else null
 
     AppTextField(
         modifier = modifier,
@@ -31,7 +31,8 @@ fun PasswordTextField(
         imeAction = ImeAction.Next,
         leadingIcon = Icons.Outlined.Lock,
         trailingIcon = trailingIcon,
-        visualTransformation = if (showVisualityToggleIcon) aurhViewModel.passwordVisualTransformation else PasswordVisualTransformation(),
+        onTrailingIconClick = { authViewModel.togglePasswordVisibility() },
+        visualTransformation = if (showVisibilityToggleIcon) authViewModel.passwordVisualTransformation else PasswordVisualTransformation(),
         onValueChange = onValueChange,
         isError = isError,
         errorMessage = errorMessage

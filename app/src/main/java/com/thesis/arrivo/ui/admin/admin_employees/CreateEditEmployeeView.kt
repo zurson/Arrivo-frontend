@@ -264,6 +264,7 @@ private fun Preview() {
         factory = AuthViewModelFactory(
             loadingScreenManager = mainVm,
             mainViewModel = mainVm,
+            loggedInUserAccessor = mainVm
         )
     )
 

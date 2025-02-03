@@ -25,9 +25,12 @@ import com.thesis.arrivo.utilities.exceptions.OptimizationFailedException
 import com.thesis.arrivo.view_models.MainViewModel
 import retrofit2.HttpException
 import java.io.IOException
+import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -96,6 +99,10 @@ fun mapError(e: Exception, context: Context): ErrorResponse? {
 
         is DataCorruptedException -> {
             return ErrorResponse(-1, listOf(e.message!!))
+        }
+
+        is SocketTimeoutException -> {
+            return ErrorResponse(-1, listOf(context.getString(R.string.server_not_responding)))
         }
 
         is IOException ->
@@ -229,4 +236,9 @@ fun getCurrentTimeText(): String {
     val currentTime = LocalTime.now()
     val formatter = DateTimeFormatter.ofPattern("HH:mm")
     return currentTime.format(formatter)
+}
+
+
+fun formatTime(time: LocalDateTime): String {
+    return time.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"))
 }

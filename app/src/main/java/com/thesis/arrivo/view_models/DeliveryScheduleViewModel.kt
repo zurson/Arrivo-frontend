@@ -1,7 +1,6 @@
 package com.thesis.arrivo.view_models
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,21 +9,24 @@ import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.delivery.Delivery
 import com.thesis.arrivo.communication.delivery.DeliveryRepository
 import com.thesis.arrivo.communication.delivery.DeliveryStatus
-import com.thesis.arrivo.communication.delivery.DeliveryUpdateStatusRequest
 import com.thesis.arrivo.communication.task.Task
 import com.thesis.arrivo.communication.task.TaskStatus
 import com.thesis.arrivo.communication.task.TaskStatusUpdateRequest
 import com.thesis.arrivo.communication.task.TasksRepository
+import com.thesis.arrivo.utilities.BreakManager
+import com.thesis.arrivo.utilities.Settings.Companion.BREAK_BEFORE_NOTIFICATION_IN_SECONDS
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.utilities.interfaces.LoggedInUserAccessor
-import com.thesis.arrivo.utilities.showToast
+import com.thesis.arrivo.utilities.notifications.Notifier
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 class DeliveryScheduleViewModel(
     private val context: Context,
     private val loadingScreenManager: LoadingScreenManager,
-    private val loggedInUserAccessor: LoggedInUserAccessor
+    private val loggedInUserAccessor: LoggedInUserAccessor,
+    private val mapSharedViewModel: MapSharedViewModel
 ) : ViewModel(), LoadingScreenStatusChecker {
 
     private val serverRequestManager = ServerRequestManager(context, loadingScreenManager)
@@ -62,48 +64,6 @@ class DeliveryScheduleViewModel(
         toggleShowMarkAsFinishedConfirmationDialog()
 
         updateTaskStatus(selectedTask, TaskStatus.COMPLETED)
-
-        val nextTask = getNextTask()
-        if (nextTask == null)
-            finishDelivery()
-        else
-            updateTaskStatus(nextTask, TaskStatus.IN_PROGRESS)
-    }
-
-
-    private fun finishDelivery() {
-        viewModelScope.launch {
-            serverRequestManager.sendRequest(
-                actionToPerform = {
-                    deliveryRepository.updateDeliveryStatus(
-                        delivery!!.id,
-                        prepareDeliveryUpdateStatusRequest()
-                    )
-                },
-                onSuccess = { onDeliveryFinishSuccess() }
-            )
-        }
-    }
-
-
-    private fun onDeliveryFinishSuccess() {
-        showToast(
-            text = context.getString(R.string.delivery_schedule_finish_toast_message),
-            toastLength = Toast.LENGTH_LONG
-        )
-    }
-
-
-    private fun prepareDeliveryUpdateStatusRequest(): DeliveryUpdateStatusRequest {
-        return DeliveryUpdateStatusRequest(DeliveryStatus.COMPLETED)
-    }
-
-
-    private fun getNextTask(): Task? {
-        val tasks = delivery!!.tasks
-        val nextTaskIndex = tasks.indexOf(selectedTask) + 1
-
-        return tasks.getOrNull(nextTaskIndex)
     }
 
 
@@ -157,6 +117,10 @@ class DeliveryScheduleViewModel(
     val delivery: Delivery?
         get() = _delivery.value
 
+    private val _activeTask = mutableStateOf<Task?>(null)
+    val activeTask: Task?
+        get() = _activeTask.value
+
 
     private fun fetchDeliverySchedule() {
         viewModelScope.launch {
@@ -165,9 +129,37 @@ class DeliveryScheduleViewModel(
                     val userId = loggedInUserAccessor.getLoggedInUser().id
                     _delivery.value =
                         deliveryRepository.getDeliveryByEmployeeIdAndDate(userId).body()
-                }
+                },
+                onSuccess = { onDeliveryScheduleFetchSuccess() },
+                onFailure = { onDeliveryScheduleFetchFailure() }
             )
         }
+    }
+
+
+    private fun onDeliveryScheduleFetchSuccess() {
+        if (delivery == null)
+            return
+
+        mapSharedViewModel.startTime = delivery!!.startDate
+        mapSharedViewModel.breakTime = delivery!!.breakDate
+        mapSharedViewModel.deliveryId = delivery!!.id
+
+        val started = delivery!!.status == DeliveryStatus.IN_PROGRESS
+        if (!started)
+            return
+
+        val taskInProgress = delivery!!.tasks.first { it.status == TaskStatus.IN_PROGRESS }
+        mapSharedViewModel.destination = taskInProgress.location
+        firstUpdateProceeded = true
+
+        _activeTask.value = taskInProgress
+    }
+
+
+    private fun onDeliveryScheduleFetchFailure() {
+        mapSharedViewModel.startTime = null
+        mapSharedViewModel.breakTime = null
     }
 
 
@@ -186,8 +178,13 @@ class DeliveryScheduleViewModel(
         _showStartConfirmationDialog.value = !_showStartConfirmationDialog.value
     }
 
+    private var firstUpdateProceeded = false
+
 
     fun onStartButtonClick() {
+        if (!isStartButtonActive())
+            return
+
         toggleShowStartConfirmationDialog()
     }
 
@@ -208,13 +205,18 @@ class DeliveryScheduleViewModel(
     }
 
 
-    fun showStartButton(): Boolean {
+    fun isStartButtonActive(): Boolean {
         if (delivery == null)
+            return false
+
+        if (delivery!!.status != DeliveryStatus.ASSIGNED)
             return false
 
         val tasks = delivery!!.tasks
 
-        return tasks.none { it.status == TaskStatus.IN_PROGRESS } && tasks.any { it.status != TaskStatus.COMPLETED }
+        return tasks.none { it.status == TaskStatus.IN_PROGRESS } &&
+                tasks.any { it.status != TaskStatus.COMPLETED } &&
+                !loadingScreenManager.isLoadingScreenEnabled()
     }
 
 
@@ -236,9 +238,15 @@ class DeliveryScheduleViewModel(
                         statusUpdateRequest = prepareTaskUpdateRequest(newStatus)
                     )
                 },
-                onSuccess = { onTaskStatusUpdateSuccess(task, newStatus) }
+                onSuccess = { onTaskStatusUpdateSuccess(task, newStatus) },
+                onFailure = { onTaskStatusUpdateFailure() }
             )
         }
+    }
+
+
+    private fun isFirstTask(task: Task): Boolean {
+        return delivery!!.tasks.first().id == task.id
     }
 
 
@@ -247,8 +255,66 @@ class DeliveryScheduleViewModel(
     }
 
 
+    private fun scheduleBreakNotifications(breakStartTime: LocalDateTime) {
+        val title = context.getString(R.string.break_notification_title)
+
+        Notifier.scheduleNotificationAt(
+            title = title,
+            message = context.getString(R.string.break_notification_before_message),
+            dateTime = breakStartTime.minusSeconds(BREAK_BEFORE_NOTIFICATION_IN_SECONDS)
+        )
+
+        Notifier.scheduleNotificationAt(
+            title = title,
+            message = context.getString(R.string.break_notification_now_message),
+            dateTime = breakStartTime
+        )
+    }
+
+
+    private fun onTaskStatusUpdateFailure() {
+        mapSharedViewModel.destination = null
+    }
+
+
     private fun onTaskStatusUpdateSuccess(task: Task, newStatus: TaskStatus) {
         task.status = newStatus
+
+        if (isFirstTask(task) && !firstUpdateProceeded) {
+            mapSharedViewModel.destination = task.location
+            firstUpdateProceeded = true
+            _activeTask.value = task
+
+            val startTime = LocalDateTime.now()
+
+            mapSharedViewModel.startTime = startTime
+            mapSharedViewModel.breakTime = null
+
+            val breakStartTime = BreakManager.getBreakStartTime(startTime)
+            scheduleBreakNotifications(breakStartTime)
+
+            return
+        }
+
+        val nextTask = getNextTask()
+        _activeTask.value = nextTask
+
+        if (nextTask != null) {
+            updateTaskStatus(nextTask, TaskStatus.IN_PROGRESS)
+            mapSharedViewModel.destination = nextTask.location
+        } else {
+            mapSharedViewModel.destination = null
+        }
+    }
+
+
+    private fun getNextTask(): Task? {
+        val tasks = delivery!!.tasks
+        val nextTaskIndex = tasks.indexOf(selectedTask) + 1
+
+        val nextTask = tasks.getOrNull(nextTaskIndex)
+
+        return nextTask
     }
 
 

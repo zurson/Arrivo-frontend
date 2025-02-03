@@ -44,10 +44,10 @@ import com.thesis.arrivo.ui.admin.admin_tasks.tasks_list.TaskTitle
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.NavigationManager
 import com.thesis.arrivo.utilities.Settings
-import com.thesis.arrivo.utilities.Settings.Companion.DELIVERY_SCHEDULE_CURRENT_TASK_COLOR
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.DeliveryScheduleViewModel
 import com.thesis.arrivo.view_models.MainViewModel
+import com.thesis.arrivo.view_models.MapSharedViewModel
 import com.thesis.arrivo.view_models.factory.DeliveryScheduleViewModelFactory
 
 @Composable
@@ -104,7 +104,7 @@ private fun BottomSector(
     modifier: Modifier = Modifier,
     deliveryScheduleViewModel: DeliveryScheduleViewModel
 ) {
-    if (!deliveryScheduleViewModel.showStartButton())
+    if (!deliveryScheduleViewModel.isStartButtonActive())
         return
 
     Box(
@@ -144,6 +144,7 @@ private fun ScheduleSection(
             TaskContainer(
                 task = task,
                 position = tasks.indexOf(task) + 1,
+                active = deliveryScheduleViewModel.activeTask?.id == task.id,
                 onClick = { deliveryScheduleViewModel.onTaskSelected(it) }
             )
         }
@@ -155,11 +156,12 @@ private fun ScheduleSection(
 private fun TaskContainer(
     task: Task,
     position: Int,
+    active: Boolean,
     onClick: (Task) -> Unit
 ) {
     val containerColor =
-        if (task.status == TaskStatus.IN_PROGRESS)
-            DELIVERY_SCHEDULE_CURRENT_TASK_COLOR
+        if (active)
+            Settings.getCurrentTaskContainerColor()
         else
             MaterialTheme.colorScheme.surfaceContainerHigh
 
@@ -260,7 +262,8 @@ private fun Preview() {
         factory = DeliveryScheduleViewModelFactory(
             context = LocalContext.current,
             loadingScreenManager = mainVm,
-            loggedInUserAccessor = mainVm
+            loggedInUserAccessor = mainVm,
+            mapSharedViewModel = MapSharedViewModel()
         )
     )
 

@@ -4,7 +4,7 @@
 
     <!-- Navigation Bar -->
     <dimen name="navbar_icon_size">24dp</dimen>
-    <dimen name="navbar_text_size">12sp</dimen>
+    <dimen name="navbar_text_size">10sp</dimen>
     <dimen name="navbar_top_padding">2dp</dimen>
 
     <!-- AUTH -->
@@ -170,5 +170,13 @@
     <dimen name="accident_report_container_padding">8dp</dimen>
     <dimen name="accident_report_container_position_text_size">30sp</dimen>
     <dimen name="accident_report_container_arrow_icon_size">40dp</dimen>
+
+    <!-- Navigation -->
+    <dimen name="navigation_bottom_sector_horizontal_padding">8dp</dimen>
+    <dimen name="navigation_bottom_sector_text_size">12sp</dimen>
+
+    <dimen name="navigation_error_padding">32dp</dimen>
+    <dimen name="navigation_error_title_text_size">20sp</dimen>
+    <dimen name="navigation_error_code_text_size">16sp</dimen>
 
 </resources>

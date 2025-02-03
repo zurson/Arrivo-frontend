@@ -10,7 +10,7 @@ class RoadAccidentsUserViewModel(
     context: Context,
     loadingScreenManager: LoadingScreenManager,
     private val loggedInUserAccessor: LoggedInUserAccessor
-) : RoadAccidentsViewModel(context, loadingScreenManager) {
+) : RoadAccidentsViewModel(context, loadingScreenManager, loggedInUserAccessor) {
 
     init {
         showMarkAsResolvedButton = false

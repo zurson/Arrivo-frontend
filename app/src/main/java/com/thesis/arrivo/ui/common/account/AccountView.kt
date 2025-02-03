@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.AdminPanelSettings
 import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.Factory
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material.icons.outlined.StarOutline
@@ -193,6 +194,11 @@ private fun DetailsSection(
         UserDataContainer(
             icon = Icons.Outlined.PersonOutline,
             value = user.role
+        )
+
+        UserDataContainer(
+            icon = Icons.Outlined.Factory,
+            value = user.company.name
         )
     }
 }

@@ -26,6 +26,7 @@ import com.thesis.arrivo.R
 import com.thesis.arrivo.components.animations.bounceClick
 import com.thesis.arrivo.ui.theme.Theme
 import com.thesis.arrivo.utilities.Settings.Companion.APP_BUTTON_DEFAULT_MAX_LINES
+import com.thesis.arrivo.utilities.Settings.Companion.APP_BUTTON_DISABLE_ALPHA
 import com.thesis.arrivo.utilities.dpToSp
 import kotlin.math.max
 
@@ -36,21 +37,25 @@ fun AppButton(
     icon: ImageVector? = null,
     maxLines: Int = APP_BUTTON_DEFAULT_MAX_LINES,
     iconStart: Boolean = false,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
+    val buttonColor = MaterialTheme.colorScheme.primary
+    val textColor = MaterialTheme.colorScheme.onPrimary
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
-            .bounceClick()
-            .clickable { onClick() }
+            .bounceClick(enabled)
+            .clickable(enabled = enabled) { if (enabled) onClick() }
             .fillMaxWidth()
             .clip(RoundedCornerShape(dimensionResource(R.dimen.surfaces_corner_clip_radius)))
-            .background(MaterialTheme.colorScheme.primary)
+            .background(if (enabled) buttonColor else buttonColor.copy(alpha = APP_BUTTON_DISABLE_ALPHA))
             .padding(horizontal = dimensionResource(R.dimen.app_button_padding))
     ) {
         if (iconStart) {
-            icon?.let { DefaultAppButtonIcon(icon) }
+            icon?.let { DefaultAppButtonIcon(icon, enabled) }
         }
 
         Text(
@@ -59,25 +64,27 @@ fun AppButton(
             overflow = TextOverflow.Ellipsis,
             textAlign = TextAlign.Center,
             fontSize = dpToSp(R.dimen.app_button_text_size),
-            color = MaterialTheme.colorScheme.onPrimary,
+            color = if (enabled) textColor else textColor.copy(alpha = APP_BUTTON_DISABLE_ALPHA),
             modifier = Modifier
                 .weight(1f)
                 .padding(vertical = dimensionResource(R.dimen.app_button_text_padding))
         )
 
         if (!iconStart) {
-            icon?.let { DefaultAppButtonIcon(icon) }
+            icon?.let { DefaultAppButtonIcon(icon, enabled) }
         }
     }
 }
 
 
 @Composable
-private fun DefaultAppButtonIcon(icon: ImageVector) {
+private fun DefaultAppButtonIcon(icon: ImageVector, enabled: Boolean) {
+    val iconColor = MaterialTheme.colorScheme.onPrimary
+
     Icon(
         imageVector = icon,
         contentDescription = null,
-        tint = MaterialTheme.colorScheme.onPrimary,
+        tint = if (enabled) iconColor else iconColor.copy(alpha = APP_BUTTON_DISABLE_ALPHA),
         modifier = Modifier
             .requiredSize(dimensionResource(R.dimen.app_button_icon_size))
     )
@@ -91,7 +98,8 @@ private fun Preview() {
         AppButton(
             onClick = {},
             text = "Create account",
-            icon = Icons.Outlined.Close
+            icon = Icons.Outlined.Close,
+            enabled = false
         )
     }
 }

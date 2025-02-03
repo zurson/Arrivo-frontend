@@ -172,8 +172,8 @@ private fun FormsSection(modifier: Modifier = Modifier, authViewModel: AuthViewM
             label = stringResource(R.string.login_password_label),
             onValueChange = { authViewModel.password = it },
             value = authViewModel.password,
-            aurhViewModel = authViewModel,
-            showVisualityToggleIcon = true,
+            authViewModel = authViewModel,
+            showVisibilityToggleIcon = true,
             isError = authViewModel.isErrorPassword,
             errorMessage = stringResource(R.string.login_password_error)
         )
@@ -219,7 +219,8 @@ private fun Preview() {
     val viewModel: AuthViewModel = viewModel(
         factory = AuthViewModelFactory(
             mainViewModel = mainVm,
-            loadingScreenManager = mainVm
+            loadingScreenManager = mainVm,
+            loggedInUserAccessor = mainVm
         )
     )
 

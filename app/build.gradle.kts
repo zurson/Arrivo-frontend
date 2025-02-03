@@ -31,11 +31,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -94,13 +94,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
 
     /** Google **/
-    implementation(libs.gms.play.services.maps)
     implementation(libs.places)
-    implementation(libs.maps.compose.v2120)
-
-    /** Lists drag and drop reorder **/
-    implementation(libs.reorderable)
-
-    /** Google Services **/
-    implementation(libs.play.services.location)
+    implementation(libs.gms.play.services.maps)
+    implementation(libs.maps.compose.v600)
+    implementation(libs.navigation)
 }

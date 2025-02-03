@@ -37,6 +37,7 @@ import com.thesis.arrivo.components.other_components.AppButton
 import com.thesis.arrivo.components.other_components.AppTextField
 import com.thesis.arrivo.components.other_components.ConfirmationDialog
 import com.thesis.arrivo.utilities.Settings
+import com.thesis.arrivo.utilities.Settings.Companion.PRODUCT_PIECES_UNIT
 import com.thesis.arrivo.utilities.dpToSp
 import com.thesis.arrivo.view_models.TaskManagerViewModel
 
@@ -248,7 +249,7 @@ private fun ProductContainer(
                     .padding(end = dimensionResource(R.dimen.new_task_product_details_name_end_padding))
             )
             Text(
-                text = "$amount pcs",
+                text = "$amount$PRODUCT_PIECES_UNIT",
                 fontWeight = FontWeight.Bold,
                 fontSize = dpToSp(R.dimen.new_task_product_details_text_size),
                 color = MaterialTheme.colorScheme.onBackground
@@ -320,7 +321,7 @@ private fun ShowProductDeleteConfirmationDialog(taskManagerViewModel: TaskManage
         ConfirmationDialog(
             dialogTitle = stringResource(R.string.product_delete_confirmation_dialog_title),
             lineOne = productToDelete.name,
-            lineTwo = "${productToDelete.amount} pcs",
+            lineTwo = "${productToDelete.amount}$PRODUCT_PIECES_UNIT",
             onYesClick = { taskManagerViewModel.onProductDeleteConfirmationYesClick() },
             onNoClick = { taskManagerViewModel.onProductDeleteConfirmationNoClick() },
             onDismiss = { taskManagerViewModel.onProductDeleteConfirmationDismiss() },

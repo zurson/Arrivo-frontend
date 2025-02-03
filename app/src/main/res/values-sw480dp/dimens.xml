@@ -170,4 +170,12 @@
     <dimen name="accident_report_container_position_text_size">40sp</dimen>
     <dimen name="accident_report_container_arrow_icon_size">50dp</dimen>
 
+    <!-- Navigation -->
+    <dimen name="navigation_bottom_sector_horizontal_padding">16dp</dimen>
+    <dimen name="navigation_bottom_sector_text_size">20sp</dimen>
+
+    <dimen name="navigation_error_padding">48dp</dimen>
+    <dimen name="navigation_error_title_text_size">30sp</dimen>
+    <dimen name="navigation_error_code_text_size">24sp</dimen>
+
 </resources>

@@ -6,8 +6,9 @@
     <string name="io_error">Network error. Please check your connection.</string>
     <string name="error_title">Error</string>
     <string name="emp_name_error">Error</string>
+    <string name="server_not_responding">The server is not responding</string>
 
-    <!-- PERMISSIONS -->
+    <!-- Permissions -->
     <string name="location_permission_required">Location Access Required</string>
     <string name="location_permission_message">
         To continue using this app, location access is required. Please enable it in your device settings.
@@ -211,5 +212,18 @@
 
     <string name="delivery_schedule_details_dialog_finish_button_text">Mark as Finished</string>
     <string name="delivery_schedule_details_dialog_dismiss_button_text">OK</string>
-    
+
+    <!-- NAVIGATION -->
+    <string name="navigation_no_destination_message">It looks like you have\nno active tasks</string>
+    <string name="navigation_error_refresh_button_text">Refresh</string>
+    <string name="navigation_error_title_text">Unexpected error</string>
+
+    <string name="break_start_button_text">Start Break</string>
+    <string name="break_drive_time_text">Drive Time:</string>
+    <string name="break_break_in_text">Break:</string>
+
+    <string name="break_notification_title">Break</string>
+    <string name="break_notification_before_message">Break is coming soon!</string>
+    <string name="break_notification_now_message">Time for break!</string>
+
 </resources>

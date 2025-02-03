@@ -9,6 +9,7 @@ import com.thesis.arrivo.communication.gson.LocalDateAdapter
 import com.thesis.arrivo.communication.gson.LocalDateTimeAdapter
 import com.thesis.arrivo.communication.road_accidents.RoadAccidentsService
 import com.thesis.arrivo.communication.task.TasksService
+import com.thesis.arrivo.utilities.Settings.Companion.SERVER_USING_HOST
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -17,7 +18,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 object RetrofitInstance {
-    private const val BASE_URL = "http://10.0.2.2:8080/"
 
     private val gson: Gson = GsonBuilder()
         .registerTypeAdapter(LocalDate::class.java, LocalDateAdapter())
@@ -32,7 +32,7 @@ object RetrofitInstance {
 
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(SERVER_USING_HOST)
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okHttpClient)

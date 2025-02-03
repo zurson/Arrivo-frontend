@@ -20,6 +20,10 @@ class DeliveryRepository {
         return deliveryService.createDelivery(createRequest)
     }
 
+    suspend fun notifyBreakStart(id: Long) {
+        deliveryService.notifyBreakStart(id)
+    }
+
     suspend fun updateDelivery(id: Long, updateRequest: DeliveryUpdateRequest): Delivery {
         return deliveryService.updateDelivery(id, updateRequest)
     }

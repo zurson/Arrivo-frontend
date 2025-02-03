@@ -54,16 +54,19 @@ fun LocationPermissionInfoScreen(onOpenSettingsClick: () -> Unit) {
                     text = stringResource(id = R.string.location_permission_required),
                     style = MaterialTheme.typography.titleLarge,
                     textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
                     text = stringResource(id = R.string.location_permission_message),
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
                     text = stringResource(id = R.string.grant_permissions_instructions),
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Left,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
 
                 AppButton(
