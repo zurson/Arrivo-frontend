@@ -146,4 +146,13 @@ class EmployeeViewModel(
         return mainViewModel.employeeToEdit.status
     }
 
+
+    /**
+     * Other
+     **/
+
+
+    fun onWorkTimeAnalysisButtonClick() {
+        navigationManager.navigateTo(routeOrItem = NavigationItem.WorkTimeAdmin)
+    }
 }

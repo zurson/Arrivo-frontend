@@ -226,4 +226,7 @@
     <string name="break_notification_before_message">Break is coming soon!</string>
     <string name="break_notification_now_message">Time for break!</string>
 
+    <!-- WORK TIME -->
+    <string name="work_time_employees_list_button_text">Analysis</string>
+
 </resources>
