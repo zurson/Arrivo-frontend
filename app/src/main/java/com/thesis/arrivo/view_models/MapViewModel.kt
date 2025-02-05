@@ -14,6 +14,7 @@ import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
 import com.thesis.arrivo.utilities.location.Location
 import com.thesis.arrivo.utilities.navigation_api.NavigationApiManager
+import com.thesis.arrivo.utilities.notifications.Notifier
 import com.thesis.arrivo.utilities.showDefaultErrorDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -93,6 +94,7 @@ class MapViewModel(
         get() = _breakInTime.value
 
     private var timeUpdater: Job? = null
+
 
     private fun startUpdatingTime() {
         timeUpdater?.cancel()
@@ -215,9 +217,22 @@ class MapViewModel(
     }
 
 
+    private fun scheduleBreakEndNotification(breakStartTime: LocalDateTime) {
+        Notifier.scheduleNotificationAt(
+            title = context.getString(R.string.break_notification_title),
+            message = context.getString(R.string.break_notification_end_message),
+            dateTime = BreakManager.calculateBreakEndTime(breakStartTime)
+        )
+    }
+
+
     private fun onBreakNotifySuccess() {
-        mapSharedViewModel.breakTime = LocalDateTime.now()
+        val breakStartTime = LocalDateTime.now()
+
+        mapSharedViewModel.breakTime = breakStartTime
         _breakButtonEnabled.value = false
+
+        scheduleBreakEndNotification(breakStartTime)
     }
 
 
@@ -235,7 +250,6 @@ class MapViewModel(
         startUpdatingTime()
         startNavigation()
     }
-
 
 
     init {

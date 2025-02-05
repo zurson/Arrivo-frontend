@@ -14,12 +14,18 @@ object BreakManager {
 
     fun isDuringBreak(breakStartTime: LocalDateTime?): Boolean {
         return breakStartTime != null &&
-                Duration.between(breakStartTime, LocalDateTime.now()).toSeconds() < BREAK_TIME_IN_SECONDS
+                Duration.between(breakStartTime, LocalDateTime.now())
+                    .toSeconds() < BREAK_TIME_IN_SECONDS
     }
 
 
     fun getDurationBetweenNowAndBreakTime(breakStartTime: LocalDateTime): Duration {
         return Duration.between(LocalDateTime.now(), breakStartTime)
+    }
+
+
+    fun calculateBreakEndTime(breakStartTime: LocalDateTime): LocalDateTime {
+        return breakStartTime.plusSeconds(BREAK_TIME_IN_SECONDS)
     }
 
 }
