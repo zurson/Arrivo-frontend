@@ -137,7 +137,7 @@ class MapViewModel(
 
         val hours = duration.toHours()
         val minutes = duration.minusHours(hours).toMinutes()
-        val seconds = duration.minusHours(hours).minusMinutes(minutes).seconds
+        val seconds = duration.minusHours(hours).minusMinutes(minutes).toSeconds()
 
         return when {
             hours > 0 -> "${hours}h ${minutes}min"
