@@ -30,6 +30,9 @@ class Settings {
         const val NAVIGATION_API_NOT_INITIALIZED_MESSAGE = "Navigation Api is not initialized"
         const val NAVIGATION_API_INIT_ERROR_MESSAGE =
             "Navigation Api was not initialized successfully"
+        const val NAVIGATION_TIME_HOURS_UNIT: String = "h"
+        const val NAVIGATION_TIME_MINUTES_UNIT: String = "min"
+        const val NAVIGATION_TIME_SECONDS_UNIT: String = "s"
 
         // Location Tracker
         const val TRACKER_MIN_DISTANCE_METERS: Float = 50f

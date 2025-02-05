@@ -224,6 +224,8 @@
     <string name="navigation_error_refresh_button_text">Refresh</string>
     <string name="navigation_error_title_text">Unexpected error</string>
 
+    <string name="navigation_time_error">---</string>
+    <string name="navigation_time_break_ready_message">now</string>
     <string name="break_start_button_text">Start Break</string>
     <string name="break_drive_time_text">Drive Time:</string>
     <string name="break_break_in_text">Break:</string>

@@ -9,6 +9,9 @@ import com.thesis.arrivo.R
 import com.thesis.arrivo.communication.ServerRequestManager
 import com.thesis.arrivo.communication.delivery.DeliveryRepository
 import com.thesis.arrivo.utilities.BreakManager
+import com.thesis.arrivo.utilities.Settings.Companion.NAVIGATION_TIME_HOURS_UNIT
+import com.thesis.arrivo.utilities.Settings.Companion.NAVIGATION_TIME_MINUTES_UNIT
+import com.thesis.arrivo.utilities.Settings.Companion.NAVIGATION_TIME_SECONDS_UNIT
 import com.thesis.arrivo.utilities.formatTime
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenManager
 import com.thesis.arrivo.utilities.interfaces.LoadingScreenStatusChecker
@@ -126,8 +129,19 @@ class MapViewModel(
     }
 
 
+    private fun getTimeResult(hours: Long, minutes: Long, seconds: Long): String {
+        return when {
+            hours > 0 -> "${hours}$NAVIGATION_TIME_HOURS_UNIT ${minutes}$NAVIGATION_TIME_MINUTES_UNIT"
+            minutes > 0 -> "${minutes} $NAVIGATION_TIME_MINUTES_UNIT"
+            seconds > 0 -> "${seconds}$NAVIGATION_TIME_SECONDS_UNIT"
+            else -> context.getString(R.string.navigation_time_error)
+        }
+    }
+
+
     private fun getDriveTimeString(): String {
-        val startTime = mapSharedViewModel.startTime ?: return "---"
+        val startTime =
+            mapSharedViewModel.startTime ?: return context.getString(R.string.navigation_time_error)
         val breakStart = mapSharedViewModel.breakTime
 
         var now = LocalDateTime.now()
@@ -141,17 +155,13 @@ class MapViewModel(
         val minutes = duration.minusHours(hours).toMinutes()
         val seconds = duration.minusHours(hours).minusMinutes(minutes).toSeconds()
 
-        return when {
-            hours > 0 -> "${hours}h ${minutes}min"
-            minutes > 0 -> "${minutes} min"
-            seconds > 0 -> "${seconds}s"
-            else -> "---"
-        }
+        return getTimeResult(hours, minutes, seconds)
     }
 
 
     private fun getBreakInTimeString(): String {
-        val startTime = mapSharedViewModel.startTime ?: return "---"
+        val startTime =
+            mapSharedViewModel.startTime ?: return context.getString(R.string.navigation_time_error)
 
         val breakStartTime = BreakManager.getBreakStartTime(startTime)
         val duration = BreakManager.getDurationBetweenNowAndBreakTime(breakStartTime)
@@ -160,19 +170,14 @@ class MapViewModel(
             if (mapSharedViewModel.breakTime != null)
                 return formatTime(mapSharedViewModel.breakTime!!)
 
-            return "now"
+            return context.getString(R.string.navigation_time_break_ready_message)
         }
 
         val hours = duration.toHours()
         val minutes = duration.minusHours(hours).toMinutes()
         val seconds = duration.minusHours(hours).minusMinutes(minutes).seconds
 
-        return when {
-            hours > 0 -> "${hours}h ${minutes}min"
-            minutes > 0 -> "${minutes} min"
-            seconds > 0 -> "${seconds}s"
-            else -> "---"
-        }
+        return getTimeResult(hours, minutes, seconds)
     }
 
 
