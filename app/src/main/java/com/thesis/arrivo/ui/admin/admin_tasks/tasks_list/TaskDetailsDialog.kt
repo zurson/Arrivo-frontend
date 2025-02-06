@@ -18,6 +18,7 @@ import com.thesis.arrivo.components.info_alert_dialog.AlertDialogSingleButton
 import com.thesis.arrivo.components.info_alert_dialog.DialogRecord
 import com.thesis.arrivo.components.info_alert_dialog.InfoAlertDialog
 import com.thesis.arrivo.communication.task.Product
+import com.thesis.arrivo.utilities.Settings.Companion.PRODUCT_PIECES_UNIT
 import com.thesis.arrivo.view_models.TasksListViewModel
 
 @Composable
@@ -91,7 +92,7 @@ private fun ProductContainer(product: Product) {
     AlertDialogLazyListDefaultContainer(
         item = product,
         itemToLabelString = { product.name },
-        itemToValueString = { "${product.amount} psc" },
+        itemToValueString = { "${product.amount}$PRODUCT_PIECES_UNIT" },
         clickable = false
     )
 }
